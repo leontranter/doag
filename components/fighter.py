@@ -15,7 +15,7 @@ class Fighter:
 		self.hp -= amount
 
 		if self.hp <= 0:
-			results.append({'dead': self.owner})
+			results.append({'dead': self.owner, 'xp': self.xp})
 		return results
 
 	def attack(self, target):

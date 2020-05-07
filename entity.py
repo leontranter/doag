@@ -31,6 +31,8 @@ class Entity:
 			self.inventory.owner = self
 		if self.stairs:
 			self.stairs.owner = self
+		if self.level:
+			self.level.owner = self
 
 	def move(self, dx, dy):
 		self.x += dx

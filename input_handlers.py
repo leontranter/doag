@@ -43,6 +43,9 @@ def handle_player_turn_keys(key):
 	if key_char == 'g':
 		return {'pickup': True}
 	
+	if key.vk == libtcod.KEY_ENTER and key.lalt:
+		return {'fullscreen': True}
+
 	elif key_char == 'i':
 		return {'show_inventory': True}
 	elif key_char == 'd':
@@ -51,9 +54,7 @@ def handle_player_turn_keys(key):
 		return {'take_stairs': True}
 	elif key_char == 'c':
 		return {'show_character_screen': True}
-	if key.vk == libtcod.KEY_ENTER and key.lalt:
-		return {'fullscreen': True}
-
+	
 	elif key.vk == libtcod.KEY_ESCAPE:
 		#exit the game
 		return {'exit': True}

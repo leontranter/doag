@@ -9,6 +9,8 @@ from game_states import GameStates
 from death_functions import kill_monster, kill_player
 from game_messages import Message
 from menus import main_menu, message_box
+from dlevel import Dlevel
+#from map_objects.game_map import check_floor_is_explored, save_floor, load_floor
 
 def main():
 	constants = get_constants()
@@ -24,6 +26,7 @@ def main():
 	game_map = None
 	message_log = None
 	game_state = None
+	dlevels = {}
 
 	show_main_menu = True
 	show_load_error_message = False
@@ -50,12 +53,12 @@ def main():
 			if show_load_error_message and (new_game or load_saved_game or exit_game):
 				show_load_error_message = False
 			elif new_game:
-				player, entities, game_map, message_log, game_state = get_game_variables(constants)
+				player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants)
 				game_state = GameStates.PLAYERS_TURN
 				show_main_menu = False
 			elif load_saved_game:
 				try:
-					player, entities, game_map, message_log, game_state = load_game()
+					player, entities, game_map, message_log, game_state, dlevels = load_game()
 					show_main_menu = False
 				except FileNotFoundError:
 					show_load_error_message = True
@@ -64,11 +67,11 @@ def main():
 		
 		else:
 			libtcod.console_clear(con)
-			play_game(player, entities, game_map, message_log, game_state, con, panel, constants)
+			play_game(player, entities, game_map, message_log, game_state, con, panel, constants, dlevels)
 
 			show_main_menu = True
 
-def play_game(player, entities, game_map, message_log, game_state, con, panel, constants):
+def play_game(player, entities, game_map, message_log, game_state, con, panel, constants, dlevels):
 	fov_recompute = True
 	fov_map = initialize_fov(game_map)
 
@@ -103,10 +106,12 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 		drop_inventory = action.get('drop_inventory')
 		inventory_index = action.get('inventory_index')
 		take_stairs = action.get('take_stairs')
+		take_stairs_up = action.get('take_stairs_up')
 		level_up = action.get('level_up')
 		show_character_screen = action.get('show_character_screen')
 		exit = action.get('exit')
 		fullscreen = action.get('fullscreen')
+		equipment_screen = action.get('show_equipment_screen')
 
 		left_click = mouse_action.get('left_click')
 		right_click = mouse_action.get('right_click')
@@ -128,7 +133,6 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 				game_state = GameStates.ENEMY_TURN
 
 		elif wait:
-			print("waiting...")
 			game_state = GameStates.ENEMY_TURN
 
 		elif pickup and game_state == GameStates.PLAYERS_TURN:
@@ -154,17 +158,48 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 			elif game_state == GameStates.DROP_INVENTORY:
 				player_turn_results.extend(player.inventory.drop_item(item))
 		
+		# TODO: refactor this stairs / level stuff, it's a bit messy
 		if take_stairs and game_state == GameStates.PLAYERS_TURN:
 			for entity in entities:
 				if entity.stairs and entity.x == player.x and entity.y == player.y:
-					entities = game_map.next_floor(player, message_log, constants)
+					level_check = "dlevel_" + str(game_map.dungeon_level + 1)
+					if dlevels[level_check].explored:
+						entities, game_map.tiles = dlevels[level_check].entities, dlevels[level_check].tiles
+						game_map.dungeon_level += 1
+						for entity in entities:
+							if entity.name == "Upward stairs":
+								player.x, player.y = entity.x, entity.y
+					else:
+						dlevels[level_check].explored = True
+						entities = game_map.next_floor(player, message_log, constants, +1)
+						dlevels["dlevel_" + str(game_map.dungeon_level)].tiles = game_map.tiles
+						dlevels["dlevel_" + str(game_map.dungeon_level)].entities = entities
 					fov_map = initialize_fov(game_map)
 					fov_recompute = True
 					libtcod.console_clear(con)
-
 					break
 			else:
-				message_log.add_message(Message('There are no stairs here.', libtcod.yellow))
+				message_log.add_message(Message("There are no up stairs here.", libtcod.yellow))
+		
+		if take_stairs_up and game_state == GameStates.PLAYERS_TURN:
+			for entity in entities:
+				if entity.stairs and entity.x == player.x and entity.y == player.y:
+					level_check = "dlevel_" + str(game_map.dungeon_level - 1)
+					if level_check in dlevels:
+						prev_level = dlevels[level_check]
+						entities, game_map.tiles, game_map.dungeon_level = prev_level.entities, prev_level.tiles, prev_level.floor
+						for entity in entities:
+							if entity.name == "Stairs":
+								player.x, player.y = entity.x, entity.y
+					else:
+						entities = game_map.next_floor(player, message_log, constants, -1)	
+					fov_map = initialize_fov(game_map)
+					fov_recompute = True
+					libtcod.console_clear(con)
+					break
+			else:
+				message_log.add_message(Message("There are no up stairs here.", libtcod.yellow))
+
 		if level_up:
 			if level_up == 'hp':
 				player.fighter.base_max_hp += 20
@@ -193,8 +228,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 			elif game_state == GameStates.TARGETING:
 				player_turn_results.append({'targeting_cancelled': True})
 			else:
-				print("saving game")
-				save_game(player, entities, game_map, message_log, game_state)
+				save_game(player, entities, game_map, message_log, game_state, dlevels)
 				return True
 
 		if fullscreen:

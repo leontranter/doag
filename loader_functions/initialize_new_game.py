@@ -9,6 +9,7 @@ from game_messages import MessageLog
 from game_states import GameStates
 from map_objects.game_map import GameMap
 from render_functions import RenderOrder
+from dlevel import Dlevel
 
 def get_constants():
 	window_title = "Roguelike Tutorial Revised"
@@ -70,16 +71,29 @@ def get_constants():
 	return constants
 
 def get_game_variables(constants):
+	# create the player character
 	fighter_component = Fighter(hp = 100, defense=1, power=4)
 	inventory_component = Inventory(26)
 	level_component = Level()
 	equipment_component = Equipment()
 	player = Entity(0, 0, '@', libtcod.white, "Player", blocks=True, render_order=RenderOrder.ACTOR, fighter = fighter_component, inventory=inventory_component, level=level_component, equipment=equipment_component)
+	
+	# create the entities and map, save them to a Dlevel object
 	entities = [player]
 	game_map = GameMap(constants['map_width'], constants['map_height'])
 	game_map.make_map(constants['max_rooms'], constants['room_min_size'], constants['room_max_size'], constants['map_width'], constants['map_height'], player, entities)
+	
+	dlevel_1 = Dlevel(entities, game_map.tiles, game_map.dungeon_level, True)
+	dlevel_2 = Dlevel([], [], 2)
+	dlevel_3 = Dlevel([], [], 3)
+	dlevel_4 = Dlevel([], [], 4)
+	dlevel_5 = Dlevel([], [], 5)
+	dlevels = {'dlevel_1': dlevel_1, 'dlevel_2': dlevel_2, 'dlevel_3': dlevel_3, 'dlevel_4': dlevel_4, 'dlevel_5': dlevel_5}
+
 	message_log = MessageLog(constants['message_x'], constants['message_width'], constants['message_height'])
 
 	game_state = GameStates.PLAYERS_TURN
-	print("Player level up factor: {}".format(player.level.level_up_factor))
-	return player, entities, game_map, message_log, game_state
+	return player, entities, game_map, message_log, game_state, dlevels
+
+def assign_item_names():
+	pass

@@ -1,9 +1,10 @@
 from equipment_slots import EquipmentSlots
 
 class Equipment:
-	def __init__(self, main_hand=None, off_hand=None):
+	def __init__(self, main_hand=None, off_hand=None, body=None):
 		self.main_hand = main_hand
 		self.off_hand = off_hand
+		self.body = body
 
 	@property
 	def max_hp_bonus(self):
@@ -14,6 +15,9 @@ class Equipment:
 
 		if self.off_hand and self.off_hand.equippable:
 			bonus += self.off_hand.equippable.max_hp_bonus
+
+		if self.body and self.body.equippable:
+			bonus += self.body.equippable.max_hp_bonus
 
 		return bonus
 
@@ -27,6 +31,9 @@ class Equipment:
 		if self.off_hand and self.off_hand.equippable:
 			bonus += self.off_hand.equippable.power_bonus
 
+		if self.body and self.body.equippable:
+			bonus += self.body.equippable.power_bonus
+
 		return bonus
 
 	@property
@@ -38,6 +45,9 @@ class Equipment:
 
 		if self.off_hand and self.off_hand.equippable:
 			bonus += self.off_hand.equippable.defense_bonus
+
+		if self.body and self.body.equippable:
+			bonus += self.body.equippable.defense_bonus
 
 		return bonus
 
@@ -63,5 +73,19 @@ class Equipment:
 					results.append({'dequipped': self.off_hand})
 				self.off_hand = equippable_entity
 				results.append({'equipped': equippable_entity})
-
+		elif slot == EquipmentSlots.BODY:
+			if self.body == equippable_entity:
+				self.body = None
+				results.append({'equipped': equippable_entity})
+			else:
+				if self.body:
+					results.append({'dequipped': equippable_entity})
+				self.body = equippable_entity
+				results.append({'equipped': equippable_entity})
 		return results
+
+	def getEquippedItems(self):
+		equipped_items = []
+		equipped_items.append(self.main_hand)
+		equipped_items.append(self.off_hand)
+		return equipped_items

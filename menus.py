@@ -1,6 +1,10 @@
 import tcod as libtcod
+import components.equipment
+from menu_options import MenuOption
 
-def menu(con, header, options, width, screen_width, screen_height):
+#TODO: clean up these parameters - inventory and player probably not needed
+
+def menu(con, header, options, width, screen_width, screen_height, inventory=None, player=None):
 	if len(options) > 26:
 		raise ValueError('Cannot have a menu with more than 26 options!')
 
@@ -18,8 +22,10 @@ def menu(con, header, options, width, screen_width, screen_height):
 	#print all the options
 	y = header_height
 	letter_index = ord('a')
-	for option_text in options:
-		text = '(' + chr(letter_index) + ')' + option_text
+	for option in options:
+		text = '(' + chr(letter_index) + ')' + option.name
+		if inventory:
+			text = mark_equipped(text, option, inventory, player)
 		libtcod.console_print_ex(window, 0, y, libtcod.BKGND_NONE, libtcod.LEFT, text)
 		y += 1
 		letter_index += 1
@@ -29,14 +35,23 @@ def menu(con, header, options, width, screen_width, screen_height):
 	y = int(screen_height / 2 - height / 2)
 	libtcod.console_blit(window, 0, 0, width, height, 0, x, y, 1.0, 0.7)
 
-def inventory_menu(con, header, inventory, inventory_width, screen_width, screen_height):
+def inventory_menu(con, header, inventory, inventory_width, screen_width, screen_height, player=None):
 	# show a menu with each item of the inventory as an option
 	if len(inventory.items) == 0:
-		options = ['Inventory is empty.']
+		options = [MenuOption("Your inventory is empty.")]
 	else:
-		options = [item.name for item in inventory.items]
+		options = player.inventory.items
+	
+	menu(con, header, options, inventory_width, screen_width, screen_height, inventory, player)
 
-	menu(con, header, options, inventory_width, screen_width, screen_height)
+def equipment_menu(con, header, inventory, inventory_width, screen_width, screen_height, equipment, player=None):
+	equipped_items = equipment.getEquippedItems()
+	if len(equipped_items) == 0:
+		options = ["Nothing equipped."]
+	else:
+		options = [equipment.name for equipment in equipped_items]
+
+	menu(con, header, options, inventory_width, screen_width, screen_height, inventory, player)
 
 def main_menu(con, backgrond_image, screen_width, screen_height):
 	libtcod.image_blit_2x(backgrond_image, 0, 0, 0)
@@ -44,7 +59,14 @@ def main_menu(con, backgrond_image, screen_width, screen_height):
 	libtcod.console_set_default_foreground(0, libtcod.light_yellow)
 	libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height / 2) -4, libtcod.BKGND_NONE, libtcod.CENTER, 'TOMBS OF THE ANCIENT KINGS')
 	libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height /2), libtcod.BKGND_NONE, libtcod.CENTER, 'By Leon Tranter')
-	menu(con, '', ['Play a new game', 'Continue last game', 'Quit'], 24, screen_width, screen_height)
+	menuOptions = []
+	menu1 = MenuOption('Play a new game')
+	menuOptions.append(menu1)
+	menu2 = MenuOption('Continue a game')
+	menuOptions.append(menu2)
+	menu3 = MenuOption('Quit')
+	menuOptions.append(menu3)
+	menu(con, '', menuOptions, 24, screen_width, screen_height)
 
 def message_box(con, header, width, screen_width, screen_height):
 	menu(con, header, [], width, screen_width, screen_height)
@@ -70,3 +92,10 @@ def character_screen(player, character_screen_width, character_screen_height, sc
 	y = screen_height // 2 - character_screen_height // 2
 
 	libtcod.console_blit(window, 0, 0, character_screen_width, character_screen_height, 0, x, y, 1.0, 0.7)
+
+def mark_equipped(text, option, inventory, player):
+	if player.equipment.main_hand == option:
+		text += " - main hand"
+	if player.equipment.off_hand == option:
+		text += " - off-hand"
+	return text

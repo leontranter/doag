@@ -103,6 +103,12 @@ class Entity:
 		dy = other.y - self.y
 		return math.sqrt(dx ** 2 + dy ** 2)
 
+	def makeSword(self, x, y):
+		sword = Entity()
+		return sword
+
+
+
 def get_blocking_entities_at_location(entities, destination_x, destination_y):
 	for entity in entities:
 		if entity.blocks and entity.x == destination_x and entity.y == destination_y:

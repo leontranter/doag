@@ -49,7 +49,6 @@ class Inventory:
 		return results
 
 	def remove_item(self, item):
-		print("About to remove a {}.".format(item))
 		self.items.remove(item)
 
 	def drop_item(self, item):

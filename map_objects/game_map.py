@@ -2,6 +2,7 @@ from map_objects.tile import Tile
 from map_objects.rectangle import Rect
 from random import randint
 import tcod as libtcod
+import components.item
 from entity import Entity
 from components.fighter import Fighter
 from components.ai import BasicMonster
@@ -41,7 +42,7 @@ class GameMap:
 
 		return False
 
-	def make_map(self, max_rooms, room_min_size, room_max_size, map_width, map_height, player, entities):
+	def make_map(self, max_rooms, room_min_size, room_max_size, map_width, map_height, player, entities, floor_direction=1):
 		rooms = []
 		num_rooms = 0
 
@@ -96,9 +97,18 @@ class GameMap:
 				rooms.append(new_room)
 				num_rooms += 1
 
+		# create the down stairs
 		stairs_component = Stairs(self.dungeon_level + 1)
 		down_stairs = Entity(center_of_last_room_x, center_of_last_room_y, '>', libtcod.white, 'Stairs', render_order=RenderOrder.STAIRS, stairs=stairs_component)
+		if floor_direction == -1:
+			down_stairs.x, down_stairs.y = player.x, player.y
 		entities.append(down_stairs)
+
+		# if this isn't level 1, create an up stairway
+		if self.dungeon_level != 1:
+			stairs_component_up = Stairs(self.dungeon_level - 1)
+			up_stairs = Entity(player.x, player.y, '<', libtcod.white, 'Upward stairs', render_order=RenderOrder.STAIRS, stairs=stairs_component_up)
+			entities.append(up_stairs)
 
 	def create_h_tunnel(self, x1, x2, y):
 		for x in range(min(x1, x2), max(x1, x2) + 1):
@@ -112,6 +122,7 @@ class GameMap:
 
 	def place_entities(self, room, entities):
 		# get a random number of monsters
+		#max_monsters_per_room = from_dungeon_level([[2, 1], [3, 4], [5, 6]], self.dungeon_level)
 		max_monsters_per_room = from_dungeon_level([[2, 1], [3, 4], [5, 6]], self.dungeon_level)
 		max_items_per_room = from_dungeon_level([[1, 1], [2, 4]], self.dungeon_level)
 		number_of_monsters = randint(0, max_monsters_per_room)
@@ -155,7 +166,7 @@ class GameMap:
 			if not any([entity for entity in entities if entity.x == x and entity.y == y]):
 				item_choice = random_choice_from_dict(item_chances)
 				if item_choice == 'healing_potion':
-					item_component = Item(use_function=heal, amount=40)
+					item_component = Item.makeHealingPotion()
 					item = Entity(x, y, '!', libtcod.violet, 'Healing Potion', render_order=RenderOrder.ITEM, item=item_component)
 				elif item_choice == 'sword':
 					equippable_component = Equippable(EquipmentSlots.MAIN_HAND, power_bonus=3)
@@ -164,24 +175,37 @@ class GameMap:
 					equippable_component = Equippable(EquipmentSlots.OFF_HAND, defense_bonus=3)
 					item = Entity(x, y, '/', libtcod.darker_orange, 'Shield', equippable=equippable_component)
 				elif item_choice == 'fireball_scroll':
-					item_component = Item(use_function=cast_fireball, targeting=True, targeting_message=Message('Left-click a target tile for the fireball, or right-click to cancel.', libtcod.light_cyan), damage=25, radius=3)
+					item_component = Item.makeFireballScroll()
+				#	item_component = Item(use_function=cast_fireball, targeting=True, targeting_message=Message('Left-click a target tile for the fireball, or right-click to cancel.', libtcod.light_cyan), damage=25, radius=3)
 					item = Entity(x, y, '#', libtcod.red, 'Fireball scroll', render_order=RenderOrder.ITEM, item=item_component)
 				elif item_choice == 'confusion_scroll':
-					item_component = Item(use_function=cast_confuse, targeting=True, targeting_message=Message('Left-click on an enemy to confuse it or right-click to cancel.', libtcod.light_cyan))
+					item_component = Item.makeConfusionScroll()
+					#item_component = Item(use_function=cast_confuse, targeting=True, targeting_message=Message('Left-click on an enemy to confuse it or right-click to cancel.', libtcod.light_cyan))
 					item = Entity(x, y, '#', libtcod.light_pink, 'Confusion scroll', render_order=RenderOrder.ITEM, item=item_component)
 				else:
-					item_component = Item(use_function=cast_lightning, damage=40, maximum_range=5)
+					item_component = Item.makeLightningScroll()
+					#item_component = Item(use_function=cast_lightning, damage=40, maximum_range=5)
 					item = Entity(x, y, '#', libtcod.yellow, 'Lightning Scroll', render_order=RenderOrder.ITEM, item=item_component)
 				entities.append(item)
 
-	def next_floor(self, player, message_log, constants):
-		self.dungeon_level += 1
+	def next_floor(self, player, message_log, constants, floor_direction):
+		self.dungeon_level += floor_direction
 		entities = [player]
 
 		self.tiles = self.initialize_tiles()
-		self.make_map(constants['max_rooms'], constants['room_min_size'], constants['room_max_size'], constants['map_width'], constants['map_height'], player, entities)
+		self.make_map(constants['max_rooms'], constants['room_min_size'], constants['room_max_size'], constants['map_width'], constants['map_height'], player, entities, floor_direction)
 		
-		player.fighter.heal(player.fighter.max_hp // 2)
+		player.fighter.heal(10)
 		message_log.add_message(Message('You take a moment to rest and recover your strength.', libtcod.light_violet))
 
 		return entities
+
+	def save_floor(self, dlevels, entities):
+		dlevels["dlevel_" + str(self.dungeon_level)].entities = entities
+		dlevels["dlevel_" + str(self.dungeon_level)].tiles = self.tiles
+
+	def load_floor(self, dlevels, dungeon_level):
+		entities = dlevels[dungeon_level].entities
+		tiles = dlevels[dungeon_level].tiles
+		self.dungeon_level += 1
+		return entities, tiles, self.dungeon_level

@@ -2,12 +2,16 @@ import tcod as libtcod
 from game_messages import Message
 
 class Fighter:
-	def __init__(self, hp, defense, power, xp=0):
+	def __init__(self, hp, defense, power, xp=0, ST=10, DX=10, IQ=10, HT=10):
 		self.base_max_hp = hp
 		self.hp = hp
 		self.base_defense = defense
 		self.base_power = power
 		self.xp = xp
+		self.ST = ST
+		self.DX = DX
+		self.IQ = IQ
+		self.HT = HT
 
 	@property
 	def max_hp(self):

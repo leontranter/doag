@@ -24,3 +24,15 @@ def from_dungeon_level(table, dungeon_level):
 			return value
 
 	return 0
+
+def diceRoll(numberOfDice, modifier=0):
+	roll = 0
+	for _ in numberOfDice:
+		thisRoll = randint(1, 6)
+		roll += thisRoll
+
+	roll += modifier
+	return roll
+
+def contestOf(compare1, compare2):
+	pass

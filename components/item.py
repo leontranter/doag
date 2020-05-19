@@ -1,5 +1,5 @@
 import tcod as libtcod
-from item_functions import heal, cast_fireball, cast_lightning, cast_confuse
+from item_functions import heal, cast_fireball, cast_lightning, cast_confuse, learn_fireball, learn_heal
 from game_messages import Message
 
 class Item:
@@ -18,11 +18,20 @@ class Item:
 		return tempItem
 
 	def makeFireballScroll():
-		tempItem = ItemFactory(use_function=cast_fireball, targeting_message=Message('Left-click a target tile for the fireball, or right-click to cancel.', libtcod.light_cyan), damage=25, radius=3)
+		tempItem = ItemFactory(use_function=cast_fireball, targeting=True, targeting_message=Message('Left-click a target tile for the fireball, or right-click to cancel.', libtcod.light_cyan), damage=25, radius=3)
 		return tempItem
 
 	def makeConfusionScroll():
 		tempItem = ItemFactory(use_function=cast_confuse, targeting=True, targeting_message=Message('Left-click on an enemy to confuse it or right-click to cancel.', libtcod.light_cyan))
+		return tempItem
+
+	def makeFireballBook():
+		tempItem = ItemFactory(use_function=learn_fireball, spell="Fireball")
+		return tempItem
+
+	def makeHealBook():
+		tempItem = ItemFactory(use_function=learn_heal, spell="Heal")
+		return tempItem
 
 class ItemFactory:
 	def __init__(self, use_function=None, targeting=False, targeting_message=None, **kwargs):

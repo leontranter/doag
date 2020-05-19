@@ -14,6 +14,8 @@ def handle_keys(key, game_state):
 		return handle_level_up_menu(key)
 	elif game_state == GameStates.CHARACTER_SCREEN:
 		return handle_character_screen(key)
+	elif game_state == GameStates.SPELLS_SCREEN:
+		return handle_spells_screen(key)
 	return {}
 
 
@@ -56,9 +58,12 @@ def handle_player_turn_keys(key):
 		return {'take_stairs_up': True}
 	elif key_char == 'c':
 		return {'show_character_screen': True}
+	#TODO: do I want this equipment screen?
 	elif key_char == 'e':
 		return {'show_equipment_screen': True}
-	
+	elif key_char == 'k':
+		print("Zap!")
+		return {'show_spells_screen': True}
 	elif key.vk == libtcod.KEY_ESCAPE:
 		#exit the game
 		return {'exit': True}
@@ -135,4 +140,16 @@ def handle_character_screen(key):
 	if key.vk == libtcod.KEY_ESCAPE:
 		return {'exit': True}
 
-	return {}	
+	return {}
+
+def handle_spells_screen(key):
+	index = key.c - ord('a')
+
+	if index >= 0:
+		return {'spells_index': index}
+	if key.vk == libtcod.KEY_ENTER and key.lalt:
+		return {'fullscreen': True}
+	elif key.vk == libtcod.KEY_ESCAPE:
+		return {'exit': True}
+
+	return {}

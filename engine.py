@@ -10,6 +10,7 @@ from death_functions import kill_monster, kill_player
 from game_messages import Message
 from menus import main_menu, message_box
 from dlevel import Dlevel
+from spells import Spell
 #from map_objects.game_map import check_floor_is_explored, save_floor, load_floor
 
 def main():
@@ -112,6 +113,8 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 		exit = action.get('exit')
 		fullscreen = action.get('fullscreen')
 		equipment_screen = action.get('show_equipment_screen')
+		spells_screen = action.get('show_spells_screen')
+		spells_index = action.get('spells_index')
 
 		left_click = mouse_action.get('left_click')
 		right_click = mouse_action.get('right_click')
@@ -203,7 +206,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 		if level_up:
 			if level_up == 'hp':
 				player.fighter.base_max_hp += 20
-				player.fighter_hp += 20
+				player.fighter.hp += 20
 			elif level_up == 'str':
 				player.fighter.base_power += 1
 			elif level_up == 'def':
@@ -215,15 +218,27 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 			previous_game_state = game_state
 			game_state = GameStates.CHARACTER_SCREEN
 
+		if spells_screen:
+			previous_game_state = game_state
+			game_state = GameStates.SPELLS_SCREEN
+
+		if spells_index is not None and spells_index < len(player.caster.spells):
+			spell = player.caster.spells[spells_index]
+			player_turn_results.extend(player.caster.cast(spell, entities=entities, fov_map=fov_map))
+
 		if game_state == GameStates.TARGETING:
 			if left_click:
 				target_x, target_y = left_click
-				item_use_results = player.inventory.use(targeting_item, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y)
-				player_turn_results.extend(item_use_results)
+				if targeting_item:	
+					item_use_results = player.inventory.use(targeting_item, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y)
+					player_turn_results.extend(item_use_results)
+				elif targeting_spell:
+					spell_use_results = player.caster.use(targeting_spell, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y)
+					player_turn_results.extend(spell_use_results)
 			elif right_click:
 				player_turn_results.append({'targeting_cancelled': True})
 		if exit:
-			if game_state in (GameStates.SHOW_INVENTORY, GameStates.DROP_INVENTORY, GameStates.CHARACTER_SCREEN):
+			if game_state in (GameStates.SHOW_INVENTORY, GameStates.DROP_INVENTORY, GameStates.CHARACTER_SCREEN, GameStates.SPELLS_SCREEN):
 				game_state = previous_game_state
 			elif game_state == GameStates.TARGETING:
 				player_turn_results.append({'targeting_cancelled': True})
@@ -241,9 +256,12 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 			item_consumed = player_turn_result.get('consumed')
 			item_dropped = player_turn_result.get('item_dropped')
 			targeting = player_turn_result.get('targeting')
+			spell_targeting = player_turn_result.get('spell_targeting')
 			targeting_cancelled = player_turn_result.get('targeting_cancelled')
 			xp = player_turn_result.get('xp')
 			equip = player_turn_result.get('equip')
+			cast = player_turn_result.get('cast')
+			not_cast = player_turn_result.get('not_cast')
 
 			if message:
 				message_log.add_message(message)
@@ -263,6 +281,11 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 				game_state = GameStates.TARGETING
 				targeting_item = targeting
 				message_log.add_message(targeting_item.item.targeting_message)
+			if spell_targeting:
+				previous_game_state = GameStates.PLAYERS_TURN
+				game_state = GameStates.TARGETING
+				targeting_spell = targeting
+				message_log.add_message(targeting_spell.spell.targeting_message)
 			if item_dropped:
 				entities.append(item_dropped)
 				game_state = GameStates.ENEMY_TURN
@@ -279,6 +302,12 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 			if targeting_cancelled:
 				game_state = previous_game_state
 				message_log.add_message(Message('Targeting cancelled'))
+			if cast:
+				message_log.add_message(Message('You cast the {} spell.'.format(cast), libtcod.yellow))
+				game_state = GameStates.ENEMY_TURN
+			if not_cast:
+				message_log.add_message(Message("You don't have enough mana to cast that spell.", libtcod.yellow))
+				game_state = GameStates.ENEMY_TURN
 			if xp:
 				leveled_up = player.level.add_xp(xp)
 				message_log.add_message(Message('You gain {0} xp.'.format(xp)))

@@ -37,7 +37,7 @@ def menu(con, header, options, width, screen_width, screen_height, inventory=Non
 
 def inventory_menu(con, header, inventory, inventory_width, screen_width, screen_height, player=None):
 	# show a menu with each item of the inventory as an option
-	if len(inventory.items) == 0:
+	if len(player.inventory.items) == 0:
 		options = [MenuOption("Your inventory is empty.")]
 	else:
 		options = player.inventory.items
@@ -59,22 +59,24 @@ def main_menu(con, backgrond_image, screen_width, screen_height):
 	libtcod.console_set_default_foreground(0, libtcod.light_yellow)
 	libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height / 2) -4, libtcod.BKGND_NONE, libtcod.CENTER, 'TOMBS OF THE ANCIENT KINGS')
 	libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height /2), libtcod.BKGND_NONE, libtcod.CENTER, 'By Leon Tranter')
-	menuOptions = []
-	menu1 = MenuOption('Play a new game')
-	menuOptions.append(menu1)
-	menu2 = MenuOption('Continue a game')
-	menuOptions.append(menu2)
-	menu3 = MenuOption('Quit')
-	menuOptions.append(menu3)
-	menu(con, '', menuOptions, 24, screen_width, screen_height)
+	options = buildTextMenu(['Play a new game', 'Continue a game', 'Quit'])	
+	menu(con, '', options, 24, screen_width, screen_height)
 
 def message_box(con, header, width, screen_width, screen_height):
 	menu(con, header, [], width, screen_width, screen_height)
 
 def level_up_menu(con, header, player, menu_width, screen_width, screen_height):
-	options = ['Constitution (+20HP, from {0})'.format(player.fighter.max_hp), 'Strength (+1 attack, from {0})'.format(player.fighter.power), 'Agility (+1 defense, from {0})'.format(player.fighter.defense)]
+	options = buildTextMenu(['Constitution (+20HP)', 'Strength (+1 attack)', 'Agility (+1 defense)'])
 
 	menu(con, header, options, menu_width, screen_width, screen_height)
+
+def spells_menu(con, header, caster, spells_width, screen_width, screen_height, player=None):
+	if len(caster.spells) == 0:
+		options = [MenuOption("You don't know any spells yet.")]
+	else:
+		options = player.caster.spells
+
+	menu(con, header, options, spells_width, screen_width, screen_height)
 
 def character_screen(player, character_screen_width, character_screen_height, screen_width, screen_height):
 	window = libtcod.console_new(character_screen_width, character_screen_height)
@@ -98,4 +100,14 @@ def mark_equipped(text, option, inventory, player):
 		text += " - main hand"
 	if player.equipment.off_hand == option:
 		text += " - off-hand"
+	if player.equipment.body == option:
+		text += " - worn on body"
 	return text
+
+def buildTextMenu(optionsList):
+	returnList = []
+	for optionText in optionsList:
+		tempOption = MenuOption(optionText)
+		returnList.append(tempOption)
+
+	return returnList

@@ -87,4 +87,18 @@ def cast_confuse(*args, **kwargs):
 	else:
 		results.append({'consumed': False, 'message': Message('There is no targetable enemy at that location.', libtcod.yellow)})
 
-	return results	
+	return results
+
+def learn_fireball(*args, **kwargs):
+	entity = args[0]
+	results = []
+	entity.caster.learnFireballSpell()
+	results.append({'consumed': True, 'message': Message('You learned the Fireball spell!', libtcod.light_green)})
+	return results
+
+def learn_heal(*args, **kwargs):
+	entity = args[0]
+	results = []
+	entity.caster.learnHealSpell()
+	results.append({'consumed': True, 'message': Message('You learned the Heal spell!', libtcod.light_green)})
+	return results

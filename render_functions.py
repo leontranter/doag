@@ -1,7 +1,7 @@
 import tcod as libtcod
 from enum import Enum
 from game_states import GameStates
-from menus import inventory_menu, level_up_menu, character_screen
+from menus import inventory_menu, level_up_menu, character_screen, spells_menu
 
 class RenderOrder(Enum):
 	STAIRS = 1
@@ -18,7 +18,7 @@ def get_names_under_mouse(mouse, entities, fov_map):
 
 def render_bar(panel, x, y, total_width, name, value, maximum, bar_color, back_color):
 	bar_width = int(float(value) / maximum * total_width)
-
+	
 	libtcod.console_set_default_background(panel, back_color)
 	libtcod.console_rect(panel, x, y, total_width, 1, False, libtcod.BKGND_SCREEN)
 
@@ -67,6 +67,7 @@ def render_all(con, panel, entities, player, game_map, fov_map, fov_recompute, m
 		y += 1
 
 	render_bar(panel, 1, 1, bar_width, 'HP', player.fighter.hp, player.fighter.max_hp, libtcod.light_red, libtcod.darker_red)
+	render_bar(panel, 60, 1, bar_width, 'Mana', player.caster.mana, player.caster.max_mana, libtcod.blue, libtcod.darker_blue)
 	libtcod.console_print_ex(panel, 1, 3, libtcod.BKGND_NONE, libtcod.LEFT, 'Dungeon level: {0}'.format(game_map.dungeon_level))
 
 	libtcod.console_set_default_foreground(panel, libtcod.light_gray)
@@ -79,13 +80,16 @@ def render_all(con, panel, entities, player, game_map, fov_map, fov_recompute, m
 		else:
 			inventory_title = 'Press the key next to an item to drop it, or Esc to cancel.\n'
 		# TODO: Fix this! player shouldn't be here twice
-		inventory_menu(con, inventory_title, player.inventory, 50, screen_width, screen_height, player)
+		inventory_menu(con, inventory_title, player, 50, screen_width, screen_height, player)
 
 	elif game_state == GameStates.LEVEL_UP:
 		level_up_menu(con, 'Level up! Choose a stat to raise:', player, 40, screen_width, screen_height)
 
 	elif game_state == GameStates.CHARACTER_SCREEN:
 		character_screen(player, 30, 10, screen_width, screen_height)
+
+	elif game_state == GameStates.SPELLS_SCREEN:
+		spells_menu(con, "Choose a spell to cast...", player.caster, 50, screen_width, screen_height, player)
 
 def clear_all(con, entities):
 	for entity in entities:

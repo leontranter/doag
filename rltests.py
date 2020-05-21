@@ -35,6 +35,23 @@ class EntityTests(unittest.TestCase):
 		test_caster.learnFireballSpell()
 		self.assertEqual(test_caster.spells[0].name, "Fireball")
 
+class SpellTests(unittest.TestCase):
+	def test_can_learn_heal(self):
+		test_caster = Caster(spells=[], max_mana=50)
+		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", caster=test_caster)
+		test_caster.learnHealSpell()
+		self.assertEqual(test_caster.spells[0].name, "Heal")
+
+	def test_can_learn_multiple_spells(self):
+		test_caster = Caster(spells=[], max_mana=50)
+		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", caster=test_caster)
+		test_caster.learnHealSpell()
+		test_caster.learnFireballSpell()
+		self.assertEqual(test_caster.spells[0].name, "Heal")
+		self.assertEqual(test_caster.spells[1].name, "Fireball")		
+
+
+
 class MapTests(unittest.TestCase):
 	def test_can_make_map(self):
 		test_map = maps.GameMap(80, 45)

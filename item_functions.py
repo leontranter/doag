@@ -92,13 +92,23 @@ def cast_confuse(*args, **kwargs):
 def learn_fireball(*args, **kwargs):
 	entity = args[0]
 	results = []
-	entity.caster.learnFireballSpell()
-	results.append({'consumed': True, 'message': Message('You learned the Fireball spell!', libtcod.light_green)})
+	for spell in entity.caster.spells:
+		if spell.name == "Fireball":
+			results.append({'consumed': False, 'message': Message("You already know that spell.", libtcod.light_green)})
+			break
+	else:
+		entity.caster.learnFireballSpell()
+		results.append({'consumed': True, 'message': Message('You learned the Fireball spell!', libtcod.light_green)})
 	return results
 
 def learn_heal(*args, **kwargs):
 	entity = args[0]
 	results = []
-	entity.caster.learnHealSpell()
-	results.append({'consumed': True, 'message': Message('You learned the Heal spell!', libtcod.light_green)})
+	for spell in entity.caster.spells:
+		if spell.name == "Heal":
+			results.append({'consumed': False, 'message': Message("You already know that spell.", libtcod.light_green)})
+			break
+	else:
+		entity.caster.learnHealSpell()
+		results.append({'consumed': True, 'message': Message('You learned the Heal spell!', libtcod.light_green)})
 	return results

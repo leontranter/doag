@@ -32,8 +32,6 @@ class GameMap:
 		for x in range(room.x1 + 1, room.x2):
 			for y in range(room.y1 + 1, room.y2):
 				self.tiles[x][y].blocked = False
-				#print("self.tiles for {},{} is blocked?".format(x, y))
-				#print(self.is_blocked(x,y))
 				self.tiles[x][y].block_sight = False
 
 	def is_blocked(self, x, y):
@@ -124,7 +122,7 @@ class GameMap:
 		# get a random number of monsters
 		#max_monsters_per_room = from_dungeon_level([[2, 1], [3, 4], [5, 6]], self.dungeon_level)
 		max_monsters_per_room = from_dungeon_level([[2, 1], [3, 4], [5, 6]], self.dungeon_level)
-		max_items_per_room = from_dungeon_level([[1, 1], [2, 4]], self.dungeon_level)
+		max_items_per_room = from_dungeon_level([[1, 1], [2, 4]], self.dungeon_level)\
 		number_of_monsters = randint(0, max_monsters_per_room)
 		number_of_items = randint(0, max_items_per_room)
 
@@ -136,11 +134,11 @@ class GameMap:
 		item_chances = {
 			'healing_potion': 35,
 			'armor': 20,
-			'heal_book': 90,
+			'fireball_book': 50,
 			'sword': from_dungeon_level([[25, 1]], self.dungeon_level),
 			'shield': from_dungeon_level([[25, 1]], self.dungeon_level),
-			'lightning_scroll': from_dungeon_level([[25, 3]], self.dungeon_level),
-			'fireball_scroll': from_dungeon_level([[25, 2]], self.dungeon_level),
+			'lightning_scroll': from_dungeon_level([[15, 3]], self.dungeon_level),
+			'fireball_scroll': from_dungeon_level([[55, 2]], self.dungeon_level),
 			'confusion_scroll': from_dungeon_level([[10, 2]], self.dungeon_level)
 		}
 

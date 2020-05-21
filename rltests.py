@@ -5,11 +5,35 @@ import map_objects.tile
 import entity
 import tcod as libtcod
 import map_objects.rectangle as rectangle
+from components.fighter import Fighter
+from components.caster import Caster
 
 class EntityTests(unittest.TestCase):
 	def test_can_make_entity(self):
-		test_entity = entity.Entity(1, 1, 'A', libtcod.white)
+		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player")
 		self.assertEqual(test_entity.x, 1)
+
+	def test_can_make_entity_with_fighter(self):
+		test_fighter = Fighter(100, 5, 10)
+		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", fighter=test_fighter)
+		self.assertEqual(test_entity.fighter, test_fighter)
+		self.assertEqual(test_entity.fighter.hp, 100)
+		self.assertEqual(test_entity.fighter.max_hp, 100)
+		self.assertEqual(test_entity.fighter.defense, 5)
+		self.assertEqual(test_entity.fighter.power, 10)
+
+	def test_can_make_entity_with_caster(self):
+		test_caster = Caster(spells=[], max_mana=20)
+		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", caster=test_caster)
+		self.assertEqual(test_entity.caster, test_caster)
+		self.assertEqual(test_entity.caster.mana, 20)
+		self.assertEqual(test_entity.caster.max_mana, 20)
+
+	def test_can_make_entity_with_caster_who_knows_spells(self):
+		test_caster = Caster(spells=[], max_mana=50)
+		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", caster=test_caster)
+		test_caster.learnFireballSpell()
+		self.assertEqual(test_caster.spells[0].name, "Fireball")
 
 class MapTests(unittest.TestCase):
 	def test_can_make_map(self):
@@ -18,22 +42,6 @@ class MapTests(unittest.TestCase):
 		self.assertEqual(test_map.height, 45)
 		self.assertEqual(len(test_map.tiles), 80)
 		self.assertEqual(len(test_map.tiles[0]), 45)
-
-	def test_map_is_mainly_blocked(self):
-		test_map2 = maps.GameMap(80, 45)
-		self.assertEqual(test_map2.tiles[0][0].blocked, True)
-		self.assertEqual(test_map2.tiles[0][0].block_sight, True)
-		test_map2.make_map()
-		self.assertEqual(test_map2.tiles[21][16].blocked, False)
-		self.assertEqual(test_map2.tiles[21][16].block_sight, False)
-
-	def test_can_make_h_tunnel(self):
-		test_map3 = maps.GameMap(80, 45)
-		self.assertEqual(test_map3.tiles[25][23].blocked, True)
-		self.assertEqual(test_map3.tiles[25][23].block_sight, True)
-		test_map3.make_map()
-		self.assertEqual(test_map3.tiles[25][23].blocked, False)
-		self.assertEqual(test_map3.tiles[25][23].blocked, False)
 
 if __name__ == "__main__":
 	unittest.main()

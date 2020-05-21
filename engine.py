@@ -15,7 +15,6 @@ from spells import Spell
 
 def main():
 	constants = get_constants()
-	print(constants)
 	libtcod.console_set_custom_font('arial10x10.png', libtcod.FONT_TYPE_GREYSCALE | libtcod.FONT_LAYOUT_TCOD)
 	libtcod.console_init_root(constants['screen_width'], constants['screen_height'], constants['window_title'], False)
 
@@ -228,12 +227,14 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 
 		if game_state == GameStates.TARGETING:
 			if left_click:
+				print("left clicked")
 				target_x, target_y = left_click
 				if targeting_item:	
 					item_use_results = player.inventory.use(targeting_item, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y)
 					player_turn_results.extend(item_use_results)
-				elif targeting_spell:
-					spell_use_results = player.caster.use(targeting_spell, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y)
+				elif spell_targeting:
+					print("Targeting this spell...")
+					spell_use_results = player.caster.cast(spell_targeting, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y)
 					player_turn_results.extend(spell_use_results)
 			elif right_click:
 				player_turn_results.append({'targeting_cancelled': True})
@@ -284,8 +285,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 			if spell_targeting:
 				previous_game_state = GameStates.PLAYERS_TURN
 				game_state = GameStates.TARGETING
-				targeting_spell = targeting
-				message_log.add_message(targeting_spell.spell.targeting_message)
+				message_log.add_message(spell_targeting.targeting_message)
 			if item_dropped:
 				entities.append(item_dropped)
 				game_state = GameStates.ENEMY_TURN

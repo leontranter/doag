@@ -10,7 +10,7 @@ class Caster:
 		self.mana = max_mana
 
 	def learnFireballSpell(self):
-		spell = SpellFactory("Fireball", 10, cast_fireball, targeting=True, targeting_message="Choose a target for your fireball...", damage=30, radius=3)
+		spell = SpellFactory("Fireball", 10, cast_fireball, targeting=True, targeting_message=Message('Left-click a target tile for the fireball, or right-click to cancel.', libtcod.light_cyan), damage=30, radius=3)
 		self.spells.append(spell)
 
 	def learnHealSpell(self):
@@ -20,26 +20,22 @@ class Caster:
 	#def removeSpell(self, spell):
 		#pass
 
-	def cast(self, spell_entity, **kwargs):
+	def cast(self, spell, **kwargs):
 		results = []
-		
-		spell_component = spell_entity
 
-		print(spell_component.__dict__)
-		if spell_component.mana_cost > self.mana:
-			print("cost: {}, self mana: {}".format(spell_component.mana_cost, self.mana))
-			results.append({'not_cast': spell_component.name})
+		if spell.mana_cost > self.mana:
+			results.append({'not_cast': spell.name})
 			return results
 
-		if spell_component.targeting and not (kwargs.get('target_x') or kwargs.get('target_y')):
-			results.append({'spell_targeting': spell_entity})
+		if spell.targeting and not (kwargs.get('target_x') or kwargs.get('target_y')):
+			results.append({'spell_targeting': spell})
 		else:
-			kwargs = {**spell_component.function_kwargs, **kwargs}
-			self.mana -= spell_component.mana_cost
-			spell_cast_results = spell_component.use_function(self.owner, **kwargs)
+			kwargs = {**spell.function_kwargs, **kwargs}
+			self.mana -= spell.mana_cost
+			spell_cast_results = spell.use_function(self.owner, **kwargs)
 
 			results.extend(spell_cast_results)
-		results.append({'cast': spell_component.name})
+			results.append({'cast': spell.name})
 		return results
 
 class SpellFactory:

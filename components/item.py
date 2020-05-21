@@ -38,4 +38,4 @@ class ItemFactory:
 		self.use_function = use_function
 		self.targeting = targeting
 		self.targeting_message = targeting_message
-		self.function_kwargs = kwargs
+		self.function_kwargs = kwargs 

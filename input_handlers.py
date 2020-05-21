@@ -62,7 +62,6 @@ def handle_player_turn_keys(key):
 	elif key_char == 'e':
 		return {'show_equipment_screen': True}
 	elif key_char == 'k':
-		print("Zap!")
 		return {'show_spells_screen': True}
 	elif key.vk == libtcod.KEY_ESCAPE:
 		#exit the game

@@ -39,7 +39,6 @@ def render_all(con, panel, entities, player, game_map, fov_map, fov_recompute, m
 
 				if visible:
 					if wall:
-						#print("variables are: {} {} {} {}".format(con, x, y, colors.get('light_wall')))
 						libtcod.console_set_char_background(con, x, y, colors.get('light_wall'), libtcod.BKGND_SET)
 					else:
 						libtcod.console_set_char_background(con, x, y, colors.get('light_ground'), libtcod.BKGND_SET)

@@ -8,7 +8,7 @@ def heal(*args, **kwargs):
 
 	results = []
 
-	if entity.fighter.hp == entity.fighter.max_hp:
+	if entity.stats.hp == entity.stats.max_hp:
 		results.append({'consumed': False, 'message': Message('You are already at full health.', libtcod.yellow)})
 	else:
 		entity.fighter.heal(amount)

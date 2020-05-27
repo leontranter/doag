@@ -16,7 +16,10 @@ def kill_monster(monster):
 	monster.blocks = False
 	monster.fighter = None
 	monster.ai = None
-	monster.name = 'remains of a ' + monster.name
+	if monster.name[0].lower() in 'aeiou':
+		monster.name = 'remains of an ' + monster.name	
+	else:
+		monster.name = 'remains of a ' + monster.name
 	monster.render_order = RenderOrder.CORPSE
 
 	return death_message

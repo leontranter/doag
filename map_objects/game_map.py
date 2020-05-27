@@ -9,7 +9,7 @@ from components.ai import BasicMonster
 from render_functions import RenderOrder
 from components.item import Item, ItemFactory
 from components.equipment import EquipmentSlots
-from components.equippable import Equippable
+from components.equippable import Equippable, EquippableFactory
 from components.stairs import Stairs
 from item_functions import cast_fireball, cast_lightning, heal, cast_confuse
 from game_messages import Message
@@ -78,6 +78,8 @@ class GameMap:
 					# this is the first room, where the player starts
 					player.x = new_x
 					player.y = new_y
+					# TODO: This is only for debugging!!!!
+					self.spawn_items(new_room, entities, x, y)
 				else:
 					# for all other rooms, connect it to the previous room with a tunnel
 					(prev_x, prev_y) = rooms[num_rooms -1].center()
@@ -123,8 +125,7 @@ class GameMap:
 		# get a random number of monsters
 		#max_monsters_per_room = from_dungeon_level([[2, 1], [3, 4], [5, 6]], self.dungeon_level)
 		max_monsters_per_room = from_dungeon_level([[2, 1], [3, 4], [5, 6]], self.dungeon_level)
-		#max_items_per_room = from_dungeon_level([[1, 1], [2, 4]], self.dungeon_level)
-		max_items_per_room = 8
+		max_items_per_room = from_dungeon_level([[1, 1], [2, 4]], self.dungeon_level)
 		number_of_monsters = randint(0, max_monsters_per_room)
 		number_of_items = randint(0, max_items_per_room)
 
@@ -137,9 +138,12 @@ class GameMap:
 		item_chances = {
 			'healing_potion': 35,
 			'armor': 20,
-			'fireball_book': 50,
-			'sword': from_dungeon_level([[25, 1]], self.dungeon_level),
-			'shield': from_dungeon_level([[25, 1]], self.dungeon_level),
+			#'fireball_book': 50,
+			'zweihander': 20,
+			'bow': 30,
+			'arrows': 20,
+			'sword': from_dungeon_level([[15, 1]], self.dungeon_level),
+			'shield': from_dungeon_level([[35, 1]], self.dungeon_level),
 			'lightning_scroll': from_dungeon_level([[15, 3]], self.dungeon_level),
 			'fireball_scroll': from_dungeon_level([[55, 2]], self.dungeon_level),
 			'confusion_scroll': from_dungeon_level([[10, 2]], self.dungeon_level)
@@ -170,14 +174,26 @@ class GameMap:
 					item_component = ItemFactory.makeHealingPotion()
 					item = Entity(x, y, '!', libtcod.violet, 'Healing Potion', render_order=RenderOrder.ITEM, item=item_component)
 				elif item_choice == 'sword':
-					equippable_component = Equippable(EquipmentSlots.MAIN_HAND, power_bonus=3)
-					item = Entity(x, y, '/', libtcod.sky, 'Sword', equippable=equippable_component)
+					equippable_component = EquippableFactory.makeSword()
+					item = Entity(x, y, '(', libtcod.sky, 'Sword', equippable=equippable_component)
 				elif item_choice == 'shield':
-					equippable_component = Equippable(EquipmentSlots.OFF_HAND, defense_bonus=1)
-					item = Entity(x, y, '/', libtcod.darker_orange, 'Shield', equippable=equippable_component)
+					equippable_component = EquippableFactory.makeShield()
+					item = Entity(x, y, '[', libtcod.darker_orange, 'Shield', equippable=equippable_component)
 				elif item_choice == 'armor':
-					equippable_component = Equippable(EquipmentSlots.BODY, defense_bonus=2)
-					item = Entity(x, y, '/', libtcod.darker_orange, 'Armor', equippable=equippable_component)
+					equippable_component = EquippableFactory.makeLeatherArmor()
+					item = Entity(x, y, '[', libtcod.darker_orange, 'Armor', equippable=equippable_component)
+				elif item_choice == 'zweihander':
+					equippable_component = EquippableFactory.makeZweihander()
+					item = Entity(x, y, '(', libtcod.red, 'Zweihander', equippable = equippable_component)
+				elif item_choice == 'dagger':
+					equippable_component = EquippableFactory.makeDagger()
+					item = Entity(x, y, '(', libtcod.red, 'Dagger', equippable = equippable_component)
+				elif item_choice == 'bow':
+					equippable_component = EquippableFactory.makeBow()
+					item = Entity(x, y, '(', libtcod.red, 'Bow', equippable = equippable_component)
+				elif item_choice == 'arrows':
+					equippable_component = EquippableFactory.makeArrows()
+					item = Entity(x, y, '(', libtcod.red, 'A quiver of arrows', equippable=equippable_component)
 				elif item_choice == 'fireball_scroll':
 					item_component = ItemFactory.makeFireballScroll()
 					#item_component = Item(use_function=cast_fireball, targeting=True, targeting_message=Message('Left-click a target tile for the fireball, or right-click to cancel.', libtcod.light_cyan), damage=25, radius=3)
@@ -197,6 +213,8 @@ class GameMap:
 					#item_component = Item(use_function=cast_lightning, damage=40, maximum_range=5)
 					item = Entity(x, y, '?', libtcod.yellow, 'Lightning Scroll', render_order=RenderOrder.ITEM, item=item_component)
 				entities.append(item)
+		
+
 
 	def next_floor(self, player, message_log, constants, floor_direction):
 		self.dungeon_level += floor_direction
@@ -205,9 +223,6 @@ class GameMap:
 		self.tiles = self.initialize_tiles()
 		self.make_map(constants['max_rooms'], constants['room_min_size'], constants['room_max_size'], constants['map_width'], constants['map_height'], player, entities, floor_direction)
 		
-		player.fighter.heal(10)
-		message_log.add_message(Message('You take a moment to rest and recover your strength.', libtcod.light_violet))
-
 		return entities
 
 	def save_floor(self, dlevels, entities):
@@ -219,3 +234,11 @@ class GameMap:
 		tiles = dlevels[dungeon_level].tiles
 		self.dungeon_level += 1
 		return entities, tiles, self.dungeon_level
+
+	def spawn_items(self, room, entities, x, y):
+		equippable_component = EquippableFactory.makeShield()
+		item = Entity(x, y, '[', libtcod.darker_orange, 'Shield', equippable=equippable_component)
+		entities.append(item)
+		equippable_component = EquippableFactory.makeZweihander()
+		item = Entity(x, y, '(', libtcod.darker_orange, 'Zweihander', equippable=equippable_component)
+		entities.append(item)

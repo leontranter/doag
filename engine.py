@@ -1,6 +1,7 @@
 import tcod as libtcod
 from input_handlers import handle_keys, handle_mouse, handle_main_menu
-from loader_functions.initialize_new_game import get_constants, get_game_variables
+from loader_functions.initialize_new_game import get_game_variables
+from loader_functions.constants import get_constants
 from loader_functions.data_loaders import load_game, save_game
 from entity import Entity, get_blocking_entities_at_location
 from render_functions import clear_all, render_all
@@ -53,7 +54,7 @@ def main():
 			if show_load_error_message and (new_game or load_saved_game or exit_game):
 				show_load_error_message = False
 			elif new_game:
-				player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants)
+				player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants, start_equipped=True)
 				game_state = GameStates.PLAYERS_TURN
 				show_main_menu = False
 			elif load_saved_game:
@@ -82,6 +83,11 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 	previous_game_state = game_state
 
 	targeting_item = None
+
+	print(player.fighter)
+	print(player.fighter.__dict__)
+	print(player.fighter.owner)
+	print(player.fighter.owner.stats)
 
 	while not libtcod.console_is_window_closed():
 		libtcod.sys_check_for_event(libtcod.EVENT_KEY_PRESS | libtcod.EVENT_MOUSE, key, mouse)
@@ -114,6 +120,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 		equipment_screen = action.get('show_equipment_screen')
 		spells_screen = action.get('show_spells_screen')
 		spells_index = action.get('spells_index')
+		fire_weapon = action.get('fire_weapon')
 
 		left_click = mouse_action.get('left_click')
 		right_click = mouse_action.get('right_click')
@@ -127,7 +134,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 			if not game_map.is_blocked(destination_x, destination_y):
 				target = get_blocking_entities_at_location(entities, destination_x, destination_y)
 				if target:
-					attack_results = player.fighter.attack(target)
+					attack_results = player.fighter.melee_attack(target)
 					player_turn_results.extend(attack_results)
 				else:	
 					player.move(dx, dy)
@@ -204,12 +211,12 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 
 		if level_up:
 			if level_up == 'hp':
-				player.fighter.base_max_hp += 20
-				player.fighter.hp += 20
+				player.stats.base_max_hp += 20
+				player.stats.hp += 20
 			elif level_up == 'str':
-				player.fighter.base_power += 1
+				player.stats.ST += 1
 			elif level_up == 'def':
-				player.fighter.base_defense += 1
+				player.fighter.base_DR += 1
 
 			game_state = previous_game_state
 
@@ -225,17 +232,24 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 			spell = player.caster.spells[spells_index]
 			player_turn_results.extend(player.caster.cast(spell, entities=entities, fov_map=fov_map))
 
+		if fire_weapon:
+			if player.equipment.ammunition and player.equipment.ammunition.equippable.quantity > 0:
+				player_turn_results.extend(player.fighter.fire_weapon())
+			else:
+				player_turn_results.append({"no_ammunition": True})
+
 		if game_state == GameStates.TARGETING:
 			if left_click:
-				print("left clicked")
 				target_x, target_y = left_click
 				if targeting_item:	
 					item_use_results = player.inventory.use(targeting_item, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y)
 					player_turn_results.extend(item_use_results)
 				elif spell_targeting:
-					print("Targeting this spell...")
 					spell_use_results = player.caster.cast(spell_targeting, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y)
 					player_turn_results.extend(spell_use_results)
+				elif missile_targeting:
+					missile_attack_results = player.fighter.fire_weapon(weapon=player.equipment.main_hand.equippable, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y)
+					player_turn_results.extend(missile_attack_results)
 			elif right_click:
 				player_turn_results.append({'targeting_cancelled': True})
 		if exit:
@@ -251,6 +265,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 			libtcod.console_set_fullscreen(not libtcod.console_is_fullscreen())
 
 		for player_turn_result in player_turn_results:
+			#print(player_turn_result)
 			message = player_turn_result.get('message')
 			dead_entity = player_turn_result.get('dead')
 			item_added = player_turn_result.get('item_added')
@@ -260,9 +275,18 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 			spell_targeting = player_turn_result.get('spell_targeting')
 			targeting_cancelled = player_turn_result.get('targeting_cancelled')
 			xp = player_turn_result.get('xp')
+			equip_message = player_turn_result.get('equip_message')
 			equip = player_turn_result.get('equip')
 			cast = player_turn_result.get('cast')
 			not_cast = player_turn_result.get('not_cast')
+			not_fired = player_turn_result.get('not_fired')
+			missile_targeting = player_turn_result.get('missile_targeting')
+			no_missile_attack_weapon = player_turn_result.get("no_missile_attack_weapon")
+			fired_weapon = player_turn_result.get("fired_weapon")
+			no_ammunition = player_turn_result.get("no_ammunition")
+			missile_attack_miss = player_turn_result.get("missile_attack_miss")
+			melee_attack_miss = player_turn_result.get("melee_attack_miss")
+			miss_message = player_turn_result.get("miss_message")
 
 			if message:
 				message_log.add_message(message)
@@ -277,6 +301,8 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 				game_state = GameStates.ENEMY_TURN
 			if item_consumed:
 				game_state = GameStates.ENEMY_TURN
+			if fired_weapon:
+				game_state = GameStates.ENEMY_TURN
 			if targeting:
 				previous_game_state = GameStates.PLAYERS_TURN
 				game_state = GameStates.TARGETING
@@ -286,6 +312,19 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 				previous_game_state = GameStates.PLAYERS_TURN
 				game_state = GameStates.TARGETING
 				message_log.add_message(spell_targeting.targeting_message)
+			if missile_targeting:
+				previous_game_state = GameStates.PLAYERS_TURN
+				game_state = GameStates.TARGETING
+				message_log.add_message(Message("Choose a target for your missile attack..."))
+			if no_missile_attack_weapon:
+				game_state = GameStates.TARGETING
+				message_log.add_message(Message("You don't have a missile weapon equipped!"))
+			if missile_attack_miss:
+				message_log.add_message(Message("You missed!"))
+				game_state = GameStates.ENEMY_TURN
+			if melee_attack_miss:
+				message_log.add_message(Message("You missed!"))
+				game_state = GameStates.ENEMY_TURN
 			if item_dropped:
 				entities.append(item_dropped)
 				game_state = GameStates.ENEMY_TURN
@@ -294,10 +333,13 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 				for equip_result in equip_results:
 					equipped = equip_result.get('equipped')
 					dequipped = equip_result.get('dequipped')
+					fail_equip = equip_result.get('fail_equip')
 					if equipped:
 						message_log.add_message(Message('You equipped the {0}.'.format(equipped.name)))
 					if dequipped:
 						message_log.add_message(Message('You dequipped the {0}.'.format(dequipped.name)))
+					if fail_equip:
+						message_log.add_message(Message(fail_equip))
 				game_state = GameStates.ENEMY_TURN
 			if targeting_cancelled:
 				game_state = previous_game_state
@@ -308,6 +350,10 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 			if not_cast:
 				message_log.add_message(Message("You don't have enough mana to cast that spell.", libtcod.yellow))
 				game_state = GameStates.ENEMY_TURN
+			if not_fired:
+				message_log.add_message(Message("Nothing fired..."))
+			if no_ammunition:
+				message_log.add_message(Message("You don't have any ammunition to fire."))
 			if xp:
 				leveled_up = player.level.add_xp(xp)
 				message_log.add_message(Message('You gain {0} xp.'.format(xp)))

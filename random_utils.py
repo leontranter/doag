@@ -27,10 +27,9 @@ def from_dungeon_level(table, dungeon_level):
 
 def diceRoll(numberOfDice, modifier=0):
 	roll = 0
-	for _ in numberOfDice:
+	for _ in range(numberOfDice):
 		thisRoll = randint(1, 6)
 		roll += thisRoll
-
 	roll += modifier
 	return roll
 

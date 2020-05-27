@@ -8,7 +8,7 @@ class Entity:
 	"""
 	A generic object for anything
 	"""
-	def __init__(self, x, y, char, color, name, blocks=False, render_order=RenderOrder.CORPSE, fighter=None, ai=None, item=None, inventory=None, stairs=None, level=None, equipment=None, equippable=None, caster=None):
+	def __init__(self, x, y, char, color, name, blocks=False, render_order=RenderOrder.CORPSE, fighter=None, ai=None, item=None, inventory=None, stairs=None, level=None, equipment=None, equippable=None, caster=None, stats=None, defender=None, skills=None):
 		self.x = x
 		self.y = y
 		self.char = char
@@ -25,6 +25,9 @@ class Entity:
 		self.equipment = equipment
 		self.equippable = equippable
 		self.caster = caster
+		self.stats = stats
+		self.defender = defender
+		self.skills = skills
 
 		if self.fighter:
 			self.fighter.owner = self
@@ -48,6 +51,12 @@ class Entity:
 				self.item.owner = self
 		if caster:
 			self.caster.owner = self
+		if stats:
+			self.stats.owner = self
+		if defender:
+			self.defender.owner = self
+		if skills:
+			self.skills.owner = self
 
 	def move(self, dx, dy):
 		self.x += dx

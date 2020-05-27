@@ -81,14 +81,22 @@ def spells_menu(con, header, caster, spells_width, screen_width, screen_height, 
 def character_screen(player, character_screen_width, character_screen_height, screen_width, screen_height):
 	window = libtcod.console_new(character_screen_width, character_screen_height)
 	libtcod.console_set_default_foreground(window, libtcod.white)
+	dice, modifier, damage_type = player.fighter.get_current_melee_damage()
+	if modifier < 0:
+		damage_string = "{}d6 {} {}".format(dice, modifier, damage_type)
+	elif modifier == 0:
+		damage_string = "{}d6 {}".format(dice, damage_type)
+	else:
+		damage_string = "{}d6 +{} {}".format(dice, modifier, damage_type)
 
 	libtcod.console_print_rect_ex(window, 0, 1, character_screen_width, character_screen_height, libtcod.BKGND_NONE, libtcod.LEFT, 'Character Information')
 	libtcod.console_print_rect_ex(window, 0, 2, character_screen_width, character_screen_height, libtcod.BKGND_NONE, libtcod.LEFT, 'Level: {0}'.format(player.level.current_level))
 	libtcod.console_print_rect_ex(window, 0, 3, character_screen_width, character_screen_height, libtcod.BKGND_NONE, libtcod.LEFT, 'Experience: {0}'.format(player.level.current_xp))
 	libtcod.console_print_rect_ex(window, 0, 4, character_screen_width, character_screen_height, libtcod.BKGND_NONE, libtcod.LEFT, 'Experience to Level: {0}'.format(player.level.experience_to_next_level))
-	libtcod.console_print_rect_ex(window, 0, 6, character_screen_width, character_screen_height, libtcod.BKGND_NONE, libtcod.LEFT, 'Maximum HP: {0}'.format(player.fighter.max_hp))
-	libtcod.console_print_rect_ex(window, 0, 7, character_screen_width, character_screen_height, libtcod.BKGND_NONE, libtcod.LEFT, 'Attack: {0}'.format(player.fighter.power))
-	libtcod.console_print_rect_ex(window, 0, 8, character_screen_width, character_screen_height, libtcod.BKGND_NONE, libtcod.LEFT, 'Defense: {0}'.format(player.fighter.defense))
+	libtcod.console_print_rect_ex(window, 0, 6, character_screen_width, character_screen_height, libtcod.BKGND_NONE, libtcod.LEFT, 'Maximum HP: {0}'.format(player.stats.max_hp))
+	libtcod.console_print_rect_ex(window, 0, 7, character_screen_width, character_screen_height, libtcod.BKGND_NONE, libtcod.LEFT, 'Melee Damage: ' + damage_string)
+	libtcod.console_print_rect_ex(window, 0, 8, character_screen_width, character_screen_height, libtcod.BKGND_NONE, libtcod.LEFT, 'Damage Resistance: {0}'.format(player.fighter.DR))
+	libtcod.console_print_rect_ex(window, 0, 9, character_screen_width, character_screen_height, libtcod.BKGND_NONE, libtcod.LEFT, 'Passive Defense: {0}'.format(player.fighter.PD))
 
 	x = screen_width // 2 - character_screen_width // 2
 	y = screen_height // 2 - character_screen_height // 2
@@ -102,6 +110,8 @@ def mark_equipped(text, option, inventory, player):
 		text += " - off-hand"
 	if player.equipment.body == option:
 		text += " - worn on body"
+	if player.equipment.ammunition == option:
+		text += " in quiver, {} arrows left".format(player.equipment.ammunition.equippable.quantity)
 	return text
 
 def buildTextMenu(optionsList):

@@ -12,6 +12,8 @@ from game_messages import Message
 from menus import main_menu, message_box
 from dlevel import Dlevel
 from spells import Spell
+from components.equippable import make_dropped_missile
+import components.inventory
 #from map_objects.game_map import check_floor_is_explored, save_floor, load_floor
 
 def main():
@@ -83,11 +85,6 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 	previous_game_state = game_state
 
 	targeting_item = None
-
-	print(player.fighter)
-	print(player.fighter.__dict__)
-	print(player.fighter.owner)
-	print(player.fighter.owner.stats)
 
 	while not libtcod.console_is_window_closed():
 		libtcod.sys_check_for_event(libtcod.EVENT_KEY_PRESS | libtcod.EVENT_MOUSE, key, mouse)
@@ -265,7 +262,6 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 			libtcod.console_set_fullscreen(not libtcod.console_is_fullscreen())
 
 		for player_turn_result in player_turn_results:
-			#print(player_turn_result)
 			message = player_turn_result.get('message')
 			dead_entity = player_turn_result.get('dead')
 			item_added = player_turn_result.get('item_added')
@@ -287,6 +283,10 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 			missile_attack_miss = player_turn_result.get("missile_attack_miss")
 			melee_attack_miss = player_turn_result.get("melee_attack_miss")
 			miss_message = player_turn_result.get("miss_message")
+			attack_defended = player_turn_result.get("attack_defended")
+			missile_dropped = player_turn_result.get("missile_dropped")
+			dropped_location = player_turn_result.get("dropped_location")
+			monster_drops = player_turn_result.get("monster_drops")
 
 			if message:
 				message_log.add_message(message)
@@ -295,6 +295,10 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 					message, game_state = kill_player(dead_entity)
 				else:
 					message = kill_monster(dead_entity)
+					#print("monster items:")
+					#for item in dead_entity.inventory.items:
+					#	print(item.name)
+					entities = dead_entity.inventory.drop_on_death(entities, dead_entity)
 				message_log.add_message(message)
 			if item_added:
 				entities.remove(item_added)
@@ -303,6 +307,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 				game_state = GameStates.ENEMY_TURN
 			if fired_weapon:
 				game_state = GameStates.ENEMY_TURN
+			# TODO: roll these three results into one!
 			if targeting:
 				previous_game_state = GameStates.PLAYERS_TURN
 				game_state = GameStates.TARGETING
@@ -319,12 +324,11 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 			if no_missile_attack_weapon:
 				game_state = GameStates.TARGETING
 				message_log.add_message(Message("You don't have a missile weapon equipped!"))
-			if missile_attack_miss:
-				message_log.add_message(Message("You missed!"))
+			if missile_attack_miss or melee_attack_miss or attack_defended:
 				game_state = GameStates.ENEMY_TURN
-			if melee_attack_miss:
-				message_log.add_message(Message("You missed!"))
-				game_state = GameStates.ENEMY_TURN
+			if missile_dropped:
+				missile_entity = make_dropped_missile(missile_dropped, dropped_location)
+				entities.append(missile_entity)
 			if item_dropped:
 				entities.append(item_dropped)
 				game_state = GameStates.ENEMY_TURN
@@ -369,6 +373,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 					for enemy_turn_result in enemy_turn_results:
 						message = enemy_turn_result.get('message')
 						dead_entity = enemy_turn_result.get('dead')
+						#dropped_items = enemy_turn_result.get('dropped_items')
 						
 						if message:
 							message_log.add_message(message)

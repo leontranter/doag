@@ -8,6 +8,7 @@ from components.caster import Caster
 from components.equippable import Equippable, EquippableFactory
 from components.stats import Stats
 from components.skills import Skills
+from components.defender import Defender
 from entity import Entity
 from game_messages import MessageLog
 from game_states import GameStates
@@ -21,6 +22,7 @@ def get_game_variables(constants, start_equipped=False):
 	inventory_component = Inventory(26)
 	level_component = Level()
 	equipment_component = Equipment()
+	defender_component = Defender()
 	stats_component = Stats(ST=12, DX=12, IQ=12, HT=12)
 	skills_component = Skills()
 	skills_component.setSkill("sword", 14)
@@ -28,7 +30,7 @@ def get_game_variables(constants, start_equipped=False):
 	skills_component.setSkill("bow", 14)
 
 	caster_component = Caster(max_mana=20)
-	player = Entity(0, 0, '@', libtcod.white, "Player", blocks=True, render_order=RenderOrder.ACTOR, fighter = fighter_component, inventory=inventory_component, level=level_component, equipment=equipment_component, caster=caster_component, stats=stats_component, skills=skills_component)
+	player = Entity(0, 0, '@', libtcod.white, "Player", blocks=True, render_order=RenderOrder.ACTOR, fighter = fighter_component, inventory=inventory_component, level=level_component, equipment=equipment_component, caster=caster_component, stats=stats_component, skills=skills_component, defender=defender_component)
 	entities = [player]
 
 	
@@ -38,7 +40,7 @@ def get_game_variables(constants, start_equipped=False):
 		item = Entity(x, y, '(', libtcod.red, 'Bow', equippable=equippable_component)
 		player.inventory.items.append(item)
 		equippable_component = EquippableFactory.makeArrows()
-		item = Entity(x, y, '(', libtcod.red, 'A quiver of arrows', equippable=equippable_component)
+		item = Entity(x, y, '(', libtcod.red, 'Arrows', equippable=equippable_component)
 		player.inventory.items.append(item)
 		equippable_component = EquippableFactory.makeDagger()
 		item = Entity(x, y, '(', libtcod.red, 'Dagger', equippable = equippable_component)

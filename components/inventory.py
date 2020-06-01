@@ -19,8 +19,14 @@ class Inventory:
 				'item_added': item,
 				'message': Message('You pick up the {0}!'.format(item.name), libtcod.yellow)
 			})
-				
-			self.items.append(item)
+			for current_item in self.items:
+				if current_item.name == item.name and current_item.equippable and current_item.equippable.quantity > 0:
+					# Checking if we can stack this item with one already carried
+					# TODO: This will need a LOT more work at some point... not a very clever check
+					current_item.equippable.quantity += 1
+					break	
+			else:
+				self.items.append(item)
 		return results
 
 	def use(self, item_entity, **kwargs):
@@ -60,6 +66,14 @@ class Inventory:
 		item.y = self.owner.y
 
 		self.remove_item(item)
-		results.append({'item_dropped': item, 'message': Message('You dropped the {0}'.format(item.name), libtcod.yellow)})
+		results.append({'item_dropped': item, 'message': Message(f"{self.owner.name} dropped the {item.name}", libtcod.yellow)})
 
 		return results
+
+	def drop_on_death(self, entities, monster):
+		for item in self.items:
+			# TODO - does the monster need to de-equip these items?? should this be part of the class or module??
+			item.x, item.y = self.owner.x, self.owner.y
+			entities.append(item)
+		self.items = []
+		return entities

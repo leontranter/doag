@@ -13,12 +13,7 @@ from components.equippable import Equippable, EquippableFactory
 from components.skills import Skills
 from components.stats import Stats
 from components.defender import Defender
-from components.meleeweapon import MeleeWeapon
-from loader_functions.constants import get_basic_damage, WeaponTypes
-from systems.attack import weapon_skill_lookup, get_weapon_skill_for_attack
-from components.inventory import Inventory
-import monsters
-import mocks
+from loader_functions.constants import get_basic_damage
 
 class EntityTests(unittest.TestCase):
 	def test_can_make_entity(self):
@@ -148,111 +143,24 @@ class DamageTests(unittest.TestCase):
 		self.assertEqual(dice, 1)
 		self.assertEqual(modifier, -2)
 
-class AttackTests(unittest.TestCase):
-	def test_can_lookup_weapon_skill(self):
-		test_weapon = EquippableFactory.makeBroadSword()
-		self.assertEqual(weapon_skill_lookup(test_weapon), "sword")
-
-	def test_can_lookup_correct_weapon_skill(self):
-		test_char = mocks.create_mockchar_3()
-		weapon = test_char.equipment.main_hand.equippable
-		skill_num = get_weapon_skill_for_attack(test_char, weapon)
-		self.assertEqual(skill_num, 14)
-
-
 class DefenderTests(unittest.TestCase):
 	def test_can_create_defender(self):
 		test_defender_component = Defender()
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", defender=test_defender_component)
 		self.assertEqual(test_entity.defender, test_defender_component)
 
-	def test_can_get_correct_parry(self):
-		test_char = mocks.create_mockchar_3()
-		test_char_pd = test_char.equipment.PD_bonus
-		self.assertEqual(test_char.defender.get_parry(), (7 + test_char_pd))
-
-	def test_can_get_correct_block(self):
-		test_char = mocks.create_mockchar_5()
-		test_char_pd = test_char.equipment.PD_bonus
-		self.assertEqual(test_char.defender.get_block(), (6 + test_char_pd))
-
-	def test_can_get_correct_dodge(self):
-		test_char = mocks.create_mockchar_2()
-		test_char_pd = test_char.equipment.PD_bonus
-		self.assertEqual(test_char.defender.get_dodge(), (5 + test_char_pd))
-
 	def test_defender_can_provide_a_defense(self):
-		test_char = mocks.create_mockchar_2()
-		defense_num = test_char.defender.get_best_melee_defense()
+		test_defender_component = Defender()
+		test_equipment_component = Equipment()
+		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", equipment=test_equipment_component, defender=test_defender_component)
+		#print(test_entity.defender)
+		#print(test_entity.equipment)
+		print(test_defender_component.owner)
+		defense_num = test_defender_component.get_best_melee_defense()
 		self.assertNotEqual(defense_num, 0)
 
-	def test_defender_can_choose_best_melee_defense_without_shield(self):
-		test_char = mocks.create_mockchar_3()
-		test_char_pd = test_char.equipment.PD_bonus
-		results = test_char.defender.get_best_melee_defense()
-		self.assertEqual(results[0], "parry")
-		self.assertEqual(results[1], (7 + test_char_pd))
+	
 
-	def test_defender_can_choose_best_melee_defense_with_shield_and_low_shield_skill(self):
-		test_char = mocks.create_mockchar_5()
-		test_char_pd = test_char.equipment.PD_bonus
-		results = test_char.defender.get_best_melee_defense()
-		self.assertEqual(results[0], "parry")
-		self.assertEqual(results[1], (7 + test_char_pd))		
-
-	def test_defender_can_choose_best_melee_defense_with_shield_and_high_shield_skill(self):
-		test_char = mocks.create_mockchar_6()
-		test_char_pd = test_char.equipment.PD_bonus
-		results = test_char.defender.get_best_melee_defense()
-		self.assertEqual(results[0], "block")
-		self.assertEqual(results[1], (8 + test_char_pd))
-
-	def test_defender_can_choose_best_missile_defense(self):
-		test_char = mocks.create_mockchar_1()
-		test_char_pd = test_char.equipment.PD_bonus
-		results = test_char.defender.get_best_missile_defense()
-		self.assertEqual(results[0], "dodge")
-		self.assertEqual(results[1], (5 + test_char_pd))
-
-	def test_defender_can_choose_best_missile_defense_but_not_a_parry(self):
-		test_char = mocks.create_mockchar_5()
-		test_char_pd = test_char.equipment.PD_bonus
-		results = test_char.defender.get_best_missile_defense()
-		self.assertNotEqual(results[0], "parry")
-
-	def test_defender_can_choose_best_missile_defense_with_shield(self):
-		test_char = mocks.create_mockchar_5()
-		test_char_pd = test_char.equipment.PD_bonus
-		results = test_char.defender.get_best_missile_defense()
-		self.assertEqual(results[0], "block")
-		self.assertEqual(results[1], (6 + test_char_pd)) 
-
-class DeathDropTests(unittest.TestCase):
-	def test_monster_has_items(self):
-		test_monster = monsters.makeKobold(1, 1)
-		self.assertNotEqual(len(test_monster.inventory.items), 0)
-
-	def test_kobold_drops_all_items(self):
-		test_monster = monsters.makeKobold(1, 1)
-		entities = []
-		entities = test_monster.inventory.drop_on_death(entities, test_monster)
-		self.assertEqual(len(entities), 3)
-
-	def test_orc_drops_all_items(self):
-		test_monster = monsters.makeOrc(1, 1)
-		entities = []
-		entities = test_monster.inventory.drop_on_death(entities, test_monster)
-		for entity in entities:
-			print(entity.name)
-		self.assertEqual(len(entities), 2)
-
-	def test_monster_drops_one_item(self):
-		pass
-
-class MeleeWeaponTests(unittest.TestCase):
-	def test_can_create_melee_weapon_component(self):
-		test_component = MeleeWeapon(WeaponTypes.AXE, "swing", 1, DamageTypes.CRUSHING)
-		self.assertEqual(test_component.weapon_type, WeaponTypes.AXE)	
 
 if __name__ == "__main__":
 	unittest.main()

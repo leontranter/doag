@@ -79,7 +79,6 @@ class GameMap:
 					player.x = new_x
 					player.y = new_y
 					# TODO: This is only for debugging!!!!
-					self.spawn_items(new_room, entities, x, y)
 				else:
 					# for all other rooms, connect it to the previous room with a tunnel
 					(prev_x, prev_y) = rooms[num_rooms -1].center()
@@ -170,11 +169,12 @@ class GameMap:
 
 			if not any([entity for entity in entities if entity.x == x and entity.y == y]):
 				item_choice = random_choice_from_dict(item_chances)
+				# TODO: This whole lookup could be just changed to one dict lookup I think? item = itemMaker[itemchoice] or something?
 				if item_choice == 'healing_potion':
 					item_component = ItemFactory.makeHealingPotion()
 					item = Entity(x, y, '!', libtcod.violet, 'Healing Potion', render_order=RenderOrder.ITEM, item=item_component)
 				elif item_choice == 'sword':
-					equippable_component = EquippableFactory.makeSword()
+					equippable_component = EquippableFactory.makeBroadSword()
 					item = Entity(x, y, '(', libtcod.sky, 'Sword', equippable=equippable_component)
 				elif item_choice == 'shield':
 					equippable_component = EquippableFactory.makeShield()
@@ -188,12 +188,14 @@ class GameMap:
 				elif item_choice == 'dagger':
 					equippable_component = EquippableFactory.makeDagger()
 					item = Entity(x, y, '(', libtcod.red, 'Dagger', equippable = equippable_component)
+				elif item_choice == 'axe':
+					item = EquippableFactory.makeAxe()
 				elif item_choice == 'bow':
 					equippable_component = EquippableFactory.makeBow()
 					item = Entity(x, y, '(', libtcod.red, 'Bow', equippable = equippable_component)
 				elif item_choice == 'arrows':
 					equippable_component = EquippableFactory.makeArrows()
-					item = Entity(x, y, '(', libtcod.red, 'A quiver of arrows', equippable=equippable_component)
+					item = Entity(x, y, '(', libtcod.red, 'Arrows', equippable=equippable_component)
 				elif item_choice == 'fireball_scroll':
 					item_component = ItemFactory.makeFireballScroll()
 					#item_component = Item(use_function=cast_fireball, targeting=True, targeting_message=Message('Left-click a target tile for the fireball, or right-click to cancel.', libtcod.light_cyan), damage=25, radius=3)
@@ -234,11 +236,3 @@ class GameMap:
 		tiles = dlevels[dungeon_level].tiles
 		self.dungeon_level += 1
 		return entities, tiles, self.dungeon_level
-
-	def spawn_items(self, room, entities, x, y):
-		equippable_component = EquippableFactory.makeShield()
-		item = Entity(x, y, '[', libtcod.darker_orange, 'Shield', equippable=equippable_component)
-		entities.append(item)
-		equippable_component = EquippableFactory.makeZweihander()
-		item = Entity(x, y, '(', libtcod.darker_orange, 'Zweihander', equippable=equippable_component)
-		entities.append(item)

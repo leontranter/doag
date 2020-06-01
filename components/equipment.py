@@ -36,7 +36,7 @@ class Equipment:
 		if self.body and self.body.equippable:
 			bonus += self.body.equippable.melee_damage_bonus
 		if self.ammunition and self.ammunition.equippable:
-			bonus += self.body.equippable.melee_damage_bonus			
+			bonus += self.ammunition.equippable.melee_damage_bonus			
 
 		return bonus
 
@@ -51,7 +51,7 @@ class Equipment:
 		if self.body and self.body.equippable:
 			bonus += self.body.equippable.missile_damage_bonus
 		if self.ammunition and self.ammunition.equippable:
-			bonus += self.body.equippable.missile_damage_bonus			
+			bonus += self.ammunition.equippable.missile_damage_bonus			
 
 		return bonus
 
@@ -66,7 +66,7 @@ class Equipment:
 		if self.body and self.body.equippable:
 			bonus += self.body.equippable.PD_bonus
 		if self.ammunition and self.ammunition.equippable:
-			bonus += self.body.equippable.PD_bonus
+			bonus += self.ammunition.equippable.PD_bonus
 
 		return bonus
 
@@ -81,7 +81,7 @@ class Equipment:
 		if self.body and self.body.equippable:
 			bonus += self.body.equippable.DR_bonus
 		if self.ammunition and self.ammunition.equippable:
-			bonus += self.body.equippable.DR_bonus
+			bonus += self.ammunition.equippable.DR_bonus
 
 		return bonus
 
@@ -107,10 +107,6 @@ class Equipment:
 			equippable_entity, results = self.toggle_body(equippable_entity, results)
 		elif slot == EquipmentSlots.AMMUNITION:
 			equippable_entity, results = self.toggle_ammunition(equippable_entity, results)
-		#print("returning results:")
-		#for r in results:
-		#	print(r.items())
-		#print("results before we return: {}".format(results))
 		return results
 
 	def getEquippedItems(self):

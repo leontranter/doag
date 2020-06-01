@@ -1,14 +1,13 @@
 from equipment_slots import EquipmentSlots
 from damage_types import DamageTypes
 from loader_functions.constants import WeaponTypes
+from entity import Entity
+from components import MeleeWeapon
+import tcod as libtcod
 
 class Equippable:
-	def __init__(self, slot, weapon_type=None, melee_attack_type=None, melee_damage_bonus=0, melee_damage_type=None, DR_bonus=0, PD_bonus=0, max_hp_bonus=0, two_handed=False, missile_damage=None, missile_damage_type=None, missile_damage_bonus=0, quantity=0, isShield=False):
+	def __init__(self, slot, DR_bonus=0, PD_bonus=0, max_hp_bonus=0, two_handed=False, missile_damage=None, missile_damage_type=None, missile_damage_bonus=0, quantity=0, isShield=False, weight=1):
 		self.slot = slot
-		self.weapon_type = weapon_type
-		self.melee_attack_type = melee_attack_type
-		self.melee_damage_bonus = melee_damage_bonus
-		self.melee_damage_type = melee_damage_type
 		self.DR_bonus = DR_bonus
 		self.PD_bonus = PD_bonus
 		self.max_hp_bonus = max_hp_bonus
@@ -18,14 +17,29 @@ class Equippable:
 		self.missile_damage_bonus = missile_damage_bonus
 		self.quantity = quantity
 		self.isShield = isShield
+		self.weight = weight
+
+def make_dropped_missile(missile_type, location):
+	temp_equippable_missile = EquippableFactory.makeArrows(quantity=1)
+	temp_entity = Entity(location[0], location[1], '(', libtcod.red, 'Arrows', equippable=temp_equippable_missile)
+	return temp_entity
 
 class EquippableFactory:
+
+	def makeAxe():
+		tempEquippable = Equippable(EquipmentSlots.MAIN_HAND, WeaponTypes.AXE, melee_attack_type="swing", melee_damage_bonus=2, melee_damage_type=DamageTypes.CUTTING, weight=4)
+		tempMeleeWeapon = MeleeWeapon(WeaponTypes.AXE, "swing", 2, DamageTypes.CUTTING)
+		return tempEquippable
+
+	def makeMace():
+		tempEquippable = Equippable(EquipmentSlots.MAIN_HAND, WeaponTypes.AXE, melee_attack_type="swing", melee_damage_bonus=3, melee_damage_type=DamageTypes.CRUSHING, weight=4)
+		return tempEquippable		
 
 	def makeDagger():
 		tempEquippable = Equippable(EquipmentSlots.MAIN_HAND, WeaponTypes.DAGGER, melee_attack_type="thrust", melee_damage_bonus=0, melee_damage_type=DamageTypes.IMPALING)
 		return tempEquippable
 
-	def makeSword():
+	def makeBroadSword():
 		tempEquippable = Equippable(EquipmentSlots.MAIN_HAND, WeaponTypes.SWORD, melee_attack_type="swing", melee_damage_bonus=1, melee_damage_type=DamageTypes.CUTTING)
 		return tempEquippable
 
@@ -65,6 +79,6 @@ class EquippableFactory:
 		tempEquippable = Equippable(EquipmentSlots.MAIN_HAND, weapon_type = WeaponTypes.CROSSBOW, melee_attack_type="swing", melee_damage_typee_bonus = -3, melee_damage_type=DamageTypes.CRUSHING, two_handed=True, missile_damage=(1, 3), missile_damage_type=DamageTypes.IMPALING)
 		return tempEquippable		
 
-	def makeArrows():
-		tempEquippable = Equippable(EquipmentSlots.AMMUNITION, missile_damage_bonus=1, quantity=10)
+	def makeArrows(quantity=10):
+		tempEquippable = Equippable(EquipmentSlots.AMMUNITION, missile_damage_bonus=1, quantity=quantity)
 		return tempEquippable		

@@ -1,7 +1,7 @@
 import tcod as libtcod
 from game_messages import Message
 from loader_functions.constants import get_basic_damage
-from random_utils import diceRoll
+from random_utils import dice_roll
 from damage_types import DamageTypes, damage_type_modifiers
 from systems.damage import calculate_damage, damage_messages
 from systems.attack import get_weapon_skill_for_attack
@@ -37,7 +37,7 @@ class Fighter:
 	def get_basic_thrust_damage(self):
 		ST = self.owner.stats.get_strength_in_range()
 		swing_damage, thrust_damage = get_basic_damage()
-		dice, modifier = thrust_damage[ST][0], thrust_damage[ST][1]
+		dice, modifier = thrust_damage[ST][0], thrust_damage[ST][1]	
 		return (dice, modifier)
 
 	def get_current_melee_damage(self):
@@ -70,13 +70,14 @@ class Fighter:
 	def melee_attack(self, target):
 		results = []
 		if self.check_hit(target):
-			if target.defender.defend_attack(attack_type="melee"):
+			defense_result, defense_choice = target.defender.defend_melee_attack()
+			if not defense_result:
+				results.append({'attack_not_defended': True, 'message': Message(f"{self.owner.name} hits! {target.name} tries to {defense_choice} the attack but fails.")})
 				dice, modifier, damage_type = self.get_current_melee_damage()
 				results = self.resolve_hit(results, dice, modifier, damage_type, target)
 			else:
-				results.append({'attack_defended': True, 'message': Message(f'The {target.name} defends against your attack.')})
+				results.append({'attack_defended': True, 'message': Message(f'The {self.owner.name} hits, but the {target.name} {defense_choice}s the attack.')})
 		else:
-			print("miss!")
 			results.append({'melee_attack_miss': True, 'message': Message(f'{self.owner.name} misses the {target.name}.')})
 		return results
 
@@ -93,14 +94,18 @@ class Fighter:
 			results = self.resolve_hit(results, dice, modifier, damage_type, target, missile_attack=True)
 		else:
 			results.append({'missile_attack_miss': True, 'message': Message(f'{self.owner.name} misses the {target.name}.')})
+		if dice_roll(1, 0) > 2:
+				results.append({'missile_dropped': True, 'missile_type': 'arrows', 'dropped_location': (target.x, target.y)})
 		return results
 
 	def check_hit(self, target):
 		# TODO: Fix this!
-		skill_target = get_weapon_skill_for_attack(self.owner, self.owner.equipment.main_hand.equippable)
-		numberRolled = diceRoll(3, 0)
-		if numberRolled <= skill_target:		
-			print(f"diceRoll was {numberRolled}, target was {skill_target}")
+		if self.owner.equipment.main_hand:
+			skill_target = get_weapon_skill_for_attack(self.owner, self.owner.equipment.main_hand.equippable)
+		else:
+			skill_target = 8
+		numberRolled = dice_roll(3, 0)
+		if numberRolled <= skill_target:
 			return True
 		else:
 			return False
@@ -130,6 +135,5 @@ class Fighter:
 				for entity in entities:
 					if entity.x == target_x and entity.y == target_y and entity.fighter:
 						self.owner.equipment.ammunition.equippable.quantity -= 1
-						print("lost an arrow")
 						results.extend(self.missile_attack(entity))					
 		return results

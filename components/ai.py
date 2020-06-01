@@ -8,15 +8,23 @@ class BasicMonster():
 
 		monster = self.owner
 		if libtcod.map_is_in_fov(fov_map, monster.x, monster.y):
-
-			if monster.distance_to(target) >= 2:
-				monster.move_astar(target, entities, game_map)
-
-			elif target.stats.hp > 0:
-				attack_results = monster.fighter.melee_attack(target)
-				results.extend(attack_results)
-
+			if monster.equipment.main_hand and monster.equipment.main_hand.equippable.missile_damage:
+				pass
+			else:
+				results = self.make_melee_action(results, target, entities, game_map)
+				
 		return results
+
+	def make_melee_action(self, results, target, entities, game_map):
+		monster = self.owner
+		if monster.distance_to(target) >= 2:
+			monster.move_astar(target, entities, game_map)
+		elif target.stats.hp > 0:
+			attack_results = monster.fighter.melee_attack(target)
+			results.extend(attack_results)
+		
+		return results
+
 
 class ConfusedMonster:
 	def __init__(self, previous_ai, number_of_turns=10):

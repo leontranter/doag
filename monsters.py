@@ -9,6 +9,7 @@ from components.inventory import Inventory
 from components.equippable import EquippableFactory
 from components.stats import Stats
 from components.skills import Skills
+from components.defender import Defender
 
 
 def getMonsterByDungeonLevel(level):
@@ -20,14 +21,19 @@ def makeOrc(x, y):
 	ai_component = BasicMonster()
 	equipment_component = Equipment()
 	inventory_component = Inventory(26)
+	defender_component = Defender()
 	skill_component = Skills()
-	skill_component.setSkill("sword", 12)
+	skill_component.setSkill("sword", 10)
 	skill_component.setSkill("dagger", 12)
-	monster = Entity(x, y, 'o', libtcod.desaturated_green, "Orc", blocks=True, render_order=RenderOrder.ACTOR, fighter = fighter_component, inventory=inventory_component, ai = ai_component, equipment=equipment_component, stats=stats_component, skills=skill_component)
-	equippable_component = EquippableFactory.makeDagger()
-	item = Entity(x, y, '(', libtcod.red, 'Dagger', equippable = equippable_component)
+	monster = Entity(x, y, 'o', libtcod.desaturated_green, "Orc", blocks=True, render_order=RenderOrder.ACTOR, fighter = fighter_component, inventory=inventory_component, ai = ai_component, equipment=equipment_component, stats=stats_component, skills=skill_component, defender=defender_component)
+	equippable_component = EquippableFactory.makeBroadSword()
+	item = Entity(x, y, '(', libtcod.red, 'Sword', equippable=equippable_component)
 	monster.inventory.items.append(item)
 	monster.equipment.main_hand = item
+	equippable_component = EquippableFactory.makeLeatherArmor()
+	item = Entity(x, y, '[', libtcod.red, 'Leather Armor', equippable=equippable_component)
+	monster.inventory.items.append(item)
+	monster.equipment.body = item
 	return monster
 
 def makeTroll(x, y):
@@ -36,11 +42,12 @@ def makeTroll(x, y):
 	ai_component = BasicMonster()
 	equipment_component = Equipment()
 	inventory_component = Inventory(26)
+	defender_component = Defender()
 	skill_component = Skills()
 	skill_component.setSkill("sword", 13)
 	skill_component.setSkill("dagger", 12)
-	monster = Entity(x, y, 't', libtcod.darker_green, "Troll", blocks=True, render_order=RenderOrder.ACTOR, fighter = fighter_component, inventory=inventory_component, ai = ai_component, equipment=equipment_component, stats=stats_component, skills=skill_component)
-	equippable_component = EquippableFactory.makeSword()
+	monster = Entity(x, y, 't', libtcod.darker_green, "Troll", blocks=True, render_order=RenderOrder.ACTOR, fighter = fighter_component, inventory=inventory_component, ai = ai_component, equipment=equipment_component, stats=stats_component, skills=skill_component, defender=defender_component)
+	equippable_component = EquippableFactory.makeBroadSword()
 	item = Entity(x, y, '(', libtcod.red, 'Sword', equippable = equippable_component)
 	monster.inventory.items.append(item)
 	monster.equipment.main_hand = item
@@ -52,12 +59,20 @@ def makeKobold(x, y):
 	ai_component = BasicMonster()
 	equipment_component = Equipment()
 	inventory_component = Inventory(26)
+	defender_component = Defender()
 	skill_component = Skills()
 	skill_component.setSkill("sword", 10)
 	skill_component.setSkill("dagger", 10)
-	monster = Entity(x, y, 'k', libtcod.blue, "Kobold", blocks=True, render_order=RenderOrder.ACTOR, fighter=fighter_component, inventory=inventory_component, ai=ai_component, equipment=equipment_component, stats=stats_component, skills=skill_component)
+	monster = Entity(x, y, 'k', libtcod.blue, "Kobold", blocks=True, render_order=RenderOrder.ACTOR, fighter=fighter_component, inventory=inventory_component, ai=ai_component, equipment=equipment_component, stats=stats_component, skills=skill_component, defender=defender_component)
 	equippable_component = EquippableFactory.makeDagger()
 	item = Entity(x, y, '(', libtcod.red, 'Dagger', equippable = equippable_component)
 	monster.inventory.items.append(item)
+	equippable_component = EquippableFactory.makeBow()
+	item = Entity(x, y, '(', libtcod.red, 'Bow', equippable = equippable_component)
+	monster.inventory.items.append(item)
 	monster.equipment.main_hand = item
+	equippable_component2 = EquippableFactory.makeArrows()
+	item = Entity(x, y, '(', libtcod.red, 'Arrows', equippable = equippable_component)
+	monster.inventory.items.append(item)
+	monster.equipment.ammunition = item
 	return monster

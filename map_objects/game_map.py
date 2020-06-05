@@ -7,12 +7,12 @@ from entity import Entity
 from components.fighter import Fighter
 from components.ai import BasicMonster
 from render_functions import RenderOrder
-from components.item import Item, ItemFactory
 from components.equipment import EquipmentSlots
 from components.equippable import Equippable, EquippableFactory
 from components.stairs import Stairs
 from item_functions import cast_fireball, cast_lightning, heal, cast_confuse
 from game_messages import Message
+from generators import item_generator
 from random_utils import from_dungeon_level, random_choice_from_dict
 import monsters
 
@@ -170,34 +170,7 @@ class GameMap:
 			if not any([entity for entity in entities if entity.x == x and entity.y == y]):
 				item_choice = random_choice_from_dict(item_chances)
 				# TODO: This whole lookup could be just changed to one dict lookup I think? item = itemMaker[itemchoice] or something?
-				if item_choice == 'healing_potion':
-					item = ItemFactory.makeHealingPotion()
-				elif item_choice == 'sword':
-					item = EquippableFactory.makeBroadSword(x, y)
-				elif item_choice == 'shield':
-					item = EquippableFactory.makeShield(x, y) 
-				elif item_choice == 'armor':
-					item = EquippableFactory.makeLeatherArmor(x, y)
-				elif item_choice == 'greatsword':
-					item = EquippableFactory.makeGreatSword(x, y)
-				elif item_choice == 'dagger':
-					item = EquippableFactory.makeDagger(x, y)
-				elif item_choice == 'axe':
-					item = EquippableFactory.makeAxe(x, y)
-				elif item_choice == 'bow':
-					item = EquippableFactory.makeBow(x, y)
-				elif item_choice == 'arrows':
-					item = EquippableFactory.makeArrows(x, y)
-				elif item_choice == 'fireball_scroll':
-					item = ItemFactory.makeFireballScroll()
-				elif item_choice == 'confusion_scroll':
-					item = ItemFactory.makeConfusionScroll()	
-				elif item_choice == 'fireball_book':
-					item_component = ItemFactory.makeFireballBook()
-				elif item_choice == 'heal_book':
-					item_component = ItemFactory.makeHealBook()
-				else:
-					item = ItemFactory.makeLightningScroll()	
+				item = item_generator(item_choice, x, y)
 				entities.append(item)
 
 	def next_floor(self, player, message_log, constants, floor_direction):

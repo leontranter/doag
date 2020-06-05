@@ -14,10 +14,12 @@ from components.skills import Skills
 from components.stats import Stats
 from components.defender import Defender
 from components.meleeweapon import MeleeWeapon
+from components.item import Item
 from damage_types import DamageTypes
 from loader_functions.constants import get_basic_damage, WeaponTypes
 from systems.attack import weapon_skill_lookup, get_weapon_skill_for_attack
 from components.inventory import Inventory
+from item_factory import makeHealingPotion, makeLightningScroll, makeFireballScroll, makeConfusionScroll, makeFireballBook, makeHealBook
 import monsters
 import mocks
 
@@ -266,6 +268,16 @@ class MeleeWeaponTests(unittest.TestCase):
 	def test_can_create_melee_weapon_component(self):
 		test_component = MeleeWeapon(WeaponTypes.AXE, "swing", 1, DamageTypes.CRUSHING)
 		self.assertEqual(test_component.weapon_type, WeaponTypes.AXE)	
+
+#class ItemTests(unittest.TestCase):
+#	def test_can_create_item(self):
+#		test_item_component = Item(use_function=None, targeting=False, targeting_message=None)
+#		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Test", item=test_item_component)
+#		self.assertEqual(test_item_component, test_entity.item)
+
+#	def test_can_create_healing_potion(self):
+#		test_item = ItemFactory.makeHealingPotion()
+#		self.assertEqual(test_item.name, "Healing Potion")
 
 if __name__ == "__main__":
 	unittest.main()

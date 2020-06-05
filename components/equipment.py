@@ -56,21 +56,6 @@ class Equipment:
 		return bonus
 
 	@property
-	def PD_bonus(self):
-		bonus = 0
-
-		if self.main_hand and self.main_hand.equippable:
-			bonus += self.main_hand.equippable.PD_bonus
-		if self.off_hand and self.off_hand.equippable:
-			bonus += self.off_hand.equippable.PD_bonus
-		if self.body and self.body.equippable:
-			bonus += self.body.equippable.PD_bonus
-		if self.ammunition and self.ammunition.equippable:
-			bonus += self.ammunition.equippable.PD_bonus
-
-		return bonus
-
-	@property
 	def DR_bonus(self):
 		bonus = 0
 
@@ -162,3 +147,25 @@ class Equipment:
 			self.ammunition = equippable_entity
 			results.append({'equipped': equippable_entity})
 		return equippable_entity, results
+
+	def has_missile_weapon(self):
+		if self.owner.equipment.main_hand:
+			if self.owner.equipment.main_hand.missile_weapon:
+				return True
+			else:
+				return False
+		else:
+			return False
+
+	def has_ammunition(self):
+		if self.ammunition:
+			return True
+			if self.ammunition.equippable.quantity:
+				if self.ammunition.equippable.quantity > 0:
+					return True
+				else:
+					return False
+			else:
+				return False
+		else:
+			return False	

@@ -96,7 +96,6 @@ def character_screen(player, character_screen_width, character_screen_height, sc
 	libtcod.console_print_rect_ex(window, 0, 6, character_screen_width, character_screen_height, libtcod.BKGND_NONE, libtcod.LEFT, 'Maximum HP: {0}'.format(player.stats.max_hp))
 	libtcod.console_print_rect_ex(window, 0, 7, character_screen_width, character_screen_height, libtcod.BKGND_NONE, libtcod.LEFT, 'Melee Damage: ' + damage_string)
 	libtcod.console_print_rect_ex(window, 0, 8, character_screen_width, character_screen_height, libtcod.BKGND_NONE, libtcod.LEFT, 'Damage Resistance: {0}'.format(player.fighter.DR))
-	libtcod.console_print_rect_ex(window, 0, 9, character_screen_width, character_screen_height, libtcod.BKGND_NONE, libtcod.LEFT, 'Passive Defense: {0}'.format(player.fighter.PD))
 
 	x = screen_width // 2 - character_screen_width // 2
 	y = screen_height // 2 - character_screen_height // 2

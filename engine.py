@@ -118,6 +118,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 		spells_screen = action.get('show_spells_screen')
 		spells_index = action.get('spells_index')
 		fire_weapon = action.get('fire_weapon')
+		load_weapon = action.get('load_weapon')
 
 		left_click = mouse_action.get('left_click')
 		right_click = mouse_action.get('right_click')
@@ -235,6 +236,9 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 			else:
 				player_turn_results.append({"no_ammunition": True})
 
+		if load_weapon:
+			player_turn_results = player.fighter.load_missile_weapon()
+
 		if game_state == GameStates.TARGETING:
 			if left_click:
 				target_x, target_y = left_click
@@ -288,7 +292,8 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 			dropped_location = player_turn_result.get("dropped_location")
 			missile_type = player_turn_result.get("missile_type")
 			monster_drops = player_turn_result.get("monster_drops")
-
+			not_loaded = player_turn_result.get("not_loaded")
+			loaded = player_turn_result.get("loaded")
 
 			if message:
 				message_log.add_message(message)
@@ -297,9 +302,6 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 					message, game_state = kill_player(dead_entity)
 				else:
 					message = kill_monster(dead_entity)
-					#print("monster items:")
-					#for item in dead_entity.inventory.items:
-					#	print(item.name)
 					entities = dead_entity.inventory.drop_on_death(entities, dead_entity)
 				message_log.add_message(message)
 			if item_added:
@@ -331,6 +333,8 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 			if missile_dropped:
 				missile_entity = make_dropped_missile(missile_type, dropped_location)
 				entities.append(missile_entity)
+			if not_loaded:
+				message_log.add_message(Message("Your missile weapon is not loaded with any ammunition!"))
 			if item_dropped:
 				entities.append(item_dropped)
 				game_state = GameStates.ENEMY_TURN
@@ -360,6 +364,8 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 				message_log.add_message(Message("Nothing fired..."))
 			if no_ammunition:
 				message_log.add_message(Message("You don't have any ammunition to fire."))
+			if loaded:
+				game_state = GameStates.ENEMY_TURN
 			if xp:
 				leveled_up = player.level.add_xp(xp)
 				message_log.add_message(Message('You gain {0} xp.'.format(xp)))

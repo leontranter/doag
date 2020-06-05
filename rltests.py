@@ -168,18 +168,15 @@ class DefenderTests(unittest.TestCase):
 
 	def test_can_get_correct_parry(self):
 		test_char = mocks.create_mockchar_3()
-		test_char_pd = test_char.equipment.PD_bonus
-		self.assertEqual(test_char.defender.get_parry(), (7 + test_char_pd))
+		self.assertEqual(test_char.defender.get_parry(), 7)
 
 	def test_can_get_correct_block(self):
 		test_char = mocks.create_mockchar_5()
-		test_char_pd = test_char.equipment.PD_bonus
-		self.assertEqual(test_char.defender.get_block(), (6 + test_char_pd))
+		self.assertEqual(test_char.defender.get_block(), 6)
 
 	def test_can_get_correct_dodge(self):
 		test_char = mocks.create_mockchar_2()
-		test_char_pd = test_char.equipment.PD_bonus
-		self.assertEqual(test_char.defender.get_dodge(), (5 + test_char_pd))
+		self.assertEqual(test_char.defender.get_dodge(), 5)
 
 	def test_defender_can_provide_a_defense(self):
 		test_char = mocks.create_mockchar_2()
@@ -188,44 +185,38 @@ class DefenderTests(unittest.TestCase):
 
 	def test_defender_can_choose_best_melee_defense_without_shield(self):
 		test_char = mocks.create_mockchar_3()
-		test_char_pd = test_char.equipment.PD_bonus
 		results = test_char.defender.get_best_melee_defense()
 		self.assertEqual(results[0], "parry")
-		self.assertEqual(results[1], (7 + test_char_pd))
+		self.assertEqual(results[1], 7)
 
 	def test_defender_can_choose_best_melee_defense_with_shield_and_low_shield_skill(self):
 		test_char = mocks.create_mockchar_5()
-		test_char_pd = test_char.equipment.PD_bonus
 		results = test_char.defender.get_best_melee_defense()
 		self.assertEqual(results[0], "parry")
-		self.assertEqual(results[1], (7 + test_char_pd))		
+		self.assertEqual(results[1], 7)		
 
 	def test_defender_can_choose_best_melee_defense_with_shield_and_high_shield_skill(self):
 		test_char = mocks.create_mockchar_6()
-		test_char_pd = test_char.equipment.PD_bonus
 		results = test_char.defender.get_best_melee_defense()
 		self.assertEqual(results[0], "block")
-		self.assertEqual(results[1], (8 + test_char_pd))
+		self.assertEqual(results[1], 8)
 
 	def test_defender_can_choose_best_missile_defense(self):
 		test_char = mocks.create_mockchar_1()
-		test_char_pd = test_char.equipment.PD_bonus
 		results = test_char.defender.get_best_missile_defense()
 		self.assertEqual(results[0], "dodge")
-		self.assertEqual(results[1], (5 + test_char_pd))
+		self.assertEqual(results[1], 5)
 
 	def test_defender_can_choose_best_missile_defense_but_not_a_parry(self):
 		test_char = mocks.create_mockchar_5()
-		test_char_pd = test_char.equipment.PD_bonus
 		results = test_char.defender.get_best_missile_defense()
 		self.assertNotEqual(results[0], "parry")
 
 	def test_defender_can_choose_best_missile_defense_with_shield(self):
 		test_char = mocks.create_mockchar_5()
-		test_char_pd = test_char.equipment.PD_bonus
 		results = test_char.defender.get_best_missile_defense()
 		self.assertEqual(results[0], "block")
-		self.assertEqual(results[1], (6 + test_char_pd)) 
+		self.assertEqual(results[1], 6) 
 
 class DeathDropTests(unittest.TestCase):
 	def test_monster_has_items(self):
@@ -251,11 +242,25 @@ class DeathDropTests(unittest.TestCase):
 
 class DroppedMissileTests(unittest.TestCase):
 	def test_can_drop_missile(self):
-		pass
+		test_monster = monsters.makeKobold(1, 1)
+		entities = []
 
 	def test_can_drop_missile_at_correct_location(self):
 		pass
-	
+
+class MissileWeaponTests(unittest.TestCase):
+	def test_can_equip_missile_weapon(self):
+		test_char = mocks.create_mockchar_5()
+		pass
+
+	def test_can_load_missile_weapon(self):
+		pass
+
+	def test_cannot_load_non_missile_weapon(self):
+		pass
+
+	def test_cannot_load_missile_weapon_without_ammunition(self):
+		pass
 
 class MeleeWeaponTests(unittest.TestCase):
 	def test_can_create_melee_weapon_component(self):

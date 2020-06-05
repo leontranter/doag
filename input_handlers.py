@@ -65,6 +65,8 @@ def handle_player_turn_keys(key):
 		return {'show_spells_screen': True}
 	elif key_char == 'f':
 		return {'fire_weapon': True}
+	elif key_char == 'l':
+		return {'load_weapon': True}
 	elif key.vk == libtcod.KEY_ESCAPE:
 		#exit the game
 		return {'exit': True}

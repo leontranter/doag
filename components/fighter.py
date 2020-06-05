@@ -17,15 +17,7 @@ class Fighter:
 			bonus = self.owner.equipment.DR_bonus
 		else:
 			bonus = 0
-		return self.base_DR + bonus
-
-	@property
-	def PD(self):
-		if self.owner and self.owner.equipment:
-			bonus = self.owner.equipment.PD_bonus
-		else:
-			bonus = 0
-		return bonus	
+		return self.base_DR + bonus	
 
 	def get_basic_swing_damage(self):
 		# TODO: Fix this up!! No magic numbers!
@@ -127,10 +119,26 @@ class Fighter:
 		if self.owner.stats.hp > self.owner.stats.max_hp:
 			self.owner.stats.hp = self.owner.stats.max_hp
 
+	def load_missile_weapon(self):
+		results = []
+		# TODO : needs to check you have the right type of ammunition!!
+		if self.owner.equipment.has_missile_weapon():
+			if self.owner.equipment.has_ammunition():
+				self.owner.equipment.main_hand.missile_weapon.loaded = True
+				results.append({"loaded": True, "message": Message("You load your missile weapon.")})
+			else:
+				results.append({'message': Message("You don't have any ammunition for that weapon!")})
+		else:
+			results.append({'message': Message("You don't have a missile weapon equipped!")})
+		return results
+
 	def fire_weapon(self, **kwargs):
 		results = []
 		if not self.owner.equipment.main_hand.missile_weapon:
 			results.append({"no_missile_attack_weapon": True})
+		elif not self.owner.equipment.main_hand.missile_weapon.loaded:
+			results.append({"not_loaded": True})
+			return results
 		if not (kwargs.get("target_x") or kwargs.get("target_y")):
 			results.append({'missile_targeting': True})
 			return results
@@ -147,5 +155,6 @@ class Fighter:
 				for entity in entities:
 					if entity.x == target_x and entity.y == target_y and entity.fighter:
 						self.owner.equipment.ammunition.equippable.quantity -= 1
+						self.owner.equipment.main_hand.missile_weapon.loaded = False
 						results.extend(self.missile_attack(entity))					
 		return results

@@ -8,11 +8,24 @@ class BasicMonster():
 
 		monster = self.owner
 		if libtcod.map_is_in_fov(fov_map, monster.x, monster.y):
-			if monster.equipment.main_hand and monster.equipment.main_hand.missile_weapon and monster.equipment.ammunition.equippable.quantity > 0:
-				results.extend(monster.fighter.fire_weapon(weapon=monster.equipment.main_hand.equippable, entities=entities, fov_map=fov_map, target_x=target.x, target_y=target.y))
+			results = self.attack_player(monster, target, fov_map, game_map, entities)
+		return results
+
+	def attack_player(self, monster, target, fov_map, game_map, entities):
+		# missile attack
+		results = []
+		target_x, target_y = target.x, target.y
+		# TODO: Monster should switch weapons - or maybe run away! - if it has run out of ammunition!
+		if monster.equipment.main_hand and monster.equipment.main_hand.missile_weapon and monster.equipment.ammunition.equippable.quantity > 0:
+			if monster.equipment.main_hand.missile_weapon.loaded:
+				results.extend(monster.fighter.fire_weapon(weapon=monster.equipment.main_hand.equippable, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y))
 			else:
-				results = self.make_melee_action(results, target, entities, game_map)
-				
+			# TODO: This doesn't belong here - should move it to Fighter, but the load weapon function needs to be reworked to work for monsters!!
+				self.owner.equipment.main_hand.missile_weapon.loaded = True
+				results.append({"message": Message(f"The {self.owner.name} loads its {self.owner.equipment.main_hand.name}.")})
+		# melee attack
+		else:
+			results = self.make_melee_action(results, target, entities, game_map)
 		return results
 
 	def make_melee_action(self, results, target, entities, game_map):
@@ -22,7 +35,6 @@ class BasicMonster():
 		elif target.stats.hp > 0:
 			attack_results = monster.fighter.melee_attack(target)
 			results.extend(attack_results)
-		
 		return results
 
 

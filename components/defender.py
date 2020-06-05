@@ -21,26 +21,23 @@ class Defender:
 			return False
 
 	def get_parry(self):
-		bonus = self.owner.equipment.PD_bonus
 		if self.owner.skills and self.owner.equipment.main_hand.melee_weapon:
 			weapon_skill = weapon_skill_lookup(self.owner.equipment.main_hand.melee_weapon)
 			weapon_skill_num = self.owner.skills.getSkill(weapon_skill)
 			parry_num = int(weapon_skill_num /2) + bonus
 			return parry_num
 		else:
-			return self.default_defense + bonus
+			return self.default_defense
 
 	def get_block(self):
 		if self.owner.equipment and self.owner.equipment.off_hand and self.owner.equipment.off_hand.equippable.isShield:
-			bonus = self.owner.equipment.PD_bonus
 			shield_skill_num = self.owner.skills.getSkill("shield")
 			return int(shield_skill_num / 2) + bonus
 		else:
 			return 0
 
 	def get_dodge(self):
-		bonus = self.owner.equipment.PD_bonus
-		dodge = self.owner.stats.move + bonus
+		dodge = self.owner.stats.move
 		return dodge
 
 	def get_best_melee_defense(self):

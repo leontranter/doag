@@ -138,7 +138,7 @@ class GameMap:
 			'healing_potion': 35,
 			'armor': 20,
 			#'fireball_book': 50,
-			'zweihander': 20,
+			'greatsword': 20,
 			'bow': 30,
 			'arrows': 20,
 			'sword': from_dungeon_level([[15, 1]], self.dungeon_level),
@@ -174,28 +174,21 @@ class GameMap:
 					item_component = ItemFactory.makeHealingPotion()
 					item = Entity(x, y, '!', libtcod.violet, 'Healing Potion', render_order=RenderOrder.ITEM, item=item_component)
 				elif item_choice == 'sword':
-					equippable_component = EquippableFactory.makeBroadSword()
-					item = Entity(x, y, '(', libtcod.sky, 'Sword', equippable=equippable_component)
+					item = EquippableFactory.makeBroadSword(x, y)
 				elif item_choice == 'shield':
-					equippable_component = EquippableFactory.makeShield()
-					item = Entity(x, y, '[', libtcod.darker_orange, 'Shield', equippable=equippable_component)
+					item = EquippableFactory.makeShield(x, y) 
 				elif item_choice == 'armor':
-					equippable_component = EquippableFactory.makeLeatherArmor()
-					item = Entity(x, y, '[', libtcod.darker_orange, 'Armor', equippable=equippable_component)
-				elif item_choice == 'zweihander':
-					equippable_component = EquippableFactory.makeZweihander()
-					item = Entity(x, y, '(', libtcod.red, 'Zweihander', equippable = equippable_component)
+					item = EquippableFactory.makeLeatherArmor(x, y)
+				elif item_choice == 'greatsword':
+					item = EquippableFactory.makeGreatSword(x, y)
 				elif item_choice == 'dagger':
-					equippable_component = EquippableFactory.makeDagger()
-					item = Entity(x, y, '(', libtcod.red, 'Dagger', equippable = equippable_component)
+					item = EquippableFactory.makeDagger(x, y)
 				elif item_choice == 'axe':
-					item = EquippableFactory.makeAxe()
+					item = EquippableFactory.makeAxe(x, y)
 				elif item_choice == 'bow':
-					equippable_component = EquippableFactory.makeBow()
-					item = Entity(x, y, '(', libtcod.red, 'Bow', equippable = equippable_component)
+					item = EquippableFactory.makeBow(x, y)
 				elif item_choice == 'arrows':
-					equippable_component = EquippableFactory.makeArrows()
-					item = Entity(x, y, '(', libtcod.red, 'Arrows', equippable=equippable_component)
+					item = EquippableFactory.makeArrows(x, y)
 				elif item_choice == 'fireball_scroll':
 					item_component = ItemFactory.makeFireballScroll()
 					#item_component = Item(use_function=cast_fireball, targeting=True, targeting_message=Message('Left-click a target tile for the fireball, or right-click to cancel.', libtcod.light_cyan), damage=25, radius=3)

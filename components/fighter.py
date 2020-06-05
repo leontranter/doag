@@ -41,21 +41,32 @@ class Fighter:
 		return (dice, modifier)
 
 	def get_current_melee_damage(self):
-		if self.owner.equipment.main_hand.equippable.melee_attack_type == "swing":
+		# TODO: Fix this! Implement punching and kicking properly
+		# nothing in main hand
+		if not self.owner.equipment.main_hand:
+			dice, modifier = self.get_basic_thrust_damage()
+			damage_type = DamageTypes.CRUSHING
+		# something in main hand but it's not a melee weapon, e.g. a bow
+		elif self.owner.equipment.main_hand and not self.owner.equipment.main_hand.melee_weapon:
+			dice, modifier = self.get_basic_thrust_damage()
+			modifier += 1
+			damage_type = DamageTypes.CRUSHING
+		elif self.owner.equipment.main_hand.melee_weapon.melee_attack_type == "swing":
 			dice, modifier = self.get_basic_swing_damage()
+			damage_type = self.owner.equipment.main_hand.melee_weapon.melee_damage_type
 		else:
 			dice, modifier = self.get_basic_thrust_damage()
+			damage_type = self.owner.equipment.main_hand.melee_weapon.melee_damage_type
 		modifier += self.owner.equipment.melee_damage_bonus
-		damage_type = self.owner.equipment.main_hand.equippable.melee_damage_type
 		return (dice, modifier, damage_type)
 
 	def get_current_missile_damage(self):
-		if not self.owner.equipment.main_hand.equippable.missile_damage_type:
+		if not self.owner.equipment.main_hand.missile_weapon:
 			return 0, 0, "crushing"
 		else:
-			dice, modifier = self.owner.equipment.main_hand.equippable.missile_damage
+			dice, modifier = self.owner.equipment.main_hand.missile_weapon.missile_damage
 			modifier += self.owner.equipment.missile_damage_bonus
-			damage_type = self.owner.equipment.main_hand.equippable.missile_damage_type
+			damage_type = self.owner.equipment.main_hand.missile_weapon.missile_damage_type
 			return (dice, modifier, damage_type)
 		
 	def take_damage(self, amount):
@@ -93,15 +104,16 @@ class Fighter:
 			results.append({'fired_weapon': True})
 			results = self.resolve_hit(results, dice, modifier, damage_type, target, missile_attack=True)
 		else:
-			results.append({'missile_attack_miss': True, 'message': Message(f'{self.owner.name} misses the {target.name}.')})
+			results.append({'missile_attack_miss': True, 'message': Message(f'{self.owner.name} fires their {self.owner.equipment.main_hand.name} but misses the {target.name}.')})
 		if dice_roll(1, 0) > 2:
-				results.append({'missile_dropped': True, 'missile_type': 'arrows', 'dropped_location': (target.x, target.y)})
+			#TODO: Fix the ammunition type!!!
+				results.append({'missile_dropped': True, 'missile_type': self.owner.equipment.ammunition.name, 'dropped_location': (target.x, target.y)})
 		return results
 
 	def check_hit(self, target):
 		# TODO: Fix this!
-		if self.owner.equipment.main_hand:
-			skill_target = get_weapon_skill_for_attack(self.owner, self.owner.equipment.main_hand.equippable)
+		if self.owner.equipment.main_hand and self.owner.equipment.main_hand.melee_weapon:
+			skill_target = get_weapon_skill_for_attack(self.owner, self.owner.equipment.main_hand.melee_weapon)
 		else:
 			skill_target = 8
 		numberRolled = dice_roll(3, 0)
@@ -117,7 +129,7 @@ class Fighter:
 
 	def fire_weapon(self, **kwargs):
 		results = []
-		if not self.owner.equipment.main_hand.equippable.missile_damage:
+		if not self.owner.equipment.main_hand.missile_weapon:
 			results.append({"no_missile_attack_weapon": True})
 		if not (kwargs.get("target_x") or kwargs.get("target_y")):
 			results.append({'missile_targeting': True})

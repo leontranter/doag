@@ -27,7 +27,7 @@ def get_game_variables(constants, start_equipped=False):
 	skills_component = Skills()
 	skills_component.setSkill("sword", 14)
 	skills_component.setSkill("dagger", 14)
-	skills_component.setSkill("bow", 14)
+	skills_component.setSkill("bow", 15)
 
 	caster_component = Caster(max_mana=20)
 	player = Entity(0, 0, '@', libtcod.white, "Player", blocks=True, render_order=RenderOrder.ACTOR, fighter = fighter_component, inventory=inventory_component, level=level_component, equipment=equipment_component, caster=caster_component, stats=stats_component, skills=skills_component, defender=defender_component)
@@ -36,25 +36,20 @@ def get_game_variables(constants, start_equipped=False):
 	
 	if start_equipped:
 		x, y = 1, 1
-		equippable_component = EquippableFactory.makeBow()
-		item = Entity(x, y, '(', libtcod.red, 'Bow', equippable=equippable_component)
+		item = EquippableFactory.makeBow()
 		player.inventory.items.append(item)
-		equippable_component = EquippableFactory.makeArrows()
-		item = Entity(x, y, '(', libtcod.red, 'Arrows', equippable=equippable_component)
+		#player.equipment.main_hand = item
+		item = EquippableFactory.makeArrows()
 		player.inventory.items.append(item)
-		equippable_component = EquippableFactory.makeDagger()
-		item = Entity(x, y, '(', libtcod.red, 'Dagger', equippable = equippable_component)
-		player.inventory.items.append(item)
-		player.equipment.main_hand = item
-		equippable_component = EquippableFactory.makeLeatherArmor()
-		item = Entity(x, y, '[', libtcod.red, 'Leather Armor', equippable = equippable_component)
+		item2 = EquippableFactory.makeDagger()
+		player.inventory.items.append(item2)
+		player.equipment.main_hand = item2
+		item = EquippableFactory.makeLeatherArmor()
 		player.inventory.items.append(item)
 		player.equipment.body = item
-		equippable_component = EquippableFactory.makeZweihander()
-		item = Entity(x, y, '(', libtcod.red, 'Zweihander', equippable = equippable_component)
+		item = EquippableFactory.makeGreatSword()
 		player.inventory.items.append(item)
-		equippable_component = EquippableFactory.makeShield()
-		item = Entity(x, y, '[', libtcod.darker_orange, 'Shield', equippable=equippable_component)
+		item = EquippableFactory.makeShield()
 		player.inventory.items.append(item)
 
 	game_map = GameMap(constants['map_width'], constants['map_height'])

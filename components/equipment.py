@@ -28,15 +28,15 @@ class Equipment:
 	@property
 	def melee_damage_bonus(self):
 		bonus = 0
-
-		if self.main_hand and self.main_hand.equippable:
-			bonus += self.main_hand.equippable.melee_damage_bonus
-		if self.off_hand and self.off_hand.equippable:
-			bonus += self.off_hand.equippable.melee_damage_bonus
-		if self.body and self.body.equippable:
-			bonus += self.body.equippable.melee_damage_bonus
-		if self.ammunition and self.ammunition.equippable:
-			bonus += self.ammunition.equippable.melee_damage_bonus			
+		# TODO: Fix this! Make melee damage bonus actually work properly
+		if self.main_hand and self.main_hand.melee_weapon:
+			bonus += self.main_hand.melee_weapon.melee_damage_bonus
+		#if self.off_hand and self.off_hand.equippable:
+		#	bonus += self.off_hand.equippable.melee_damage_bonus
+		#if self.body and self.body.equippable:
+		#	bonus += self.body.equippable.melee_damage_bonus
+		#if self.ammunition and self.ammunition.equippable:
+		#	bonus += self.ammunition.equippable.melee_damage_bonus			
 
 		return bonus
 

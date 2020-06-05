@@ -15,15 +15,18 @@ class Inventory:
 				'message': Message('You cannot carry any more, your Inventory is full.', libtcod.yellow)
 				})
 		else:
+			display_name = item.name
+			if item.equippable and item.equippable.quantity and item.equippable.quantity == 1:
+				display_name = display_name[:-1]
 			results.append({
 				'item_added': item,
-				'message': Message('You pick up the {0}!'.format(item.name), libtcod.yellow)
+				'message': Message('You pick up the {0}!'.format(display_name), libtcod.yellow)
 			})
 			for current_item in self.items:
-				if current_item.name == item.name and current_item.equippable and current_item.equippable.quantity > 0:
+				if current_item.name == item.name and current_item.equippable and current_item.equippable.quantity and current_item.equippable.quantity > 0:
 					# Checking if we can stack this item with one already carried
 					# TODO: This will need a LOT more work at some point... not a very clever check
-					current_item.equippable.quantity += 1
+					current_item.equippable.quantity += item.equippable.quantity
 					break	
 			else:
 				self.items.append(item)

@@ -8,8 +8,8 @@ class BasicMonster():
 
 		monster = self.owner
 		if libtcod.map_is_in_fov(fov_map, monster.x, monster.y):
-			if monster.equipment.main_hand and monster.equipment.main_hand.equippable.missile_damage:
-				pass
+			if monster.equipment.main_hand and monster.equipment.main_hand.missile_weapon and monster.equipment.ammunition.equippable.quantity > 0:
+				results.extend(monster.fighter.fire_weapon(weapon=monster.equipment.main_hand.equippable, entities=entities, fov_map=fov_map, target_x=target.x, target_y=target.y))
 			else:
 				results = self.make_melee_action(results, target, entities, game_map)
 				

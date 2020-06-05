@@ -286,7 +286,9 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 			attack_defended = player_turn_result.get("attack_defended")
 			missile_dropped = player_turn_result.get("missile_dropped")
 			dropped_location = player_turn_result.get("dropped_location")
+			missile_type = player_turn_result.get("missile_type")
 			monster_drops = player_turn_result.get("monster_drops")
+
 
 			if message:
 				message_log.add_message(message)
@@ -327,7 +329,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 			if missile_attack_miss or melee_attack_miss or attack_defended:
 				game_state = GameStates.ENEMY_TURN
 			if missile_dropped:
-				missile_entity = make_dropped_missile(missile_dropped, dropped_location)
+				missile_entity = make_dropped_missile(missile_type, dropped_location)
 				entities.append(missile_entity)
 			if item_dropped:
 				entities.append(item_dropped)
@@ -373,10 +375,16 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 					for enemy_turn_result in enemy_turn_results:
 						message = enemy_turn_result.get('message')
 						dead_entity = enemy_turn_result.get('dead')
+						missile_dropped = enemy_turn_result.get('missile_dropped')
+						missile_type = enemy_turn_result.get('missile_type')
+						dropped_location = enemy_turn_result.get('dropped_location')
 						#dropped_items = enemy_turn_result.get('dropped_items')
 						
 						if message:
 							message_log.add_message(message)
+						if missile_dropped:
+							missile_entity = make_dropped_missile(missile_type, dropped_location)
+							entities.append(missile_entity)
 						if dead_entity:
 							if dead_entity == player:
 								message, game_state = kill_player(dead_entity)

@@ -14,6 +14,7 @@ from components.skills import Skills
 from components.stats import Stats
 from components.defender import Defender
 from components.meleeweapon import MeleeWeapon
+from damage_types import DamageTypes
 from loader_functions.constants import get_basic_damage, WeaponTypes
 from systems.attack import weapon_skill_lookup, get_weapon_skill_for_attack
 from components.inventory import Inventory
@@ -62,10 +63,9 @@ class EquipmentTests(unittest.TestCase):
 	def test_can_equip_main_hand(self):
 		test_equipment = Equipment()
 		test_player_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", equipment=test_equipment)
-		equippable_component = EquippableFactory.makeBroadSword()
-		test_item_entity = entity.Entity(1, 1, 'B', libtcod.white, "Sword", equippable=equippable_component)
+		test_item_entity = EquippableFactory.makeBroadSword()
 		test_equipment.toggle_equip(test_item_entity)
-		self.assertEqual(test_player_entity.equipment.main_hand.equippable, equippable_component)
+		self.assertEqual(test_player_entity.equipment.main_hand.equippable, test_item_entity.equippable)
 
 	def test_can_create_equipment_component(self):
 		test_equipment = Equipment()
@@ -151,11 +151,11 @@ class DamageTests(unittest.TestCase):
 class AttackTests(unittest.TestCase):
 	def test_can_lookup_weapon_skill(self):
 		test_weapon = EquippableFactory.makeBroadSword()
-		self.assertEqual(weapon_skill_lookup(test_weapon), "sword")
+		self.assertEqual(weapon_skill_lookup(test_weapon.melee_weapon), "sword")
 
 	def test_can_lookup_correct_weapon_skill(self):
 		test_char = mocks.create_mockchar_3()
-		weapon = test_char.equipment.main_hand.equippable
+		weapon = test_char.equipment.main_hand.melee_weapon
 		skill_num = get_weapon_skill_for_attack(test_char, weapon)
 		self.assertEqual(skill_num, 14)
 
@@ -248,6 +248,14 @@ class DeathDropTests(unittest.TestCase):
 
 	def test_monster_drops_one_item(self):
 		pass
+
+class DroppedMissileTests(unittest.TestCase):
+	def test_can_drop_missile(self):
+		pass
+
+	def test_can_drop_missile_at_correct_location(self):
+		pass
+	
 
 class MeleeWeaponTests(unittest.TestCase):
 	def test_can_create_melee_weapon_component(self):

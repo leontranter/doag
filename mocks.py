@@ -33,8 +33,7 @@ def create_mockchar_3():
 	test_defender_component = Defender()
 	test_skills_component = Skills()
 	test_equipment_component = Equipment()
-	equippable_component = EquippableFactory.makeBroadSword()
-	test_item_entity = Entity(1, 1, 'B', libtcod.white, "Sword", equippable=equippable_component)
+	test_item_entity = EquippableFactory.makeBroadSword()
 	test_equipment_component.main_hand = test_item_entity	
 	test_stats_component = Stats(ST=10, DX=10, IQ=10, HT=10)
 	test_entity = Entity(1, 1, 'A', libtcod.white, "Player", skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component, defender=test_defender_component)	
@@ -48,8 +47,7 @@ def create_mockchar_4():
 	test_equipment_component = Equipment()
 	equippable_component = EquippableFactory.makeShield()
 	test_item_entity = Entity(1, 1, 'B', libtcod.white, "Shield", equippable=equippable_component)
-	equippable_component2 = EquippableFactory.makeBroadSword()
-	test_item_entity2 = Entity(1, 1, 'B', libtcod.white, "Sword", equippable=equippable_component2)
+	test_item_entity2 = EquippableFactory.makeBroadSword()
 	test_equipment_component.main_hand = test_item_entity2
 	#test_equipment_component.off_hand = test_item_entity	
 	test_stats_component = Stats(ST=10, DX=10, IQ=10, HT=10)
@@ -64,8 +62,7 @@ def create_mockchar_5():
 	test_equipment_component = Equipment()
 	equippable_component = EquippableFactory.makeShield()
 	test_item_entity = Entity(1, 1, 'B', libtcod.white, "Shield", equippable=equippable_component)
-	equippable_component2 = EquippableFactory.makeBroadSword()
-	test_item_entity2 = Entity(1, 1, 'B', libtcod.white, "Sword", equippable=equippable_component2)
+	test_item_entity2 = EquippableFactory.makeBroadSword()
 	test_equipment_component.main_hand = test_item_entity2
 	test_equipment_component.off_hand = test_item_entity	
 	test_stats_component = Stats(ST=10, DX=10, IQ=10, HT=10)
@@ -81,8 +78,7 @@ def create_mockchar_6():
 	test_equipment_component = Equipment()
 	equippable_component = EquippableFactory.makeShield()
 	test_item_entity = Entity(1, 1, 'B', libtcod.white, "Shield", equippable=equippable_component)
-	equippable_component2 = EquippableFactory.makeBroadSword()
-	test_item_entity2 = Entity(1, 1, 'B', libtcod.white, "Sword", equippable=equippable_component2)
+	test_item_entity2 = EquippableFactory.makeBroadSword()
 	test_equipment_component.main_hand = test_item_entity2
 	test_equipment_component.off_hand = test_item_entity	
 	test_stats_component = Stats(ST=10, DX=10, IQ=10, HT=10)
@@ -98,8 +94,7 @@ def create_mockchar_7():
 	test_equipment_component = Equipment()
 	equippable_component = EquippableFactory.makeShield()
 	test_item_entity = Entity(1, 1, 'B', libtcod.white, "Shield", equippable=equippable_component)
-	equippable_component2 = EquippableFactory.makeBroadSword()
-	test_item_entity2 = Entity(1, 1, 'B', libtcod.white, "Sword", equippable=equippable_component2)
+	test_item_entity2 = EquippableFactory.makeBroadSword()
 	test_equipment_component.main_hand = test_item_entity2
 	test_stats_component = Stats(ST=10, DX=10, IQ=10, HT=10)
 	test_entity = Entity(1, 1, 'A', libtcod.white, "Player", skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component, defender=test_defender_component)	
@@ -114,8 +109,7 @@ def create_mockchar_8():
 	test_equipment_component = Equipment()
 	equippable_component = EquippableFactory.makeShield()
 	test_item_entity = Entity(1, 1, 'B', libtcod.white, "Shield", equippable=equippable_component)
-	equippable_component2 = EquippableFactory.makeBroadSword()
-	test_item_entity2 = Entity(1, 1, 'B', libtcod.white, "Sword", equippable=equippable_component2)
+	test_item_entity2 = EquippableFactory.makeBroadSword()
 	test_equipment_component.main_hand = test_item_entity2
 	test_equipment_component.off_hand = test_item_entity	
 	test_stats_component = Stats(ST=10, DX=10, IQ=10, HT=10)

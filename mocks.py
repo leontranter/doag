@@ -45,11 +45,9 @@ def create_mockchar_4():
 	test_defender_component = Defender()
 	test_skills_component = Skills()
 	test_equipment_component = Equipment()
-	equippable_component = EquippableFactory.makeShield()
-	test_item_entity = Entity(1, 1, 'B', libtcod.white, "Shield", equippable=equippable_component)
-	test_item_entity2 = EquippableFactory.makeBroadSword()
-	test_equipment_component.main_hand = test_item_entity2
-	#test_equipment_component.off_hand = test_item_entity	
+	test_shield = EquippableFactory.makeShield()
+	test_sword = EquippableFactory.makeBroadSword()
+	test_equipment_component.main_hand = test_sword	
 	test_stats_component = Stats(ST=10, DX=10, IQ=10, HT=10)
 	test_entity = Entity(1, 1, 'A', libtcod.white, "Player", skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component, defender=test_defender_component)	
 	test_skills_component.setSkill("sword", 14)
@@ -60,11 +58,10 @@ def create_mockchar_5():
 	test_defender_component = Defender()
 	test_skills_component = Skills()
 	test_equipment_component = Equipment()
-	equippable_component = EquippableFactory.makeShield()
-	test_item_entity = Entity(1, 1, 'B', libtcod.white, "Shield", equippable=equippable_component)
-	test_item_entity2 = EquippableFactory.makeBroadSword()
-	test_equipment_component.main_hand = test_item_entity2
-	test_equipment_component.off_hand = test_item_entity	
+	test_shield = EquippableFactory.makeShield()
+	test_sword = EquippableFactory.makeBroadSword()
+	test_equipment_component.main_hand = test_sword
+	test_equipment_component.off_hand = test_shield	
 	test_stats_component = Stats(ST=10, DX=10, IQ=10, HT=10)
 	test_entity = Entity(1, 1, 'A', libtcod.white, "Player", skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component, defender=test_defender_component)	
 	test_skills_component.setSkill("sword", 14)
@@ -76,11 +73,10 @@ def create_mockchar_6():
 	test_defender_component = Defender()
 	test_skills_component = Skills()
 	test_equipment_component = Equipment()
-	equippable_component = EquippableFactory.makeShield()
-	test_item_entity = Entity(1, 1, 'B', libtcod.white, "Shield", equippable=equippable_component)
-	test_item_entity2 = EquippableFactory.makeBroadSword()
-	test_equipment_component.main_hand = test_item_entity2
-	test_equipment_component.off_hand = test_item_entity	
+	test_shield = EquippableFactory.makeShield()
+	test_sword = EquippableFactory.makeBroadSword()
+	test_equipment_component.main_hand = test_sword
+	test_equipment_component.off_hand = test_shield
 	test_stats_component = Stats(ST=10, DX=10, IQ=10, HT=10)
 	test_entity = Entity(1, 1, 'A', libtcod.white, "Player", skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component, defender=test_defender_component)	
 	test_skills_component.setSkill("sword", 14)
@@ -92,10 +88,9 @@ def create_mockchar_7():
 	test_defender_component = Defender()
 	test_skills_component = Skills()
 	test_equipment_component = Equipment()
-	equippable_component = EquippableFactory.makeShield()
-	test_item_entity = Entity(1, 1, 'B', libtcod.white, "Shield", equippable=equippable_component)
-	test_item_entity2 = EquippableFactory.makeBroadSword()
-	test_equipment_component.main_hand = test_item_entity2
+	test_shield = EquippableFactory.makeShield()
+	test_sword = EquippableFactory.makeBroadSword()
+	test_equipment_component.main_hand = test_sword
 	test_stats_component = Stats(ST=10, DX=10, IQ=10, HT=10)
 	test_entity = Entity(1, 1, 'A', libtcod.white, "Player", skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component, defender=test_defender_component)	
 	test_skills_component.setSkill("sword", 14)
@@ -107,11 +102,10 @@ def create_mockchar_8():
 	test_defender_component = Defender()
 	test_skills_component = Skills()
 	test_equipment_component = Equipment()
-	equippable_component = EquippableFactory.makeShield()
-	test_item_entity = Entity(1, 1, 'B', libtcod.white, "Shield", equippable=equippable_component)
-	test_item_entity2 = EquippableFactory.makeBroadSword()
-	test_equipment_component.main_hand = test_item_entity2
-	test_equipment_component.off_hand = test_item_entity	
+	test_shield = EquippableFactory.makeShield()
+	test_sword = EquippableFactory.makeBroadSword()
+	test_equipment_component.main_hand = test_sword
+	test_equipment_component.off_hand = test_shield	
 	test_stats_component = Stats(ST=10, DX=10, IQ=10, HT=10)
 	test_entity = Entity(1, 1, 'A', libtcod.white, "Player", skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component, defender=test_defender_component)	
 	test_skills_component.setSkill("sword", 14)

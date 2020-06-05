@@ -110,7 +110,10 @@ def mark_equipped(text, option, inventory, player):
 	if player.equipment.body == option:
 		text += " - worn on body"
 	if player.equipment.ammunition == option:
-		text += " in quiver, {} arrows left".format(player.equipment.ammunition.equippable.quantity)
+		display_name = player.equipment.ammunition.equippable.name
+		if player.equipment.ammunition.equippable.quantity == 1:
+			display_name = display_name[:-1]
+		text += " in quiver, {} {} left".format(player.equipment.ammunition.equippable.quantity, display_name)
 	return text
 
 def buildTextMenu(optionsList):

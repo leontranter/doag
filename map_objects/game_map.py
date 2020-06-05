@@ -171,8 +171,7 @@ class GameMap:
 				item_choice = random_choice_from_dict(item_chances)
 				# TODO: This whole lookup could be just changed to one dict lookup I think? item = itemMaker[itemchoice] or something?
 				if item_choice == 'healing_potion':
-					item_component = ItemFactory.makeHealingPotion()
-					item = Entity(x, y, '!', libtcod.violet, 'Healing Potion', render_order=RenderOrder.ITEM, item=item_component)
+					item = ItemFactory.makeHealingPotion()
 				elif item_choice == 'sword':
 					item = EquippableFactory.makeBroadSword(x, y)
 				elif item_choice == 'shield':
@@ -190,26 +189,16 @@ class GameMap:
 				elif item_choice == 'arrows':
 					item = EquippableFactory.makeArrows(x, y)
 				elif item_choice == 'fireball_scroll':
-					item_component = ItemFactory.makeFireballScroll()
-					#item_component = Item(use_function=cast_fireball, targeting=True, targeting_message=Message('Left-click a target tile for the fireball, or right-click to cancel.', libtcod.light_cyan), damage=25, radius=3)
-					item = Entity(x, y, '?', libtcod.red, 'Fireball scroll', render_order=RenderOrder.ITEM, item=item_component)
+					item = ItemFactory.makeFireballScroll()
 				elif item_choice == 'confusion_scroll':
-					item_component = ItemFactory.makeConfusionScroll()
-					#item_component = Item(use_function=cast_confuse, targeting=True, targeting_message=Message('Left-click on an enemy to confuse it or right-click to cancel.', libtcod.light_cyan))
-					item = Entity(x, y, '?', libtcod.light_pink, 'Confusion scroll', render_order=RenderOrder.ITEM, item=item_component)
+					item = ItemFactory.makeConfusionScroll()	
 				elif item_choice == 'fireball_book':
 					item_component = ItemFactory.makeFireballBook()
-					item = Entity(x, y, '#', libtcod.red, 'Fireball spellbook', render_order=RenderOrder.ITEM, item=item_component)
 				elif item_choice == 'heal_book':
 					item_component = ItemFactory.makeHealBook()
-					item = Entity(x, y, '#', libtcod.red, 'Heal spellbook', render_order=RenderOrder.ITEM, item=item_component)
 				else:
-					item_component = ItemFactory.makeLightningScroll()
-					#item_component = Item(use_function=cast_lightning, damage=40, maximum_range=5)
-					item = Entity(x, y, '?', libtcod.yellow, 'Lightning Scroll', render_order=RenderOrder.ITEM, item=item_component)
+					item = ItemFactory.makeLightningScroll()	
 				entities.append(item)
-		
-
 
 	def next_floor(self, player, message_log, constants, floor_direction):
 		self.dungeon_level += floor_direction

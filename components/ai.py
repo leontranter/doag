@@ -16,15 +16,21 @@ class BasicMonster():
 		results = []
 		target_x, target_y = target.x, target.y
 		# TODO: Monster should switch weapons - or maybe run away! - if it has run out of ammunition!
-		if monster.equipment.main_hand and monster.equipment.main_hand.missile_weapon and monster.equipment.ammunition.equippable.quantity > 0:
-			if monster.equipment.main_hand.missile_weapon.loaded:
-				results.extend(monster.fighter.fire_weapon(weapon=monster.equipment.main_hand.equippable, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y))
+		if self.owner.equipment.has_missile_weapon():
+			if self.owner.equipment.has_ammunition():
+				if monster.equipment.main_hand.missile_weapon.loaded:
+					results.extend(monster.fighter.fire_weapon(weapon=monster.equipment.main_hand.equippable, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y))
+				else:
+					# TODO: This doesn't belong here - should move it to Fighter, but the load weapon function needs to be reworked to work for monsters!!
+					self.owner.equipment.main_hand.missile_weapon.loaded = True
+					results.append({"message": Message(f"The {self.owner.name} loads its {self.owner.equipment.main_hand.name}.")})
 			else:
-			# TODO: This doesn't belong here - should move it to Fighter, but the load weapon function needs to be reworked to work for monsters!!
-				self.owner.equipment.main_hand.missile_weapon.loaded = True
-				results.append({"message": Message(f"The {self.owner.name} loads its {self.owner.equipment.main_hand.name}.")})
-		# melee attack
+				#no ammunition
+				for item in self.owner.inventory.items:
+					if item.melee_weapon:
+						results.append({"message": Message(f"The {self.owner.name} equips a {item.name}."), "equips": item})
 		else:
+			# melee action (attack or move towards)
 			results = self.make_melee_action(results, target, entities, game_map)
 		return results
 

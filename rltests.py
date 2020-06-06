@@ -267,7 +267,11 @@ class MissileWeaponTests(unittest.TestCase):
 class MeleeWeaponTests(unittest.TestCase):
 	def test_can_create_melee_weapon_component(self):
 		test_component = MeleeWeapon(WeaponTypes.AXE, "swing", 1, DamageTypes.CRUSHING)
-		self.assertEqual(test_component.weapon_type, WeaponTypes.AXE)	
+		self.assertEqual(test_component.weapon_type, WeaponTypes.AXE)
+
+	def test_has_melee_weapon(self):
+		test_char = mocks.create_mockchar_5()
+		self.assertEqual(test_char.equipment.has_melee_weapon(), True)
 
 #class ItemTests(unittest.TestCase):
 #	def test_can_create_item(self):

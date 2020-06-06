@@ -384,6 +384,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 						missile_dropped = enemy_turn_result.get('missile_dropped')
 						missile_type = enemy_turn_result.get('missile_type')
 						dropped_location = enemy_turn_result.get('dropped_location')
+						equips = enemy_turn_result.get("equips")
 						#dropped_items = enemy_turn_result.get('dropped_items')
 						
 						if message:
@@ -391,6 +392,8 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 						if missile_dropped:
 							missile_entity = make_dropped_missile(missile_type, dropped_location)
 							entities.append(missile_entity)
+						if equips:
+							entity.equipment.toggle_equip(equips)
 						if dead_entity:
 							if dead_entity == player:
 								message, game_state = kill_player(dead_entity)

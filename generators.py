@@ -4,7 +4,7 @@ from components.equippable import EquippableFactory
 
 def item_generator(item_choice, x, y):
 	if item_choice == 'healing_potion':
-		item = makeHealingPotion()
+		item = makeHealingPotion(x, y)
 	elif item_choice == 'sword':
 		item = EquippableFactory.makeBroadSword(x, y)
 	elif item_choice == 'shield':
@@ -22,15 +22,15 @@ def item_generator(item_choice, x, y):
 	elif item_choice == 'arrows':
 		item = EquippableFactory.makeArrows(x, y)
 	elif item_choice == 'fireball_scroll':
-		item = makeFireballScroll()
+		item = makeFireballScroll(x, y)
 	elif item_choice == 'confusion_scroll':
-		item = makeConfusionScroll()	
+		item = makeConfusionScroll(x, y)	
 	elif item_choice == 'fireball_book':
-		item_component = makeFireballBook()
+		item_component = makeFireballBook(x, y)
 	elif item_choice == 'heal_book':
-		item_component = makeHealBook()
+		item_component = makeHealBook(x, y)
 	elif item_choice == 'lightning_scroll':
-		item = makeLightningScroll()
+		item = makeLightningScroll(x, y)
 	return item
 
 #def item_generator(item_choice):

@@ -76,6 +76,7 @@ class Equipment:
 		slot = equippable_entity.equippable.slot
 		if slot == EquipmentSlots.MAIN_HAND:
 			equippable_entity, results = self.toggle_main_hand(equippable_entity, results)
+		# TODO: Fix this up!!!
 		elif slot == EquipmentSlots.OFF_HAND:
 			if self.off_hand == equippable_entity:
 				self.off_hand = None
@@ -159,7 +160,6 @@ class Equipment:
 
 	def has_ammunition(self):
 		if self.ammunition:
-			return True
 			if self.ammunition.equippable.quantity:
 				if self.ammunition.equippable.quantity > 0:
 					return True
@@ -168,4 +168,14 @@ class Equipment:
 			else:
 				return False
 		else:
-			return False	
+			return False
+
+	def has_melee_weapon(self):
+		if self.owner.equipment:
+			if self.owner.equipment.main_hand:
+				if self.owner.equipment.main_hand.melee_weapon:
+					return True
+			else:
+				return False
+		else:
+			return False

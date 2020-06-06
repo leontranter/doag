@@ -66,7 +66,7 @@ def makeKobold(x, y):
 	item = EquippableFactory.makeBow()
 	monster.inventory.items.append(item)
 	monster.equipment.main_hand = item
-	item = EquippableFactory.makeArrows()
+	item = EquippableFactory.makeArrows(quantity=2)
 	monster.inventory.items.append(item)
 	monster.equipment.ammunition = item
 	return monster

@@ -23,7 +23,7 @@ def get_game_variables(constants, start_equipped=False):
 	level_component = Level()
 	equipment_component = Equipment()
 	defender_component = Defender()
-	stats_component = Stats(ST=12, DX=12, IQ=12, HT=12)
+	stats_component = Stats(ST=12, DX=12, IQ=12, HT=22)
 	skills_component = Skills()
 	skills_component.setSkill("sword", 14)
 	skills_component.setSkill("dagger", 14)

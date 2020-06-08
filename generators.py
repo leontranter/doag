@@ -1,11 +1,9 @@
 from components.equippable import EquippableFactory
-from item_factory import makeHealingPotion, makeFireballScroll, makeConfusionScroll, makeFireballBook, makeHealBook, makeLightningScroll
+from item_factory import makeHealingPotion, makeFireballScroll, makeConfusionScroll, makeFireballBook, makeHealBook, makeLightningScroll, makePoisonPotion
 from components.equippable import EquippableFactory
 
-def item_generator(item_choice, x, y):
-	if item_choice == 'healing_potion':
-		item = makeHealingPotion(x, y)
-	elif item_choice == 'sword':
+def item_generator2(item_choice, x, y):
+	if item_choice == 'sword':
 		item = EquippableFactory.makeBroadSword(x, y)
 	elif item_choice == 'shield':
 		item = EquippableFactory.makeShield(x, y) 
@@ -31,11 +29,15 @@ def item_generator(item_choice, x, y):
 		item_component = makeHealBook(x, y)
 	elif item_choice == 'lightning_scroll':
 		item = makeLightningScroll(x, y)
+	elif item_choice == 'healing_potion':
+		item = makeHealingPotion(x, y)
+	elif item_choice == 'poison_potion':
+		item = makePoisonPotion(x, y)
 	return item
 
-#def item_generator(item_choice):
-#	item_lookup = {'healing_potion': makeHealingPotion, 'sword': makeBroadSword, 'shield': makeShield, 'armor': makeLeatherArmor, 'greatsword': makeGreatSword, 'dagger': makeDagger,
-#				'axe': makeAxe, 'bow': makeBow, 'arrows': makeArrows, 'fireball_scroll': makeFireballScroll, 'confusion_scroll': makeConfusionScroll, 'fireball_book': makeFireballBook, 'heal_book': makeHealBook,
-#				'lightning_scroll': makeLightningScroll}
-#	chosen_item = item_lookup[item_choice]()
-#	return chosen_item
+def item_generator(item_choice, x, y):
+	item_lookup = {'healing_potion': makeHealingPotion, 'poison_potion': makePoisonPotion, 'sword': EquippableFactory.makeBroadSword, 'shield': EquippableFactory.makeShield, 'armor': EquippableFactory.makeLeatherArmor, 'greatsword': EquippableFactory.makeGreatSword, 'dagger': EquippableFactory.makeDagger,
+				'axe': EquippableFactory.makeAxe, 'bow': EquippableFactory.makeBow, 'arrows': EquippableFactory.makeArrows, 'fireball_scroll': makeFireballScroll, 'confusion_scroll': makeConfusionScroll, 'fireball_book': makeFireballBook, 'heal_book': makeHealBook,
+				'lightning_scroll': makeLightningScroll}
+	chosen_item = item_lookup[item_choice](x, y)
+	return chosen_item

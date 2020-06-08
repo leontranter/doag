@@ -60,7 +60,12 @@ class Fighter:
 			modifier += self.owner.equipment.missile_damage_bonus
 			damage_type = self.owner.equipment.main_hand.missile_weapon.missile_damage_type
 			return (dice, modifier, damage_type)
-		
+	
+	def resolve_hit(self, results, dice, modifier, damage_type, target):
+		base_damage, penetrated_damage, final_damage = calculate_damage(dice, modifier, damage_type, target)
+		results = damage_messages(results, self.owner, target, base_damage, final_damage, damage_type)
+		return results
+
 	def take_damage(self, amount):
 		results = []
 
@@ -70,12 +75,13 @@ class Fighter:
 			results.append({'dead': self.owner, 'xp': self.xp})
 		return results
 
+	# TODO: clean this up - most of these two functions can be merged
 	def melee_attack(self, target):
 		results = []
 		if self.check_hit(target):
 			defense_result, defense_choice = target.defender.defend_melee_attack()
 			if not defense_result:
-				results.append({'attack_not_defended': True, 'message': Message(f"{self.owner.name} hits! {target.name} tries to {defense_choice} the attack but fails.")})
+				results.append({'message': Message(f"{self.owner.name} hits! {target.name} tries to {defense_choice} the attack but fails.")})
 				dice, modifier, damage_type = self.get_current_melee_damage()
 				results = self.resolve_hit(results, dice, modifier, damage_type, target)
 			else:
@@ -84,22 +90,22 @@ class Fighter:
 			results.append({'melee_attack_miss': True, 'message': Message(f'{self.owner.name} misses the {target.name}.')})
 		return results
 
-	def resolve_hit(self, results, dice, modifier, damage_type, target, missile_attack=False):
-		base_damage, penetrated_damage, final_damage = calculate_damage(dice, modifier, damage_type, target)
-		results = damage_messages(results, self.owner, target, base_damage, final_damage, damage_type)
-		return results
-
 	def missile_attack(self, target):
 		results = []
 		if self.check_hit(target):
-			dice, modifier, damage_type = self.get_current_missile_damage()
-			results.append({'fired_weapon': True})
-			results = self.resolve_hit(results, dice, modifier, damage_type, target, missile_attack=True)
+			defense_result, defense_choice = target.defender.defend_missile_attack()
+			if not defense_results:
+				results.append({'message': Message(f"{self.owner.name} hits! {target.name} tries to {defense_choice} the attack but fails.")})
+				dice, modifier, damage_type = self.get_current_missile_damage()
+				results = self.resolve_hit(results, dice, modifier, damage_type, target)
+			else:
+				results.append({'attack_defended': True, 'message': Message(f'The {self.owner.name} hits, but the {target.name} {defense_choice}s the attack.')})	
 		else:
 			results.append({'missile_attack_miss': True, 'message': Message(f'{self.owner.name} fires their {self.owner.equipment.main_hand.name} but misses the {target.name}.')})
 		if dice_roll(1, 0) > 2:
 			#TODO: Fix the ammunition type!!!
-				results.append({'missile_dropped': True, 'missile_type': self.owner.equipment.ammunition.name, 'dropped_location': (target.x, target.y)})
+			results.append({'missile_dropped': True, 'missile_type': self.owner.equipment.ammunition.name, 'dropped_location': (target.x, target.y)})
+		results.append({'fired_weapon': True})
 		return results
 
 	def check_hit(self, target):

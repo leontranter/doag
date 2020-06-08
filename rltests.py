@@ -85,27 +85,29 @@ class SkillsTests(unittest.TestCase):
 	 
 	def test_can_create_sword_skill(self):
 		test_skillset = Skills()
-		test_skillset.setSkill("sword", 15)
-		self.assertEqual(test_skillset.skills["sword"], 15)
+		test_skillset.set_skill_rank("sword", 1)
+		self.assertEqual(test_skillset.skills["sword"], 1)
 
 	def test_can_update_sword_skill(self):
 		test_skillset = Skills()
-		test_skillset.setSkill("sword", 15)
-		test_skillset.setSkill("sword", 18)
-		self.assertEqual(test_skillset.skills["sword"], 18)
+		test_skillset.set_skill_rank("sword", 1)
+		test_skillset.set_skill_rank("sword", 3)
+		self.assertEqual(test_skillset.skills["sword"], 3)
 
 	def test_can_get_skill(self):
 		test_skillset = Skills()
-		test_skillset.setSkill("sword", 15)
-		foo = test_skillset.getSkill("sword")
-		self.assertEqual(foo, 15)
+		test_stats = Stats()
+		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", stats=test_stats, skills=test_skillset)
+		test_skillset.set_skill_rank("sword", 1)
+		skill_test = test_skillset.get_skill_check("sword")
+		self.assertEqual(skill_test, 10)
 	
-	# TODO: this uses the crappy default, fix it later
-	def test_can_get_skill_default(self):
+	def test_can_get_default(self):
 		test_skillset = Skills()
-		foo = test_skillset.getSkill("sword")
-		self.assertEqual(foo, 8)	
-
+		test_stats = Stats()
+		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", stats=test_stats, skills=test_skillset)
+		skill_test = test_skillset.get_skill_check("sword")
+		self.assertEqual(skill_test, 6)
 
 class MapTests(unittest.TestCase):
 	def test_can_make_map(self):
@@ -117,15 +119,15 @@ class MapTests(unittest.TestCase):
 
 class StatsTests(unittest.TestCase):
 	def test_can_create_entity_with_stats(self):
-		test_stats_component = Stats(ST=10, DX=10, IQ=10, HT=10)
+		test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", stats=test_stats_component)
 		self.assertEqual(test_entity.stats, test_stats_component)
 
 	def test_can_calculate_hp(self):
-		test_stats_component = Stats(ST=10, DX=10, IQ=10, HT=10)
+		test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", stats=test_stats_component)
-		self.assertEqual(test_entity.stats.max_hp, 10)
-		self.assertEqual(test_entity.stats.hp, 10)
+		self.assertEqual(test_entity.stats.max_hp, 19)
+		self.assertEqual(test_entity.stats.hp, 19)
 
 
 class DamageTests(unittest.TestCase):
@@ -135,7 +137,7 @@ class DamageTests(unittest.TestCase):
 		self.assertNotEqual(len(thrust_damage), 0)
 
 	def test_can_calculate_swing_damage(self):
-		test_stats_component = Stats(ST=10, DX=10, IQ=10, HT=10)
+		test_stats_component = Stats(Strength=10, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)
 		test_fighter_component = Fighter(xp=10)
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", stats=test_stats_component, fighter=test_fighter_component)
 		dice, modifier = test_fighter_component.get_basic_swing_damage()
@@ -143,7 +145,7 @@ class DamageTests(unittest.TestCase):
 		self.assertEqual(modifier, 0)
 
 	def test_can_calculate_thrust_damage(self):
-		test_stats_component = Stats(ST=10, DX=10, IQ=10, HT=10)
+		test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)
 		test_fighter_component = Fighter(xp=10)
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", stats=test_stats_component, fighter=test_fighter_component)
 		dice, modifier = test_fighter_component.get_basic_thrust_damage()
@@ -159,7 +161,7 @@ class AttackTests(unittest.TestCase):
 		test_char = mocks.create_mockchar_3()
 		weapon = test_char.equipment.main_hand.melee_weapon
 		skill_num = get_weapon_skill_for_attack(test_char, weapon)
-		self.assertEqual(skill_num, 14)
+		self.assertEqual(skill_num, 12)
 
 
 class DefenderTests(unittest.TestCase):
@@ -170,15 +172,15 @@ class DefenderTests(unittest.TestCase):
 
 	def test_can_get_correct_parry(self):
 		test_char = mocks.create_mockchar_3()
-		self.assertEqual(test_char.defender.get_parry(), 7)
+		self.assertEqual(test_char.defender.get_parry(), 6)
 
 	def test_can_get_correct_block(self):
 		test_char = mocks.create_mockchar_5()
 		self.assertEqual(test_char.defender.get_block(), 6)
 
-	def test_can_get_correct_dodge(self):
+	def test_can_get_correct_evade(self):
 		test_char = mocks.create_mockchar_2()
-		self.assertEqual(test_char.defender.get_dodge(), 5)
+		self.assertEqual(test_char.defender.get_evade(), 5)
 
 	def test_defender_can_provide_a_defense(self):
 		test_char = mocks.create_mockchar_2()
@@ -189,24 +191,25 @@ class DefenderTests(unittest.TestCase):
 		test_char = mocks.create_mockchar_3()
 		results = test_char.defender.get_best_melee_defense()
 		self.assertEqual(results[0], "parry")
-		self.assertEqual(results[1], 7)
+		self.assertEqual(results[1], 6)
 
-	def test_defender_can_choose_best_melee_defense_with_shield_and_low_shield_skill(self):
-		test_char = mocks.create_mockchar_5()
-		results = test_char.defender.get_best_melee_defense()
-		self.assertEqual(results[0], "parry")
-		self.assertEqual(results[1], 7)		
+	#def test_defender_can_choose_best_melee_defense_with_shield_and_low_shield_skill(self):
+	#	test_char = mocks.create_mockchar_5()
+	#	results = test_char.defender.get_best_melee_defense()
+	#	self.assertEqual(results[0], "parry")
+	#	self.assertEqual(results[1], 6)		
 
 	def test_defender_can_choose_best_melee_defense_with_shield_and_high_shield_skill(self):
 		test_char = mocks.create_mockchar_6()
 		results = test_char.defender.get_best_melee_defense()
+		self.assertEqual(test_char.skills.get_skill_check("shield"), 12)
 		self.assertEqual(results[0], "block")
-		self.assertEqual(results[1], 8)
+		self.assertEqual(results[1], 6)
 
 	def test_defender_can_choose_best_missile_defense(self):
 		test_char = mocks.create_mockchar_1()
 		results = test_char.defender.get_best_missile_defense()
-		self.assertEqual(results[0], "dodge")
+		self.assertEqual(results[0], "evade")
 		self.assertEqual(results[1], 5)
 
 	def test_defender_can_choose_best_missile_defense_but_not_a_parry(self):
@@ -218,7 +221,8 @@ class DefenderTests(unittest.TestCase):
 		test_char = mocks.create_mockchar_5()
 		results = test_char.defender.get_best_missile_defense()
 		self.assertEqual(results[0], "block")
-		self.assertEqual(results[1], 6) 
+		self.assertEqual(results[1], 6)
+
 
 class DeathDropTests(unittest.TestCase):
 	def test_monster_has_items(self):
@@ -235,8 +239,6 @@ class DeathDropTests(unittest.TestCase):
 		test_monster = monsters.makeOrc(1, 1)
 		entities = []
 		entities = test_monster.inventory.drop_on_death(entities, test_monster)
-		for entity in entities:
-			print(entity.name)
 		self.assertEqual(len(entities), 2)
 
 	def test_monster_drops_one_item(self):
@@ -249,6 +251,8 @@ class DroppedMissileTests(unittest.TestCase):
 
 	def test_can_drop_missile_at_correct_location(self):
 		pass
+
+# TODO: write these tests!
 
 class MissileWeaponTests(unittest.TestCase):
 	def test_can_equip_missile_weapon(self):

@@ -3,9 +3,15 @@ from entity import Entity
 from item_functions import heal, cast_lightning, cast_fireball, cast_confuse
 import tcod as libtcod
 from render_functions import RenderOrder
+from game_messages import Message
 
 def makeHealingPotion(x=1, y=1):
 	healing_component = Item(use_function=heal, amount=40)
+	tempItem = Entity(x, y, '!', libtcod.violet, 'Healing Potion', render_order=RenderOrder.ITEM, item=healing_component)
+	return tempItem
+
+def makePoisonPotion(x=1, y=1):
+	poison_component = Item(use_function=poison, amount=10)
 	tempItem = Entity(x, y, '!', libtcod.violet, 'Healing Potion', render_order=RenderOrder.ITEM, item=healing_component)
 	return tempItem
 

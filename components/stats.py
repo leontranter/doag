@@ -1,12 +1,15 @@
 class Stats:
-	def __init__(self, ST=10, DX=10, IQ=10, HT=10):
-		self.ST = ST
-		self.DX = DX
-		self.IQ = IQ
-		self.HT = HT
-		self.base_max_hp = HT
+	def __init__(self, Strength=10, Precision=10, Agility=10, Intellect=10, Willpower=10, Stamina=10, Endurance=10):
+		self.Strength = Strength
+		self.Precision = Precision
+		self.Agility = Agility
+		self.Intellect = Intellect
+		self.Willpower = Willpower
+		self.Stamina = Stamina
+		self.Endurance = Endurance
+		self.base_max_hp = self.Stamina + self.Endurance
 		self.hp = self.base_max_hp
-		self.move = int((DX + HT) / 4)
+		self.evade = int((self.Agility + self.Precision) / 4)
 
 	@property
 	def max_hp(self):
@@ -17,9 +20,9 @@ class Stats:
 		return self.base_max_hp + bonus
 
 	def get_strength_in_range(self):
-		if self.ST < 5:
+		if self.Strength < 5:
 			return 5
-		if self.ST > 19:
+		if self.Strength > 19:
 			return 19
 		else:
-			return self.ST
+			return self.Strength

@@ -16,6 +16,15 @@ def heal(*args, **kwargs):
 	
 	return results
 
+def poison(*args, **kwargs):
+	entity = args[0]
+	amount = kwargs.get('amount')
+
+	results = []
+	entity.fighter.take_damage(amount)
+	results.append({'consumed': True, 'message': Message('You drink a potion of poison! You feel terrible!', libtcod.green)})
+	return results
+
 def cast_lightning(*args, **kwargs):
 	caster = args[0]
 	entities = kwargs.get('entities')

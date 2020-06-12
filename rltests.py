@@ -9,14 +9,16 @@ import map_objects.rectangle as rectangle
 from components.fighter import Fighter
 from components.caster import Caster
 from components.equipment import Equipment
-from components.equippable import Equippable, EquippableFactory
+from components.equippable import Equippable, EquippableFactory, make_dropped_missile
 from components.skills import Skills
 from components.stats import Stats
 from components.defender import Defender
 from components.meleeweapon import MeleeWeapon
 from components.item import Item
+from components.name import Name
 from damage_types import DamageTypes
-from loader_functions.constants import get_basic_damage, WeaponTypes
+from loader_functions.constants import get_basic_damage, WeaponTypes, get_constants
+from loader_functions.initialize_new_game import get_game_variables
 from systems.attack import weapon_skill_lookup, get_weapon_skill_for_attack
 from components.inventory import Inventory
 from item_factory import makeHealingPotion, makeLightningScroll, makeFireballScroll, makeConfusionScroll, makeFireballBook, makeHealBook
@@ -65,7 +67,7 @@ class EquipmentTests(unittest.TestCase):
 	def test_can_equip_main_hand(self):
 		test_equipment = Equipment()
 		test_player_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", equipment=test_equipment)
-		test_item_entity = EquippableFactory.makeBroadSword()
+		test_item_entity = EquippableFactory.make_sword()
 		test_equipment.toggle_equip(test_item_entity)
 		self.assertEqual(test_player_entity.equipment.main_hand.equippable, test_item_entity.equippable)
 
@@ -154,7 +156,7 @@ class DamageTests(unittest.TestCase):
 
 class AttackTests(unittest.TestCase):
 	def test_can_lookup_weapon_skill(self):
-		test_weapon = EquippableFactory.makeBroadSword()
+		test_weapon = EquippableFactory.make_sword()
 		self.assertEqual(weapon_skill_lookup(test_weapon.melee_weapon), "sword")
 
 	def test_can_lookup_correct_weapon_skill(self):
@@ -241,32 +243,38 @@ class DeathDropTests(unittest.TestCase):
 		entities = test_monster.inventory.drop_on_death(entities, test_monster)
 		self.assertEqual(len(entities), 2)
 
-	def test_monster_drops_one_item(self):
-		pass
-
 class DroppedMissileTests(unittest.TestCase):
 	def test_can_drop_missile(self):
 		test_monster = monsters.makeKobold(1, 1)
 		entities = []
+		entities.append(make_dropped_missile("Arrows", (1,1)))
+		self.assertEqual(len(entities), 1)
 
 	def test_can_drop_missile_at_correct_location(self):
-		pass
-
-# TODO: write these tests!
+		test_monster = monsters.makeKobold(1, 1)
+		entities = []
+		entities.append(make_dropped_missile("Arrows", (1,1)))
+		self.assertEqual(entities[0].x, 1)
+		self.assertEqual(entities[0].y, 1)
+		self.assertEqual(entities[0].name.display_name, "Arrows")
 
 class MissileWeaponTests(unittest.TestCase):
 	def test_can_equip_missile_weapon(self):
-		test_char = mocks.create_mockchar_5()
-		pass
+		test_char = mocks.create_mockchar_1()
+		test_bow = EquippableFactory.make_bow()
+		test_char.equipment.toggle_equip(test_bow)
+		self.assertEqual(test_char.equipment.main_hand, test_bow)
+		self.assertNotEqual(test_char.equipment.main_hand.missile_weapon.missile_damage, None)
 
 	def test_can_load_missile_weapon(self):
-		pass
-
-	def test_cannot_load_non_missile_weapon(self):
-		pass
+		test_char = mocks.create_mockchar_10()
+		test_char.fighter.load_missile_weapon()
+		self.assertEqual(test_char.equipment.main_hand.missile_weapon.loaded, True)
 
 	def test_cannot_load_missile_weapon_without_ammunition(self):
-		pass
+		test_char = mocks.create_mockchar_9()
+		results = test_char.fighter.load_missile_weapon()
+		self.assertEqual(results[0].get("loaded"), None)
 
 class MeleeWeaponTests(unittest.TestCase):
 	def test_can_create_melee_weapon_component(self):
@@ -276,6 +284,22 @@ class MeleeWeaponTests(unittest.TestCase):
 	def test_has_melee_weapon(self):
 		test_char = mocks.create_mockchar_5()
 		self.assertEqual(test_char.equipment.has_melee_weapon(), True)
+	# TODO: more of these tests
+
+class NameTests(unittest.TestCase):
+	def test_can_make_name_with_display(self):
+		test_name = Name("foo")
+		self.assertEqual(test_name.display_name, "foo")
+
+	def test_can_make_name_with_true_name(self):
+		test_name = Name(true_name="bar")
+		self.assertEqual(test_name.true_name, "bar")
+
+	def test_can_make_entity_with_names(self):
+		test_name_component = Name(display_name="display", true_name="true")
+		test_entity = entity.Entity(1, 1, 'A', libtcod.white, name=test_name_component)
+		self.assertEqual(test_entity.name.display_name, "display")
+		self.assertEqual(test_entity.name.true_name, "true")
 
 #class ItemTests(unittest.TestCase):
 #	def test_can_create_item(self):
@@ -286,6 +310,37 @@ class MeleeWeaponTests(unittest.TestCase):
 #	def test_can_create_healing_potion(self):
 #		test_item = ItemFactory.makeHealingPotion()
 #		self.assertEqual(test_item.name, "Healing Potion")
+
+class GetGameVariablesTests(unittest.TestCase):
+	def test_can_create_player(self):
+		constants = get_constants()
+		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants)
+		self.assertEqual(player.name.display_name, "Player")
+
+	def test_can_create_entities(self):
+		constants = get_constants()
+		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants)
+		self.assertEqual(isinstance(entities, list), True)
+
+	def test_can_create_game_map(self):
+		constants = get_constants()
+		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants)
+		self.assertNotEqual(game_map, None)
+
+	def test_can_create_message_log(self):
+		constants = get_constants()
+		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants)
+		self.assertNotEqual(message_log, None)	
+
+	def test_can_create_game_state(self):
+		constants = get_constants()
+		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants)
+		self.assertNotEqual(game_state, None)
+
+	def test_can_create_dlevels(self):
+		constants = get_constants()
+		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants)
+		self.assertNotEqual(dlevels, None)
 
 if __name__ == "__main__":
 	unittest.main()

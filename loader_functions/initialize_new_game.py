@@ -15,6 +15,7 @@ from game_states import GameStates
 from map_objects.game_map import GameMap
 from render_functions import RenderOrder
 from dlevel import Dlevel
+from components.name import Name
 
 def get_game_variables(constants, start_equipped=False):
 	# create the player character
@@ -28,28 +29,28 @@ def get_game_variables(constants, start_equipped=False):
 	skills_component.set_skill_rank("sword", 1)
 	skills_component.set_skill_rank("dagger", 1)
 	skills_component.set_skill_rank("bow", 1)
-
 	caster_component = Caster(max_mana=20)
-	player = Entity(0, 0, '@', libtcod.white, "Player", blocks=True, render_order=RenderOrder.ACTOR, fighter = fighter_component, inventory=inventory_component, level=level_component, equipment=equipment_component, caster=caster_component, stats=stats_component, skills=skills_component, defender=defender_component)
+	player_name = Name("Player")
+	player = Entity(0, 0, '@', libtcod.white, blocks=True, render_order=RenderOrder.ACTOR, fighter=fighter_component, inventory=inventory_component, level=level_component, equipment=equipment_component, caster=caster_component, stats=stats_component, skills=skills_component, defender=defender_component, name=player_name)
 	entities = [player]
 
 	
 	if start_equipped:
 		x, y = 1, 1
-		item = EquippableFactory.makeBow()
+		item = EquippableFactory.make_bow()
 		player.inventory.items.append(item)
 		#player.equipment.main_hand = item
-		item = EquippableFactory.makeArrows()
+		item = EquippableFactory.make_arrows()
 		player.inventory.items.append(item)
-		item2 = EquippableFactory.makeDagger()
+		item2 = EquippableFactory.make_dagger()
 		player.inventory.items.append(item2)
 		player.equipment.main_hand = item2
-		item = EquippableFactory.makeLeatherArmor()
+		item = EquippableFactory.make_leather_armor()
 		player.inventory.items.append(item)
 		player.equipment.body = item
 		item = EquippableFactory.makeGreatSword()
 		player.inventory.items.append(item)
-		item = EquippableFactory.makeShield()
+		item = EquippableFactory.make_shield()
 		player.inventory.items.append(item)
 
 	game_map = GameMap(constants['map_width'], constants['map_height'])

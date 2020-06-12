@@ -6,6 +6,7 @@ from components.equippable import Equippable, EquippableFactory
 from components.skills import Skills
 from components.stats import Stats
 from components.defender import Defender
+from components.name import Name
 from entity import Entity
 
 def create_mockchar_1():
@@ -33,7 +34,7 @@ def create_mockchar_3():
 	test_defender_component = Defender()
 	test_skills_component = Skills()
 	test_equipment_component = Equipment()
-	test_item_entity = EquippableFactory.makeBroadSword()
+	test_item_entity = EquippableFactory.make_sword()
 	test_equipment_component.main_hand = test_item_entity	
 	test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)
 	test_entity = Entity(1, 1, 'A', libtcod.white, "Player", skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component, defender=test_defender_component)	
@@ -45,8 +46,8 @@ def create_mockchar_4():
 	test_defender_component = Defender()
 	test_skills_component = Skills()
 	test_equipment_component = Equipment()
-	test_shield = EquippableFactory.makeShield()
-	test_sword = EquippableFactory.makeBroadSword()
+	test_shield = EquippableFactory.make_shield()
+	test_sword = EquippableFactory.make_sword()
 	test_equipment_component.main_hand = test_sword	
 	test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)
 	test_entity = Entity(1, 1, 'A', libtcod.white, "Player", skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component, defender=test_defender_component)	
@@ -58,8 +59,8 @@ def create_mockchar_5():
 	test_defender_component = Defender()
 	test_skills_component = Skills()
 	test_equipment_component = Equipment()
-	test_shield = EquippableFactory.makeShield()
-	test_sword = EquippableFactory.makeBroadSword()
+	test_shield = EquippableFactory.make_shield()
+	test_sword = EquippableFactory.make_sword()
 	test_equipment_component.main_hand = test_sword
 	test_equipment_component.off_hand = test_shield	
 	test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)
@@ -73,8 +74,8 @@ def create_mockchar_6():
 	test_defender_component = Defender()
 	test_skills_component = Skills()
 	test_equipment_component = Equipment()
-	test_shield = EquippableFactory.makeShield()
-	test_sword = EquippableFactory.makeBroadSword()
+	test_shield = EquippableFactory.make_shield()
+	test_sword = EquippableFactory.make_sword()
 	test_equipment_component.main_hand = test_sword
 	test_equipment_component.off_hand = test_shield
 	test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)
@@ -88,8 +89,8 @@ def create_mockchar_7():
 	test_defender_component = Defender()
 	test_skills_component = Skills()
 	test_equipment_component = Equipment()
-	test_shield = EquippableFactory.makeShield()
-	test_sword = EquippableFactory.makeBroadSword()
+	test_shield = EquippableFactory.make_shield()
+	test_sword = EquippableFactory.make_sword()
 	test_equipment_component.main_hand = test_sword
 	test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)
 	test_entity = Entity(1, 1, 'A', libtcod.white, "Player", skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component, defender=test_defender_component)	
@@ -102,11 +103,37 @@ def create_mockchar_8():
 	test_defender_component = Defender()
 	test_skills_component = Skills()
 	test_equipment_component = Equipment()
-	test_shield = EquippableFactory.makeShield()
-	test_sword = EquippableFactory.makeBroadSword()
+	test_shield = EquippableFactory.make_shield()
+	test_sword = EquippableFactory.make_sword()
 	test_equipment_component.main_hand = test_sword
 	test_equipment_component.off_hand = test_shield	
 	test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)
 	test_entity = Entity(1, 1, 'A', libtcod.white, "Player", skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component, defender=test_defender_component)	
 	test_skills_component.set_skill_rank("sword", 14)
+	return test_entity
+
+def create_mockchar_9():
+	# stats and skills and a bow and no arrows
+	test_defender_component = Defender()
+	test_skills_component = Skills()
+	test_equipment_component = Equipment()
+	test_fighter = Fighter()
+	test_bow = EquippableFactory.make_bow()
+	test_equipment_component.main_hand = test_bow
+	test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)
+	test_entity = Entity(1, 1, 'A', libtcod.white, "Player", fighter=test_fighter, skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component, defender=test_defender_component)	
+	return test_entity
+
+def create_mockchar_10():
+	# stats and skills and a bow and arrows
+	test_defender_component = Defender()
+	test_skills_component = Skills()
+	test_equipment_component = Equipment()
+	test_fighter = Fighter()
+	test_bow = EquippableFactory.make_bow()
+	test_arrows = EquippableFactory.make_arrows()
+	test_equipment_component.main_hand = test_bow
+	test_equipment_component.ammunition = test_arrows
+	test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)
+	test_entity = Entity(1, 1, 'A', libtcod.white, "Player", fighter=test_fighter, skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component, defender=test_defender_component)	
 	return test_entity

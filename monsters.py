@@ -10,6 +10,7 @@ from components.equippable import EquippableFactory
 from components.stats import Stats
 from components.skills import Skills
 from components.defender import Defender
+from components.name import Name
 
 
 def getMonsterByDungeonLevel(level):
@@ -25,11 +26,12 @@ def makeOrc(x, y):
 	skill_component = Skills()
 	skill_component.set_skill_rank("sword", 10)
 	skill_component.set_skill_rank("dagger", 12)
-	monster = Entity(x, y, 'o', libtcod.desaturated_green, "Orc", blocks=True, render_order=RenderOrder.ACTOR, fighter = fighter_component, inventory=inventory_component, ai = ai_component, equipment=equipment_component, stats=stats_component, skills=skill_component, defender=defender_component)
-	item = EquippableFactory.makeBroadSword()
+	orc_name = Name("Orc")
+	monster = Entity(x, y, 'o', libtcod.desaturated_green, blocks=True, render_order=RenderOrder.ACTOR, fighter = fighter_component, inventory=inventory_component, ai = ai_component, equipment=equipment_component, stats=stats_component, skills=skill_component, defender=defender_component, name=orc_name)
+	item = EquippableFactory.make_sword()
 	monster.inventory.items.append(item)
 	monster.equipment.main_hand = item
-	item = EquippableFactory.makeLeatherArmor()
+	item = EquippableFactory.make_leather_armor()
 	monster.inventory.items.append(item)
 	monster.equipment.body = item
 	return monster
@@ -44,8 +46,9 @@ def makeTroll(x, y):
 	skill_component = Skills()
 	skill_component.set_skill_rank("sword", 13)
 	skill_component.set_skill_rank("dagger", 12)
-	monster = Entity(x, y, 't', libtcod.darker_green, "Troll", blocks=True, render_order=RenderOrder.ACTOR, fighter = fighter_component, inventory=inventory_component, ai = ai_component, equipment=equipment_component, stats=stats_component, skills=skill_component, defender=defender_component)
-	item = EquippableFactory.makeBroadSword()
+	troll_name = Name("Troll")
+	monster = Entity(x, y, 't', libtcod.darker_green, "Troll", blocks=True, render_order=RenderOrder.ACTOR, fighter = fighter_component, inventory=inventory_component, ai = ai_component, equipment=equipment_component, stats=stats_component, skills=skill_component, defender=defender_component, name=troll_name)
+	item = EquippableFactory.make_sword()
 	monster.inventory.items.append(item)
 	monster.equipment.main_hand = item
 	return monster
@@ -60,13 +63,14 @@ def makeKobold(x, y):
 	skill_component = Skills()
 	skill_component.set_skill_rank("sword", 10)
 	skill_component.set_skill_rank("dagger", 10)
-	monster = Entity(x, y, 'k', libtcod.blue, "Kobold", blocks=True, render_order=RenderOrder.ACTOR, fighter=fighter_component, inventory=inventory_component, ai=ai_component, equipment=equipment_component, stats=stats_component, skills=skill_component, defender=defender_component)
-	item = EquippableFactory.makeDagger()
+	kobold_name = Name("Kobold")
+	monster = Entity(x, y, 'k', libtcod.blue, blocks=True, render_order=RenderOrder.ACTOR, fighter=fighter_component, inventory=inventory_component, ai=ai_component, equipment=equipment_component, stats=stats_component, skills=skill_component, defender=defender_component, name=kobold_name)
+	item = EquippableFactory.make_dagger()
 	monster.inventory.items.append(item)
-	item = EquippableFactory.makeBow()
+	item = EquippableFactory.make_bow()
 	monster.inventory.items.append(item)
 	monster.equipment.main_hand = item
-	item = EquippableFactory.makeArrows(quantity=5)
+	item = EquippableFactory.make_arrows(quantity=5)
 	monster.inventory.items.append(item)
 	monster.equipment.ammunition = item
 	return monster

@@ -47,7 +47,6 @@ def main():
 				message_box(con, 'No save gam to load', 50, constants['screen_width'], constants['screen_height'])
 
 			libtcod.console_flush()
-
 			action = handle_main_menu(key)
 			new_game = action.get('new_game')
 			load_saved_game = action.get('load_game')
@@ -67,11 +66,9 @@ def main():
 					show_load_error_message = True
 			elif exit_game:
 				break
-		
 		else:
 			libtcod.console_clear(con)
 			play_game(player, entities, game_map, message_log, game_state, con, panel, constants, dlevels)
-
 			show_main_menu = True
 
 def play_game(player, entities, game_map, message_log, game_state, con, panel, constants, dlevels):
@@ -83,7 +80,6 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 
 	game_state = GameStates.PLAYERS_TURN
 	previous_game_state = game_state
-
 	targeting_item = None
 
 	while not libtcod.console_is_window_closed():
@@ -96,7 +92,6 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 		fov_recompute = False
 
 		libtcod.console_flush()
-
 		clear_all(con, entities)
 
 		action = handle_keys(key, game_state)

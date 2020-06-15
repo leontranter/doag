@@ -18,12 +18,15 @@ from components.item import Item
 from components.name import Name
 from damage_types import DamageTypes
 from loader_functions.constants import get_basic_damage, WeaponTypes, get_constants
-from loader_functions.initialize_new_game import get_game_variables
+from loader_functions.initialize_new_game import get_game_variables, potion_descriptions, potion_types, assign_potion_descriptions, potion_description_links
 from systems.attack import weapon_skill_lookup, get_weapon_skill_for_attack
 from components.inventory import Inventory
-from item_factory import makeHealingPotion, makeLightningScroll, makeFireballScroll, makeConfusionScroll, makeFireballBook, makeHealBook
+from item_factory import make_healing_potion, make_lightning_scroll, make_fireball_scroll, make_confusion_scroll, make_fireball_book, make_heal_book
 import monsters
 import mocks
+import item_factory
+from menus import menu, build_text_menu
+import menu_options
 
 class EntityTests(unittest.TestCase):
 	def test_can_make_entity(self):
@@ -341,6 +344,31 @@ class GetGameVariablesTests(unittest.TestCase):
 		constants = get_constants()
 		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants)
 		self.assertNotEqual(dlevels, None)
+
+#class MenuTests(unittest.TestCase):
+#	def can_create_main_menu(self):
+#		constants = get_constants()
+#		options = build_text_menu(['Play a new game', 'Continue a game', 'Quit'])
+#		con = libtcod.console_new(constants['screen_width'], constants['screen_height'])
+##		main_menu(con, main_menu_background_image, constants['screen_width'], constants['screen_height'])
+
+class ItemNamesTests(unittest.TestCase):
+	def test_game_has_list_of_identified_items(self):
+		self.assertEqual(isinstance(item_factory.identified_potions, dict), True)
+
+	def test_game_has_list_of_potion_names(self):
+		self.assertNotEqual(len(potion_descriptions), 0)
+
+	def test_game_has_list_of_potion_types(self):
+		self.assertNotEqual(len(potion_types), 0)
+
+	def test_same_number_of_potion_names_and_types(self):
+		self.assertEqual(len(potion_descriptions), len(potion_types))
+
+	def test_can_assign_a_potion_name_to_a_type(self):
+		assign_potion_descriptions()
+		self.assertEqual(len(potion_descriptions), len(potion_description_links))
+
 
 if __name__ == "__main__":
 	unittest.main()

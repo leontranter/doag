@@ -9,6 +9,7 @@ from components.ai import BasicMonster
 from render_functions import RenderOrder
 from components.equipment import EquipmentSlots
 from components.equippable import Equippable, EquippableFactory
+from components.name import Name
 from components.stairs import Stairs
 from item_functions import cast_fireball, cast_lightning, heal, cast_confuse
 from game_messages import Message
@@ -99,7 +100,8 @@ class GameMap:
 
 		# create the down stairs
 		stairs_component = Stairs(self.dungeon_level + 1)
-		down_stairs = Entity(center_of_last_room_x, center_of_last_room_y, '>', libtcod.white, 'Stairs', render_order=RenderOrder.STAIRS, stairs=stairs_component)
+		stairs_name = Name("Stairs")
+		down_stairs = Entity(center_of_last_room_x, center_of_last_room_y, '>', libtcod.white, render_order=RenderOrder.STAIRS, stairs=stairs_component, name=stairs_name)
 		if floor_direction == -1:
 			down_stairs.x, down_stairs.y = player.x, player.y
 		entities.append(down_stairs)
@@ -107,7 +109,8 @@ class GameMap:
 		# if this isn't level 1, create an up stairway
 		if self.dungeon_level != 1:
 			stairs_component_up = Stairs(self.dungeon_level - 1)
-			up_stairs = Entity(player.x, player.y, '<', libtcod.white, 'Upward stairs', render_order=RenderOrder.STAIRS, stairs=stairs_component_up)
+			up_stairs_name = Name("Upward Stairs")
+			up_stairs = Entity(player.x, player.y, '<', libtcod.white, render_order=RenderOrder.STAIRS, stairs=stairs_component_up, name=up_stairs_name)
 			entities.append(up_stairs)
 
 	def create_h_tunnel(self, x1, x2, y):

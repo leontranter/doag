@@ -23,12 +23,12 @@ class BasicMonster():
 				else:
 					# TODO: This doesn't belong here - should move it to Fighter, but the load weapon function needs to be reworked to work for monsters!!
 					self.owner.equipment.main_hand.missile_weapon.loaded = True
-					results.append({"message": Message(f"The {self.owner.name} loads its {self.owner.equipment.main_hand.name}.")})
+					results.append({"message": Message(f"The {self.owner.name.display_name} loads its {self.owner.equipment.main_hand.name.display_name}.")})
 			else:
 				#no ammunition
 				for item in self.owner.inventory.items:
 					if item.melee_weapon:
-						results.append({"message": Message(f"The {self.owner.name} equips a {item.name}."), "equips": item})
+						results.append({"message": Message(f"The {self.owner.name.display_name} equips a {item.name.display_name}."), "equips": item})
 		else:
 			# melee action (attack or move towards)
 			results = self.make_melee_action(results, target, entities, game_map)
@@ -62,6 +62,6 @@ class ConfusedMonster:
 			self.number_of_turns -= 1
 		else:
 			self.owner.ai = self.previous_ai
-			results.append({'message': Message('The {0} is no longer confused!'.format(self.owner.name), libtcod.red)})
+			results.append({'message': Message('The {0} is no longer confused!'.format(self.owner.name.display_name), libtcod.red)})
 
 		return results

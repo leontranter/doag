@@ -52,7 +52,7 @@ class EquippableFactory:
 		sword_equippable = Equippable(EquipmentSlots.MAIN_HAND, weight=7)
 		sword_name = Name("Sword")
 		sword_melee_weapon = MeleeWeapon(WeaponTypes.SWORD, "swing", 1, DamageTypes.SLASHING, min_strength=11)
-		sword_entity = Entity(x, y, '(', libtcod.sky, 'Sword', equippable=sword_equippable, melee_weapon=sword_melee_weapon, name=sword_name)
+		sword_entity = Entity(x, y, '(', libtcod.sky, equippable=sword_equippable, melee_weapon=sword_melee_weapon, name=sword_name)
 		return sword_entity
 
 	def make_greatsword(x=1, y=1):

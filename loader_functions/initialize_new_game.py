@@ -16,6 +16,7 @@ from map_objects.game_map import GameMap
 from render_functions import RenderOrder
 from dlevel import Dlevel
 from components.name import Name
+from random import shuffle
 
 def get_game_variables(constants, start_equipped=False):
 	# create the player character
@@ -48,7 +49,7 @@ def get_game_variables(constants, start_equipped=False):
 		item = EquippableFactory.make_leather_armor()
 		player.inventory.items.append(item)
 		player.equipment.body = item
-		item = EquippableFactory.makeGreatSword()
+		item = EquippableFactory.make_greatsword()
 		player.inventory.items.append(item)
 		item = EquippableFactory.make_shield()
 		player.inventory.items.append(item)
@@ -76,5 +77,11 @@ def get_game_variables(constants, start_equipped=False):
 	game_state = GameStates.PLAYERS_TURN
 	return player, entities, game_map, message_log, game_state, dlevels
 
-def assign_item_names():
-	pass
+potion_descriptions = ["dark", "fizzy", "cloudy"]
+potion_types = ["Healing Potion", "Poison Potion", "Confusion Potion"]
+potion_description_links = {}
+
+def assign_potion_descriptions():	
+	shuffle(potion_descriptions)
+	for i in range(len(potion_descriptions)):
+		potion_description_links[potion_types[i]] = potion_descriptions[i]

@@ -16,6 +16,7 @@ def heal(*args, **kwargs):
 	
 	return results
 
+#TODO: needs to be completely reworked
 def poison(*args, **kwargs):
 	entity = args[0]
 	amount = kwargs.get('amount')
@@ -72,13 +73,19 @@ def cast_fireball(*args, **kwargs):
 			results.append({'message': Message('The {0} gets burned for {1} points.'.format(entity.name, damage), libtcod.orange)})
 			results.extend(entity.fighter.take_damage(damage))
 	return results
+
+# TODO: needs to be completely reworked
 def cast_confuse(*args, **kwargs):
 	entities = kwargs.get('entities')
 	fov_map = kwargs.get('fov_map')
 	target_x = kwargs.get('target_x')
 	target_y = kwargs.get('target_y')
-
+	target_self = kwargs.get('target_self')
 	results = []
+
+	if target_self:
+		results.append({'consumed: True', 'message': Message("You are confused!", libtcod.yellow)})
+		return results
 
 	if not libtcod.map_is_in_fov(fov_map, target_x, target_y):
 		results.append({'consumed': False, 'message': Message('You cannot target a tile outside your field of view.', libtcod.yellow)})

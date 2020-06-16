@@ -17,6 +17,7 @@ from components.meleeweapon import MeleeWeapon
 from components.item import Item
 from components.name import Name
 from components.identified import Identified
+from components.effects import Effects
 from damage_types import DamageTypes
 from loader_functions.constants import get_basic_damage, WeaponTypes, get_constants
 from loader_functions.initialize_new_game import get_game_variables, assign_potion_descriptions
@@ -394,6 +395,17 @@ class BasicGameTests(unittest.TestCase):
 		save_game(player, entities, game_map, message_log, game_state, dlevels, potion_description_links)
 		player, entities, game_map, message_log, game_state, dlevels, potion_description_links = load_game()
 		self.assertEqual(isinstance(entities, list), True)		
+
+class EffectsTests(unittest.TestCase):
+	def test_can_create_effects_component(self):
+		effects_component = Effects()
+		self.assertEqual(isinstance(effects_component.effects, list), True)
+
+	def test_can_add_effects_component_to_entity(self):
+		effects_component = Effects()
+		test_entity = entity.Entity(1, 1, 'A', libtcod.white, effects=effects_component)
+		self.assertEqual(isinstance(test_entity.effects.effects, list), True)
+
 
 if __name__ == "__main__":
 	unittest.main()

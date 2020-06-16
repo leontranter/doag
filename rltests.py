@@ -386,7 +386,14 @@ class BasicGameTests(unittest.TestCase):
 	def test_can_save_game(self):
 		constants = get_constants()
 		player, entities, game_map, message_log, game_state, dlevels, potion_description_links = get_game_variables(constants, start_equipped=True)
-		save_game(player, entities, game_map, message_log, game_state, dlevels)
+		self.assertEqual(save_game(player, entities, game_map, message_log, game_state, dlevels, potion_description_links), True)
+
+	def test_can_load_game(self):
+		constants = get_constants()
+		player, entities, game_map, message_log, game_state, dlevels, potion_description_links = get_game_variables(constants, start_equipped=True)
+		save_game(player, entities, game_map, message_log, game_state, dlevels, potion_description_links)
+		player, entities, game_map, message_log, game_state, dlevels, potion_description_links = load_game()
+		self.assertEqual(isinstance(entities, list), True)		
 
 if __name__ == "__main__":
 	unittest.main()

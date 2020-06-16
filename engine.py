@@ -58,7 +58,7 @@ def main():
 				show_main_menu = False
 			elif load_saved_game:
 				try:
-					player, entities, game_map, message_log, game_state, dlevels = load_game()
+					player, entities, game_map, message_log, game_state, dlevels, potion_description_links = load_game()
 					show_main_menu = False
 				except FileNotFoundError:
 					show_load_error_message = True
@@ -252,7 +252,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 			elif game_state == GameStates.TARGETING:
 				player_turn_results.append({'targeting_cancelled': True})
 			else:
-				save_game(player, entities, game_map, message_log, game_state, dlevels)
+				save_game(player, entities, game_map, message_log, game_state, dlevels, potion_description_links)
 				return True
 
 		if fullscreen:

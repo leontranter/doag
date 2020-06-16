@@ -16,6 +16,7 @@ from map_objects.game_map import GameMap
 from render_functions import RenderOrder
 from dlevel import Dlevel
 from components.name import Name
+from components.identified import Identified
 from random import shuffle
 
 def get_game_variables(constants, start_equipped=False):
@@ -30,11 +31,13 @@ def get_game_variables(constants, start_equipped=False):
 	skills_component.set_skill_rank("sword", 1)
 	skills_component.set_skill_rank("dagger", 1)
 	skills_component.set_skill_rank("bow", 1)
+	# TODO: fix this max mana!
 	caster_component = Caster(max_mana=20)
+	identified_component = Identified()
 	player_name = Name("Player")
-	player = Entity(0, 0, '@', libtcod.white, blocks=True, render_order=RenderOrder.ACTOR, fighter=fighter_component, inventory=inventory_component, level=level_component, equipment=equipment_component, caster=caster_component, stats=stats_component, skills=skills_component, defender=defender_component, name=player_name)
+	player = Entity(0, 0, '@', libtcod.white, blocks=True, render_order=RenderOrder.ACTOR, fighter=fighter_component, inventory=inventory_component, level=level_component, equipment=equipment_component, caster=caster_component, stats=stats_component, skills=skills_component, defender=defender_component, name=player_name, identified=identified_component)
 	entities = [player]
-
+	potion_description_links = assign_potion_descriptions(constants['potion_descriptions'], constants['potion_types'])	
 	
 	if start_equipped:
 		x, y = 1, 1
@@ -54,6 +57,7 @@ def get_game_variables(constants, start_equipped=False):
 		item = EquippableFactory.make_shield()
 		player.inventory.items.append(item)
 
+	
 	game_map = GameMap(constants['map_width'], constants['map_height'])
 	game_map.make_map(constants['max_rooms'], constants['room_min_size'], constants['room_max_size'], constants['map_width'], constants['map_height'], player, entities)
 	
@@ -75,13 +79,15 @@ def get_game_variables(constants, start_equipped=False):
 	message_log = MessageLog(constants['message_x'], constants['message_width'], constants['message_height'])
 
 	game_state = GameStates.PLAYERS_TURN
-	return player, entities, game_map, message_log, game_state, dlevels
+	return player, entities, game_map, message_log, game_state, dlevels, potion_description_links
 
-potion_descriptions = ["dark", "fizzy", "cloudy"]
-potion_types = ["Healing Potion", "Poison Potion", "Confusion Potion"]
-potion_description_links = {}
-
-def assign_potion_descriptions():	
+def assign_potion_descriptions(potion_descriptions, potion_types):	
+	potion_description_links = {}
+	
+	# Shuffle the descriptions, so we can then randomly assign a description to a type and then return the dictionary that maps them
 	shuffle(potion_descriptions)
+	
 	for i in range(len(potion_descriptions)):
 		potion_description_links[potion_types[i]] = potion_descriptions[i]
+
+	return potion_description_links

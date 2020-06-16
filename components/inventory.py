@@ -37,6 +37,11 @@ class Inventory:
 
 		item_component = item_entity.item
 
+		# TODO: Fix this up - need to clearly categories potions and scrolls and handle them accordingly
+		if item_entity.name.true_name in potion_types and item_entity.name.true_name not in identified_potions:
+			identified_potions.append(item_entity.name.true_name)
+
+
 		if item_component.use_function is None:
 			equippable_component = item_entity.equippable
 			if equippable_component:

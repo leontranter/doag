@@ -28,6 +28,9 @@ def get_constants():
 	fov_light_walls = True
 	fov_radius = 10
 	
+	potion_descriptions = ["dark", "fizzy", "cloudy"]
+	potion_types = ["Healing Potion", "Poison Potion", "Confusion Potion"]
+
 	colors = {
 		'dark_wall': libtcod.Color(0, 0, 100),
 		'dark_ground': libtcod.Color(50, 50, 150),
@@ -55,7 +58,9 @@ def get_constants():
 		'fov_radius': fov_radius,
 		'max_monsters_per_room': max_monsters_per_room,
 		'max_items_per_room': max_items_per_room,
-		'colors': colors
+		'colors': colors,
+		'potion_descriptions': potion_descriptions,
+		'potion_types': potion_types
 	}
 
 	return constants
@@ -64,6 +69,9 @@ def get_basic_damage():
 	swing_damage = {5: (1, -3), 6: (1, 3), 7: (1, -2), 8: (1, -2), 9: (1, -1), 10: (1, 0), 11: (1, 1), 12: (1, 2), 13: (2, -1), 14: (2, 0), 15: (2, 1), 16: (2, 2), 17: (3, -1), 18: (3, 0), 19: (3, 1)}
 	thrust_damage = {5: (1, -4), 6: (1, 4), 7: (1, -3), 8: (1, -3), 9: (1, -2), 10: (1, -2), 11: (1, -1), 12: (1, -1), 13: (1, 0), 14: (1, 0), 15: (1, 1), 16: (1, 1), 17: (1, 2), 18: (1, 2), 19: (2, -1)}
 	return swing_damage, thrust_damage
+
+potion_descriptions = ["dark", "fizzy", "cloudy"]
+potion_types = ["Healing Potion", "Poison Potion", "Confusion Potion"]
 
 class WeaponTypes(Enum):
 	DAGGER = 1

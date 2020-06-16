@@ -24,12 +24,10 @@ def main():
 	con = libtcod.console_new(constants['screen_width'], constants['screen_height'])
 	panel = libtcod.console_new(constants['screen_width'], constants['panel_height'])
 
-	player = None
 	entities = []
-	game_map = None
-	message_log = None
-	game_state = None
 	dlevels = {}
+	player, game_map = None, None
+	message_log, game_state = None, None	
 
 	show_main_menu = True
 	show_load_error_message = False
@@ -55,7 +53,7 @@ def main():
 			if show_load_error_message and (new_game or load_saved_game or exit_game):
 				show_load_error_message = False
 			elif new_game:
-				player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants, start_equipped=True)
+				player, entities, game_map, message_log, game_state, dlevels, potion_description_links = get_game_variables(constants, start_equipped=True)
 				game_state = GameStates.PLAYERS_TURN
 				show_main_menu = False
 			elif load_saved_game:

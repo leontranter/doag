@@ -84,7 +84,7 @@ def cast_confuse(*args, **kwargs):
 	results = []
 
 	if target_self:
-		results.append({'consumed: True', 'message': Message("You are confused!", libtcod.yellow)})
+		results.append({'consumed': True, 'message': Message("You are confused!", libtcod.yellow)})
 		return results
 
 	if not libtcod.map_is_in_fov(fov_map, target_x, target_y):

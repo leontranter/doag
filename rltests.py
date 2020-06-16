@@ -23,6 +23,7 @@ from loader_functions.constants import get_basic_damage, WeaponTypes, get_consta
 from loader_functions.initialize_new_game import get_game_variables, assign_potion_descriptions
 from loader_functions.data_loaders import save_game, load_game
 from systems.attack import weapon_skill_lookup, get_weapon_skill_for_attack
+from systems.effects_manager import add_effect
 from components.inventory import Inventory
 from item_factory import make_healing_potion, make_lightning_scroll, make_fireball_scroll, make_confusion_scroll, make_fireball_book, make_heal_book
 import monsters
@@ -399,13 +400,18 @@ class BasicGameTests(unittest.TestCase):
 class EffectsTests(unittest.TestCase):
 	def test_can_create_effects_component(self):
 		effects_component = Effects()
-		self.assertEqual(isinstance(effects_component.effects, list), True)
+		self.assertEqual(isinstance(effects_component.effect_list, list), True)
 
 	def test_can_add_effects_component_to_entity(self):
 		effects_component = Effects()
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, effects=effects_component)
-		self.assertEqual(isinstance(test_entity.effects.effects, list), True)
+		self.assertEqual(isinstance(test_entity.effects.effect_list, list), True)
 
+	def test_effects_manager_can_add_effect(self):
+		effects_component = Effects()
+		test_entity = entity.Entity(1, 1, 'A', libtcod.white, effects=effects_component)
+		test_effect = {'name': "Poison", 'turns_left': 5, 'damage_per_turn': 3}
+		self.assertEqual(add_effect(test_effect, test_entity), True)
 
 if __name__ == "__main__":
 	unittest.main()

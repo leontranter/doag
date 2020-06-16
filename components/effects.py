@@ -1,4 +1,3 @@
 class Effects:
 	def __init__(self):
-		self.effects = []
-		
+		self.effect_list = []

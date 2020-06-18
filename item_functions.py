@@ -8,12 +8,14 @@ def heal(*args, **kwargs):
 
 	results = []
 
-	if entity.stats.hp == entity.stats.max_hp:
-		results.append({'consumed': False, 'message': Message('You are already at full health.', libtcod.yellow)})
+	if entity.stats and entity.fighter:
+		if entity.stats.hp == entity.stats.max_hp:
+			results.append({'consumed': False, 'message': Message('You are already at full health.', libtcod.yellow)})
+		else:
+			entity.fighter.heal(amount)
+			results.append({'consumed': True, 'message': Message('Your wounds start to feel better!', libtcod.green)})	
 	else:
-		entity.fighter.heal(amount)
-		results.append({'consumed': True, 'message': Message('Your wounds start to feel better!', libtcod.green)})
-	
+		results.append({'message': Message('The potion does nothing...')})
 	return results
 
 #TODO: needs to be completely reworked

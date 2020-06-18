@@ -1,5 +1,6 @@
 import tcod as libtcod
 from game_messages import Message
+from loader_functions import constants
 
 class Inventory:
 	def __init__(self, capacity):
@@ -34,13 +35,13 @@ class Inventory:
 
 	def use(self, item_entity, **kwargs):
 		results = []
-
+		game_constants = constants.get_constants()
 		item_component = item_entity.item
 
-		# TODO: Fix this up - need to clearly categories potions and scrolls and handle them accordingly
-		if item_entity.name.true_name in potion_types and item_entity.name.true_name not in identified_potions:
-			identified_potions.append(item_entity.name.true_name)
-
+		# TODO: Fix this up - need to clearly categorise potions and scrolls and handle them accordingly
+		if self.owner.identified:
+			if item_entity.name.true_name in game_constants["potion_types"] and item_entity.name.true_name not in self.owner.identified.identified_potions:
+				self.owner.identified.identified_potions.append(item_entity.name.true_name)
 
 		if item_component.use_function is None:
 			equippable_component = item_entity.equippable

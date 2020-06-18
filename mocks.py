@@ -7,15 +7,19 @@ from components.skills import Skills
 from components.stats import Stats
 from components.defender import Defender
 from components.name import Name
+from components.identified import Identified
+from components.inventory import Inventory
 from entity import Entity
 
 def create_mockchar_1():
-	# basic stats, no skills or equipment
+	# basic stats, no skills or equipment, can identify stuff
 	test_defender_component = Defender()
 	test_skills_component = Skills()
 	test_equipment_component = Equipment()
+	test_identified = Identified()
+	test_inventory = Inventory(10)
 	test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)
-	test_entity = Entity(1, 1, 'A', libtcod.white, "Player", skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component, defender=test_defender_component)	
+	test_entity = Entity(1, 1, 'A', libtcod.white, "Player", inventory=test_inventory, skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component, defender=test_defender_component, identified=test_identified)
 	return test_entity
 
 def create_mockchar_2():

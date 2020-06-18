@@ -25,6 +25,7 @@ from loader_functions.data_loaders import save_game, load_game
 from systems.attack import weapon_skill_lookup, get_weapon_skill_for_attack
 from systems.effects_manager import add_effect
 from components.inventory import Inventory
+from item_functions import heal
 from item_factory import make_healing_potion, make_lightning_scroll, make_fireball_scroll, make_confusion_scroll, make_fireball_book, make_heal_book
 import monsters
 import mocks
@@ -412,6 +413,22 @@ class EffectsTests(unittest.TestCase):
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, effects=effects_component)
 		test_effect = {'name': "Poison", 'turns_left': 5, 'damage_per_turn': 3}
 		self.assertEqual(add_effect(test_effect, test_entity), True)
+
+class UseTests(unittest.TestCase):
+	def test_can_use_healing_potion(self):
+		test_potion = make_healing_potion()
+		test_inventory = Inventory(10)
+		test_player_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", inventory=test_inventory)
+		results = test_inventory.use(test_potion)
+		self.assertEqual(len(results), 1)
+
+	def test_can_identify_a_potion(self):
+		test_char = mocks.create_mockchar_1()
+		self.assertEqual(len(test_char.identified.identified_potions), 0)
+		test_potion = make_healing_potion()
+		results = test_char.inventory.use(test_potion)
+		self.assertEqual(len(test_char.identified.identified_potions), 1)
+
 
 if __name__ == "__main__":
 	unittest.main()

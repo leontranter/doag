@@ -43,13 +43,14 @@ def menu(con, header, options, width, screen_width, screen_height, inventory=Non
 #def construct_menu_options(options, y):
 
 
-def inventory_menu(con, header, inventory, inventory_width, screen_width, screen_height, player=None):
+def inventory_menu(con, header, inventory_width, screen_width, screen_height, player=None):
 	# show a menu with each item of the inventory as an option
 	if len(player.inventory.items) == 0:
 		options = [MenuOption("Your inventory is empty.")]
 	else:
 		options = player.inventory.items
 	
+	inventory = player.inventory
 	menu(con, header, options, inventory_width, screen_width, screen_height, inventory, player)
 
 def equipment_menu(con, header, inventory, inventory_width, screen_width, screen_height, equipment, player=None):

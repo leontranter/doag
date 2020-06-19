@@ -66,10 +66,10 @@ def main():
 				break
 		else:
 			libtcod.console_clear(con)
-			play_game(player, entities, game_map, message_log, game_state, con, panel, constants, dlevels)
+			play_game(player, entities, game_map, message_log, game_state, con, panel, constants, dlevels, potion_description_links)
 			show_main_menu = True
 
-def play_game(player, entities, game_map, message_log, game_state, con, panel, constants, dlevels):
+def play_game(player, entities, game_map, message_log, game_state, con, panel, constants, dlevels, potion_description_links):
 	fov_recompute = True
 	fov_map = initialize_fov(game_map)
 
@@ -179,7 +179,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 					libtcod.console_clear(con)
 					break
 			else:
-				message_log.add_message(Message("There are no up stairs here.", libtcod.yellow))
+				message_log.add_message(Message("There are no stairs here.", libtcod.yellow))
 		
 		if take_stairs_up and game_state == GameStates.PLAYERS_TURN:
 			for entity in entities:

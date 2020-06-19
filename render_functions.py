@@ -12,7 +12,7 @@ class RenderOrder(Enum):
 def get_names_under_mouse(mouse, entities, fov_map):
 	(x, y) = (mouse.cx, mouse.cy)
 
-	names = [entity.name for entity in entities if entity.x == x and entity.y == y and libtcod.map_is_in_fov(fov_map, entity.x, entity.y)]
+	names = [entity.name.true_name for entity in entities if entity.x == x and entity.y == y and libtcod.map_is_in_fov(fov_map, entity.x, entity.y)]
 	names = ', '.join(names)
 	return names.capitalize()
 
@@ -78,8 +78,8 @@ def render_all(con, panel, entities, player, game_map, fov_map, fov_recompute, m
 			inventory_title = 'Press the key next to an item to use it, or Esc to cancel.\n'
 		else:
 			inventory_title = 'Press the key next to an item to drop it, or Esc to cancel.\n'
-		# TODO: Fix this! player shouldn't be here twice
-		inventory_menu(con, inventory_title, player, 50, screen_width, screen_height, player)
+	
+		inventory_menu(con, inventory_title, 50, screen_width, screen_height, player)
 
 	elif game_state == GameStates.LEVEL_UP:
 		level_up_menu(con, 'Level up! Choose a stat to raise:', player, 40, screen_width, screen_height)

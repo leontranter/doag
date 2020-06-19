@@ -297,6 +297,7 @@ class MeleeWeaponTests(unittest.TestCase):
 class NameTests(unittest.TestCase):
 	def test_can_make_name_with_display(self):
 		test_name = Name("foo")
+		test_entity = entity.Entity(1, 1, 'A', libtcod.white, name=test_name)
 		self.assertEqual(test_name.display_name, "foo")
 
 	def test_can_make_name_with_true_name(self):
@@ -304,9 +305,8 @@ class NameTests(unittest.TestCase):
 		self.assertEqual(test_name.true_name, "bar")
 
 	def test_can_make_entity_with_names(self):
-		test_name_component = Name(display_name="display", true_name="true")
+		test_name_component = Name(true_name="true")
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, name=test_name_component)
-		self.assertEqual(test_entity.name.display_name, "display")
 		self.assertEqual(test_entity.name.true_name, "true")
 
 #class ItemTests(unittest.TestCase):

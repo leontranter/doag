@@ -18,6 +18,7 @@ from dlevel import Dlevel
 from components.name import Name
 from components.identified import Identified
 from random import shuffle
+from item_factory import make_healing_potion
 
 def get_game_variables(constants, start_equipped=False):
 	# create the player character
@@ -56,6 +57,10 @@ def get_game_variables(constants, start_equipped=False):
 		player.inventory.items.append(item)
 		item = EquippableFactory.make_shield()
 		player.inventory.items.append(item)
+		potion1 = make_healing_potion()
+		player.inventory.items.append(potion1)
+		potion2 = make_healing_potion()
+		player.inventory.items.append(potion2)
 
 	
 	game_map = GameMap(constants['map_width'], constants['map_height'])

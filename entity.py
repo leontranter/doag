@@ -135,5 +135,4 @@ class Entity:
 def get_blocking_entities_at_location(entities, destination_x, destination_y):
 	for entity in entities:
 		if entity.blocks and entity.x == destination_x and entity.y == destination_y:
-			print(f"blocking entity name: {entity.name.display_name}")
 			return entity

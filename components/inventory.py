@@ -16,7 +16,7 @@ class Inventory:
 				'message': Message('You cannot carry any more, your Inventory is full.', libtcod.yellow)
 				})
 		else:
-			temp_display_name = item.name.display_name
+			temp_display_name = item.name.true_name
 			if item.equippable and item.equippable.quantity and item.equippable.quantity == 1:
 				temp_display_name = temp_display_name[:-1]
 			results.append({
@@ -24,7 +24,7 @@ class Inventory:
 				'message': Message('You pick up the {0}!'.format(temp_display_name), libtcod.yellow)
 			})
 			for current_item in self.items:
-				if current_item.name.display_name == item.name.display_name and current_item.equippable and current_item.equippable.quantity and current_item.equippable.quantity > 0:
+				if current_item.name.true_name == item.name.true_name and current_item.equippable and current_item.equippable.quantity and current_item.equippable.quantity > 0:
 					# Checking if we can stack this item with one already carried
 					# TODO: This will need a LOT more work at some point... not a very clever check
 					current_item.equippable.quantity += item.equippable.quantity
@@ -48,7 +48,7 @@ class Inventory:
 			if equippable_component:
 				results.append({'equip': item_entity})
 			else:
-				results.append({'message': Message('The {0} cannot be used'.format(item_entity.name.display_name), libtcod.yellow)})
+				results.append({'message': Message('The {0} cannot be used'.format(item_entity.name.true_name), libtcod.yellow)})
 		else:
 			if item_component.targeting and not (kwargs.get('target_x') or kwargs.get('target_y')):
 				results.append({'targeting': item_entity})
@@ -75,7 +75,7 @@ class Inventory:
 		item.y = self.owner.y
 
 		self.remove_item(item)
-		results.append({'item_dropped': item, 'message': Message(f"{self.owner.name.display_name} dropped the {item.name.display_name}", libtcod.yellow)})
+		results.append({'item_dropped': item, 'message': Message(f"{self.owner.name.true_name} dropped the {item.name.true_name}", libtcod.yellow)})
 
 		return results
 

@@ -9,17 +9,17 @@ def kill_player(player):
 	return Message('You died!', libtcod.red), GameStates.PLAYER_DEAD
 
 def kill_monster(monster):
-	death_message = Message('{0} is dead!'.format(monster.name.display_name), libtcod.orange)
+	death_message = Message('{0} is dead!'.format(monster.name.true_name), libtcod.orange)
 
 	monster.char = '%'
 	monster.color = libtcod.dark_red
 	monster.blocks = False
 	monster.fighter = None
 	monster.ai = None
-	if monster.name.display_name[0].lower() in 'aeiou':
-		monster.name = 'remains of an ' + monster.name.display_name
+	if monster.name.true_name[0].lower() in 'aeiou':
+		monster.name = 'remains of an ' + monster.name.true_name
 	else:
-		monster.name = 'remains of a ' + monster.name.display_name
+		monster.name = 'remains of a ' + monster.name.true_name
 	monster.render_order = RenderOrder.CORPSE	
 
 	return death_message

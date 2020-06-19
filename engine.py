@@ -167,7 +167,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 						entities, game_map.tiles = dlevels[level_check].entities, dlevels[level_check].tiles
 						game_map.dungeon_level += 1
 						for entity in entities:
-							if entity.name.display_name == "Upward stairs":
+							if entity.name.true_name == "Upward stairs":
 								player.x, player.y = entity.x, entity.y
 					else:
 						dlevels[level_check].explored = True
@@ -189,7 +189,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 						prev_level = dlevels[level_check]
 						entities, game_map.tiles, game_map.dungeon_level = prev_level.entities, prev_level.tiles, prev_level.floor
 						for entity in entities:
-							if entity.name.display_name == "Stairs":
+							if entity.name.true_name == "Stairs":
 								player.x, player.y = entity.x, entity.y
 					else:
 						entities = game_map.next_floor(player, message_log, constants, -1)	
@@ -338,9 +338,9 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 					dequipped = equip_result.get('dequipped')
 					fail_equip = equip_result.get('fail_equip')
 					if equipped:
-						message_log.add_message(Message('You equipped the {0}.'.format(equipped.name.display_name)))
+						message_log.add_message(Message('You equipped the {0}.'.format(equipped.name.true_name)))
 					if dequipped:
-						message_log.add_message(Message('You dequipped the {0}.'.format(dequipped.name.display_name)))
+						message_log.add_message(Message('You dequipped the {0}.'.format(dequipped.name.true_name)))
 					if fail_equip:
 						message_log.add_message(Message(fail_equip))
 				game_state = GameStates.ENEMY_TURN

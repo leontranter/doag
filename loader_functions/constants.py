@@ -28,7 +28,7 @@ def get_constants():
 	fov_light_walls = True
 	fov_radius = 10
 	
-	potion_descriptions = ["dark", "fizzy", "cloudy"]
+	potion_descriptions = ["dark potion", "fizzy potion", "cloudy potion"]
 	potion_types = ["Healing Potion", "Poison Potion", "Confusion Potion"]
 
 	colors = {

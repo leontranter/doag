@@ -59,7 +59,7 @@ def equipment_menu(con, header, inventory, inventory_width, screen_width, screen
 	if len(equipped_items) == 0:
 		options = ["Nothing equipped."]
 	else:
-		options = [equipment.name.display_name for equipment in equipped_items]
+		options = [equipment.name.true_name for equipment in equipped_items]
 
 	menu(con, header, options, inventory_width, screen_width, screen_height, inventory, player)
 
@@ -120,10 +120,10 @@ def mark_equipped(text, option, inventory, player):
 	if player.equipment.body == option:
 		text += " - worn on body"
 	if player.equipment.ammunition == option:
-		display_name = player.equipment.ammunition.display_name
+		ammunition_name = player.equipment.ammunition.name.true_name
 		if player.equipment.ammunition.equippable.quantity == 1:
-			display_name = display_name[:-1]
-		text += " in quiver, {} {} left".format(player.equipment.ammunition.equippable.quantity, display_name)
+			ammunition_name = display_name[:-1]
+		text += " in quiver, {} {} left".format(player.equipment.ammunition.equippable.quantity, ammunition_name)
 	return text
 
 def build_text_menu(optionsList):

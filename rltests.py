@@ -24,6 +24,7 @@ from loader_functions.initialize_new_game import get_game_variables, assign_poti
 from loader_functions.data_loaders import save_game, load_game
 from systems.attack import weapon_skill_lookup, get_weapon_skill_for_attack
 from systems.effects_manager import add_effect
+from systems.name_system import get_display_name
 from components.inventory import Inventory
 from item_functions import heal
 from item_factory import make_healing_potion, make_lightning_scroll, make_fireball_scroll, make_confusion_scroll, make_fireball_book, make_heal_book
@@ -264,7 +265,7 @@ class DroppedMissileTests(unittest.TestCase):
 		entities.append(make_dropped_missile("Arrows", (1,1)))
 		self.assertEqual(entities[0].x, 1)
 		self.assertEqual(entities[0].y, 1)
-		self.assertEqual(entities[0].name.display_name, "Arrows")
+		self.assertEqual(entities[0].name.true_name, "Arrows")
 
 class MissileWeaponTests(unittest.TestCase):
 	def test_can_equip_missile_weapon(self):
@@ -298,7 +299,7 @@ class NameTests(unittest.TestCase):
 	def test_can_make_name_with_display(self):
 		test_name = Name("foo")
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, name=test_name)
-		self.assertEqual(test_name.display_name, "foo")
+		self.assertEqual(test_name.true_name, "foo")
 
 	def test_can_make_name_with_true_name(self):
 		test_name = Name(true_name="bar")
@@ -322,32 +323,32 @@ class NameTests(unittest.TestCase):
 class GetGameVariablesTests(unittest.TestCase):
 	def test_can_create_player(self):
 		constants = get_constants()
-		player, entities, game_map, message_log, game_state, dlevels, potion_description_links = get_game_variables(constants)
-		self.assertEqual(player.name.display_name, "Player")
+		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants)
+		self.assertEqual(player.name.true_name, "Player")
 
 	def test_can_create_entities(self):
 		constants = get_constants()
-		player, entities, game_map, message_log, game_state, dlevels, potion_description_links = get_game_variables(constants)
+		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants)
 		self.assertEqual(isinstance(entities, list), True)
 
 	def test_can_create_game_map(self):
 		constants = get_constants()
-		player, entities, game_map, message_log, game_state, dlevels, potion_description_links = get_game_variables(constants)
+		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants)
 		self.assertNotEqual(game_map, None)
 
 	def test_can_create_message_log(self):
 		constants = get_constants()
-		player, entities, game_map, message_log, game_state, dlevels, potion_description_links = get_game_variables(constants)
+		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants)
 		self.assertNotEqual(message_log, None)	
 
 	def test_can_create_game_state(self):
 		constants = get_constants()
-		player, entities, game_map, message_log, game_state, dlevels, potion_description_links = get_game_variables(constants)
+		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants)
 		self.assertNotEqual(game_state, None)
 
 	def test_can_create_dlevels(self):
 		constants = get_constants()
-		player, entities, game_map, message_log, game_state, dlevels, potion_description_links = get_game_variables(constants)
+		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants)
 		self.assertNotEqual(dlevels, None)
 
 #class MenuTests(unittest.TestCase):
@@ -359,9 +360,11 @@ class GetGameVariablesTests(unittest.TestCase):
 
 class ItemNamesTests(unittest.TestCase):
 	def test_player_has_lists_of_identified_items(self):
-		identified_component = Identified()
+		dummy_links = {}
+		identified_component = Identified(dummy_links)
 		self.assertTrue(isinstance(identified_component.identified_potions, list), True)
 		self.assertTrue(isinstance(identified_component.identified_scrolls, list), True)
+		self.assertTrue(isinstance(identified_component.potion_links, dict), True)
 
 	def test_game_has_list_of_potion_names(self):
 		constants = get_constants()
@@ -380,22 +383,49 @@ class ItemNamesTests(unittest.TestCase):
 		potion_description_links = assign_potion_descriptions(constants['potion_descriptions'], constants['potion_types'])
 		self.assertNotEqual(len(potion_description_links), 0)
 
+	def test_player_has_potion_links(self):
+		constants = get_constants()
+		potion_description_links = assign_potion_descriptions(constants['potion_descriptions'], constants['potion_types'])
+		test_identified_component = Identified(potion_description_links)
+		test_entity = entity.Entity(1, 1, 'A', libtcod.white, identified=test_identified_component)
+		self.assertEqual(isinstance(test_entity.identified.potion_links, dict), True)
+
+	def test_identified_potion_has_correct_display_name(self):
+		constants = get_constants()
+		potion_description_links = assign_potion_descriptions(constants['potion_descriptions'], constants['potion_types'])
+		test_identified_component = Identified(potion_description_links)
+		test_identified_component.identified_potions.append("Healing Potion")
+		test_player = entity.Entity(1, 1, 'A', libtcod.white, identified=test_identified_component)
+		test_potion = make_healing_potion()
+		self.assertEqual(test_potion.name.true_name, "Healing Potion")
+		self.assertTrue("Healing Potion" in test_player.identified.identified_potions)
+		self.assertEqual(get_display_name(test_player, test_potion), "Healing Potion")
+
+	def test_unidentified_potion_has_correct_display_name(self):
+		constants = get_constants()
+		potion_description_links = assign_potion_descriptions(constants['potion_descriptions'], constants['potion_types'])
+		test_identified_component = Identified(potion_description_links)
+		test_player = entity.Entity(1, 1, 'A', libtcod.white, identified=test_identified_component)
+		test_potion = make_healing_potion()
+		self.assertEqual(test_potion.name.true_name, "Healing Potion")
+		self.assertEqual(get_display_name(test_player, test_potion), potion_description_links[test_potion.name.true_name])
+
 class BasicGameTests(unittest.TestCase):
 	def test_can_create_new_game(self):
 		constants = get_constants()
-		player, entities, game_map, message_log, game_state, dlevels, potion_description_links = get_game_variables(constants, start_equipped=True)
+		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants, start_equipped=True)
 		self.assertEqual(isinstance(entities, list), True)
 
 	def test_can_save_game(self):
 		constants = get_constants()
-		player, entities, game_map, message_log, game_state, dlevels, potion_description_links = get_game_variables(constants, start_equipped=True)
-		self.assertEqual(save_game(player, entities, game_map, message_log, game_state, dlevels, potion_description_links), True)
+		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants, start_equipped=True)
+		self.assertEqual(save_game(player, entities, game_map, message_log, game_state, dlevels), True)
 
 	def test_can_load_game(self):
 		constants = get_constants()
-		player, entities, game_map, message_log, game_state, dlevels, potion_description_links = get_game_variables(constants, start_equipped=True)
-		save_game(player, entities, game_map, message_log, game_state, dlevels, potion_description_links)
-		player, entities, game_map, message_log, game_state, dlevels, potion_description_links = load_game()
+		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants, start_equipped=True)
+		save_game(player, entities, game_map, message_log, game_state, dlevels)
+		player, entities, game_map, message_log, game_state, dlevels = load_game()
 		self.assertEqual(isinstance(entities, list), True)		
 
 class EffectsTests(unittest.TestCase):

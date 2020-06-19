@@ -33,11 +33,11 @@ def get_game_variables(constants, start_equipped=False):
 	skills_component.set_skill_rank("bow", 1)
 	# TODO: fix this max mana!
 	caster_component = Caster(max_mana=20)
-	identified_component = Identified()
+	potion_description_links = assign_potion_descriptions(constants['potion_descriptions'], constants['potion_types'])
+	identified_component = Identified(potion_description_links)
 	player_name = Name("Player")
 	player = Entity(0, 0, '@', libtcod.white, blocks=True, render_order=RenderOrder.ACTOR, fighter=fighter_component, inventory=inventory_component, level=level_component, equipment=equipment_component, caster=caster_component, stats=stats_component, skills=skills_component, defender=defender_component, name=player_name, identified=identified_component)
 	entities = [player]
-	potion_description_links = assign_potion_descriptions(constants['potion_descriptions'], constants['potion_types'])	
 	
 	if start_equipped:
 		x, y = 1, 1
@@ -79,7 +79,7 @@ def get_game_variables(constants, start_equipped=False):
 	message_log = MessageLog(constants['message_x'], constants['message_width'], constants['message_height'])
 
 	game_state = GameStates.PLAYERS_TURN
-	return player, entities, game_map, message_log, game_state, dlevels, potion_description_links
+	return player, entities, game_map, message_log, game_state, dlevels
 
 def assign_potion_descriptions(potion_descriptions, potion_types):	
 	potion_description_links = {}

@@ -1,7 +1,7 @@
 import shelve
 import os
 
-def save_game(player, entities, game_map, message_log, game_state, dlevels, potion_description_links):
+def save_game(player, entities, game_map, message_log, game_state, dlevels):
 	try:
 		with shelve.open('savegame', 'n') as data_file:
 			data_file['player_index'] = entities.index(player)
@@ -10,7 +10,6 @@ def save_game(player, entities, game_map, message_log, game_state, dlevels, poti
 			data_file['message_log'] = message_log
 			data_file['game_state'] = game_state
 			data_file['dlevels'] = dlevels
-			data_file['potion_description_links'] = potion_description_links
 			return True
 	except:
 		return False
@@ -27,10 +26,9 @@ def load_game():
 			message_log = data_file['message_log']
 			game_state = data_file['game_state']
 			dlevels = data_file['dlevels']
-			potion_description_links = data_file['potion_description_links']
 
 		player = entities[player_index]
 
-		return player, entities, game_map, message_log, game_state, dlevels, potion_description_links
+		return player, entities, game_map, message_log, game_state, dlevels
 	except:
 		return False

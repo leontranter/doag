@@ -1,6 +1,7 @@
 import tcod as libtcod
 import components.equipment
 from menu_options import MenuOption
+from systems.name_system import get_display_name
 
 #TODO: clean up these parameters - inventory and player probably not needed
 
@@ -27,7 +28,7 @@ def menu(con, header, options, width, screen_width, screen_height, inventory=Non
 		if text_menu:
 			display_string = option.name
 		else:
-			display_string = option.name.display_name
+			display_string = get_display_name(player, option)
 		text = '(' + chr(letter_index) + ')' + display_string
 		if inventory:
 			text = mark_equipped(text, option, inventory, player)

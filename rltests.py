@@ -27,6 +27,8 @@ from systems.effects_manager import add_effect, tick_down_effects
 from systems.name_system import get_display_name
 from components.inventory import Inventory
 from item_functions import heal
+from fov_functions import initialize_fov
+from render_functions import get_names_under_mouse
 from item_factory import make_healing_potion, make_lightning_scroll, make_fireball_scroll, make_confusion_scroll, make_fireball_book, make_heal_book
 import monsters
 import mocks
@@ -486,6 +488,7 @@ class UseTests(unittest.TestCase):
 		test_potion = make_healing_potion()
 		results = test_char.inventory.use(test_potion)
 		self.assertEqual(len(test_char.identified.identified_potions), 1)
+
 
 
 if __name__ == "__main__":

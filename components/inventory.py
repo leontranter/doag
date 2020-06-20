@@ -1,6 +1,7 @@
 import tcod as libtcod
 from game_messages import Message
 from loader_functions import constants
+from systems.name_system import get_display_name
 
 class Inventory:
 	def __init__(self, capacity):
@@ -16,7 +17,7 @@ class Inventory:
 				'message': Message('You cannot carry any more, your Inventory is full.', libtcod.yellow)
 				})
 		else:
-			temp_display_name = item.name.true_name
+			temp_display_name = get_display_name(self.owner, item)
 			if item.equippable and item.equippable.quantity and item.equippable.quantity == 1:
 				temp_display_name = temp_display_name[:-1]
 			results.append({
@@ -75,7 +76,7 @@ class Inventory:
 		item.y = self.owner.y
 
 		self.remove_item(item)
-		results.append({'item_dropped': item, 'message': Message(f"{self.owner.name.true_name} dropped the {item.name.true_name}", libtcod.yellow)})
+		results.append({'item_dropped': item, 'message': Message(f"{self.owner.name.subject_name} dropped the {get_display_name(self.owner, item)}", libtcod.yellow)})
 
 		return results
 

@@ -2,6 +2,7 @@ import tcod as libtcod
 from enum import Enum
 from game_states import GameStates
 from menus import inventory_menu, level_up_menu, character_screen, spells_menu
+from systems.name_system import get_display_name
 
 class RenderOrder(Enum):
 	STAIRS = 1
@@ -9,10 +10,9 @@ class RenderOrder(Enum):
 	ITEM = 3
 	ACTOR = 4
 
-def get_names_under_mouse(mouse, entities, fov_map):
-	(x, y) = (mouse.cx, mouse.cy)
-
-	names = [entity.name.true_name for entity in entities if entity.x == x and entity.y == y and libtcod.map_is_in_fov(fov_map, entity.x, entity.y)]
+def get_names_under_mouse(mouse, entities, fov_map, player):
+	(x, y) = (mouse.cx, mouse.cy)	
+	names = [get_display_name(player, entity) for entity in entities if entity.x == x and entity.y == y and libtcod.map_is_in_fov(fov_map, entity.x, entity.y)]
 	names = ', '.join(names)
 	return names.capitalize()
 
@@ -71,7 +71,7 @@ def render_all(con, panel, entities, player, game_map, fov_map, fov_recompute, m
 	libtcod.console_print_ex(panel, 1, 10, libtcod.BKGND_NONE, libtcod.LEFT, 'Effects:')
 	append_effects(panel, player, 11)
 	libtcod.console_set_default_foreground(panel, libtcod.light_gray)
-	libtcod.console_print_ex(panel, 1, 0, libtcod.BKGND_NONE, libtcod.LEFT, get_names_under_mouse(mouse, entities, fov_map))
+	libtcod.console_print_ex(panel, 1, 0, libtcod.BKGND_NONE, libtcod.LEFT, get_names_under_mouse(mouse, entities, fov_map, player))
 
 	libtcod.console_blit(panel, 0, 0, screen_width, panel_height, 0, 0, panel_y)
 	if game_state in (GameStates.SHOW_INVENTORY, GameStates.DROP_INVENTORY):

@@ -24,11 +24,6 @@ def main():
 	con = libtcod.console_new(constants['screen_width'], constants['screen_height'])
 	panel = libtcod.console_new(constants['screen_width'], constants['panel_height'])
 
-	entities = []
-	dlevels = {}
-	player, game_map = None, None
-	message_log, game_state = None, None	
-
 	show_main_menu = True
 	show_load_error_message = False
 	main_menu_background_image = libtcod.image_load('menu_background.png')

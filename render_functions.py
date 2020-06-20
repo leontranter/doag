@@ -68,7 +68,8 @@ def render_all(con, panel, entities, player, game_map, fov_map, fov_recompute, m
 	render_bar(panel, 1, 1, bar_width, 'HP', player.stats.hp, player.stats.max_hp, libtcod.light_red, libtcod.darker_red)
 	render_bar(panel, 1, 5, bar_width, 'Mana', player.caster.mana, player.caster.max_mana, libtcod.blue, libtcod.darker_blue)
 	libtcod.console_print_ex(panel, 1, 8, libtcod.BKGND_NONE, libtcod.LEFT, 'Dungeon level: {0}'.format(game_map.dungeon_level))
-
+	libtcod.console_print_ex(panel, 1, 10, libtcod.BKGND_NONE, libtcod.LEFT, 'Effects:')
+	append_effects(panel, player, 11)
 	libtcod.console_set_default_foreground(panel, libtcod.light_gray)
 	libtcod.console_print_ex(panel, 1, 0, libtcod.BKGND_NONE, libtcod.LEFT, get_names_under_mouse(mouse, entities, fov_map))
 
@@ -101,3 +102,11 @@ def draw_entity(con, entity, fov_map, game_map):
 
 def clear_entity(con, entity):
 	libtcod.console_put_char(con, entity.x, entity.y, ' ', libtcod.BKGND_NONE)
+
+def append_effects(panel, player, starting_y):
+	current_y = starting_y
+	for effect in player.effects.effect_list:
+		libtcod.console_print_ex(panel, 1, current_y, libtcod.BKGND_NONE, libtcod.LEFT, effect.get("name"))
+		current_y += 1
+		if current_y - starting_y == 5:
+			break 

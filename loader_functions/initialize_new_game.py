@@ -16,9 +16,10 @@ from map_objects.game_map import GameMap
 from render_functions import RenderOrder
 from dlevel import Dlevel
 from components.name import Name
+from components.effects import Effects
 from components.identified import Identified
 from random import shuffle
-from item_factory import make_healing_potion
+from item_factory import make_healing_potion, make_poison_potion
 
 def get_game_variables(constants, start_equipped=False):
 	# create the player character
@@ -36,10 +37,12 @@ def get_game_variables(constants, start_equipped=False):
 	caster_component = Caster(max_mana=20)
 	potion_description_links = assign_potion_descriptions(constants['potion_descriptions'], constants['potion_types'])
 	identified_component = Identified(potion_description_links)
+	player_effects = Effects()
 	player_name = Name("Player")
-	player = Entity(0, 0, '@', libtcod.white, blocks=True, render_order=RenderOrder.ACTOR, fighter=fighter_component, inventory=inventory_component, level=level_component, equipment=equipment_component, caster=caster_component, stats=stats_component, skills=skills_component, defender=defender_component, name=player_name, identified=identified_component)
+	player = Entity(0, 0, '@', libtcod.white, blocks=True, render_order=RenderOrder.ACTOR, fighter=fighter_component, inventory=inventory_component, level=level_component, equipment=equipment_component, caster=caster_component, stats=stats_component, skills=skills_component, defender=defender_component, name=player_name, identified=identified_component, effects=player_effects)
 	entities = [player]
 	
+	# TODO: Refactor this to a function!!! No excuses!!!
 	if start_equipped:
 		x, y = 1, 1
 		item = EquippableFactory.make_bow()
@@ -57,9 +60,9 @@ def get_game_variables(constants, start_equipped=False):
 		player.inventory.items.append(item)
 		item = EquippableFactory.make_shield()
 		player.inventory.items.append(item)
-		potion1 = make_healing_potion()
+		potion1 = make_poison_potion()
 		player.inventory.items.append(potion1)
-		potion2 = make_healing_potion()
+		potion2 = make_poison_potion()
 		player.inventory.items.append(potion2)
 
 	

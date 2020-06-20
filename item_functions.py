@@ -1,6 +1,7 @@
 import tcod as libtcod
 from game_messages import Message
 from components.ai import ConfusedMonster
+from systems.effects_manager import add_effect
 
 def heal(*args, **kwargs):
 	entity = args[0]
@@ -24,7 +25,8 @@ def poison(*args, **kwargs):
 	amount = kwargs.get('amount')
 
 	results = []
-	entity.fighter.take_damage(amount)
+	poison_effect = {'name': "Poison", "turns_left": 5, "damage_over_time": 3}
+	add_effect(poison_effect, entity)
 	results.append({'consumed': True, 'message': Message('You drink a potion of poison! You feel terrible!', libtcod.green)})
 	return results
 

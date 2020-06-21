@@ -25,6 +25,7 @@ from loader_functions.data_loaders import save_game, load_game
 from systems.attack import weapon_skill_lookup, get_weapon_skill_for_attack
 from systems.effects_manager import add_effect, tick_down_effects
 from systems.name_system import get_display_name
+from systems.damage import get_basic_thrust_damage, get_basic_swing_damage
 from components.inventory import Inventory
 from item_functions import heal
 from fov_functions import initialize_fov
@@ -153,7 +154,7 @@ class DamageTests(unittest.TestCase):
 		test_stats_component = Stats(Strength=10, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)
 		test_fighter_component = Fighter(xp=10)
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", stats=test_stats_component, fighter=test_fighter_component)
-		dice, modifier = test_fighter_component.get_basic_swing_damage()
+		dice, modifier = get_basic_swing_damage(test_entity)
 		self.assertEqual(dice, 1)
 		self.assertEqual(modifier, 0)
 
@@ -161,7 +162,7 @@ class DamageTests(unittest.TestCase):
 		test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)
 		test_fighter_component = Fighter(xp=10)
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", stats=test_stats_component, fighter=test_fighter_component)
-		dice, modifier = test_fighter_component.get_basic_thrust_damage()
+		dice, modifier = get_basic_thrust_damage(test_entity)
 		self.assertEqual(dice, 1)
 		self.assertEqual(modifier, -2)
 

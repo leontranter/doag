@@ -2,6 +2,19 @@ import tcod as libtcod
 from random_utils import dice_roll
 from damage_types import DamageTypes, damage_type_modifiers
 from game_messages import Message
+from loader_functions.constants import get_basic_damage
+
+def get_basic_swing_damage(entity):
+	ST = entity.stats.get_strength_in_range()
+	swing_damage, thrust_damage = get_basic_damage()
+	dice, modifier = swing_damage[ST][0], swing_damage[ST][1]
+	return (dice, modifier)
+
+def get_basic_thrust_damage(entity):
+	ST = entity.stats.get_strength_in_range()
+	swing_damage, thrust_damage = get_basic_damage()
+	dice, modifier = thrust_damage[ST][0], thrust_damage[ST][1]	
+	return (dice, modifier)
 
 def calculate_damage(dice, modifier, damage_type, target):
 	base_damage = dice_roll(dice, modifier)
@@ -24,6 +37,6 @@ def damage_messages(results, attacker, target, base_damage, final_damage, damage
 	else:
 		verb = "don't" if attacker.name.true_name == "Player" else "doesn't"
 		verb2 = "your" if target.name.true_name == "Player" else target.name.object_name
-		results.append({'message': Message('{attacker.name.subject_name} {verb} do enough damage to penetrate {verb2} armour.', libtcod.white)})
+		results.append({'message': Message(f'{attacker.name.subject_name} {verb} do enough damage to penetrate {verb2} armour.', libtcod.white)})
 
 	return results

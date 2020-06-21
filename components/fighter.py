@@ -5,6 +5,7 @@ from random_utils import dice_roll
 from damage_types import DamageTypes, damage_type_modifiers
 from systems.damage import calculate_damage, damage_messages
 from systems.attack import get_weapon_skill_for_attack
+from systems.damage import get_basic_swing_damage, get_basic_thrust_damage
 
 class Fighter:
 	def __init__(self, base_DR=0, xp=0):
@@ -19,35 +20,22 @@ class Fighter:
 			bonus = 0
 		return self.base_DR + bonus	
 
-	def get_basic_swing_damage(self):
-		# TODO: Fix this up!! No magic numbers!
-		ST = self.owner.stats.get_strength_in_range()
-		swing_damage, thrust_damage = get_basic_damage()
-		dice, modifier = swing_damage[ST][0], swing_damage[ST][1]
-		return (dice, modifier)
-
-	def get_basic_thrust_damage(self):
-		ST = self.owner.stats.get_strength_in_range()
-		swing_damage, thrust_damage = get_basic_damage()
-		dice, modifier = thrust_damage[ST][0], thrust_damage[ST][1]	
-		return (dice, modifier)
-
 	def get_current_melee_damage(self):
 		# TODO: Fix this! Implement punching and kicking properly
 		# nothing in main hand
 		if not self.owner.equipment.main_hand:
-			dice, modifier = self.get_basic_thrust_damage()
+			dice, modifier = get_basic_thrust_damage(self.owner)
 			damage_type = DamageTypes.CRUSHING
 		# something in main hand but it's not a melee weapon, e.g. a bow
 		elif self.owner.equipment.main_hand and not self.owner.equipment.main_hand.melee_weapon:
-			dice, modifier = self.get_basic_thrust_damage()
+			dice, modifier = self.get_basic_thrust_damage(self.owner)
 			modifier += 1
 			damage_type = DamageTypes.CRUSHING
 		elif self.owner.equipment.main_hand.melee_weapon.melee_attack_type == "swing":
-			dice, modifier = self.get_basic_swing_damage()
+			dice, modifier = get_basic_swing_damage(self.owner)
 			damage_type = self.owner.equipment.main_hand.melee_weapon.melee_damage_type
 		else:
-			dice, modifier = self.get_basic_thrust_damage()
+			dice, modifier = self.get_basic_thrust_damage(self.owner)
 			damage_type = self.owner.equipment.main_hand.melee_weapon.melee_damage_type
 		modifier += self.owner.equipment.melee_damage_bonus
 		return (dice, modifier, damage_type)
@@ -109,7 +97,10 @@ class Fighter:
 			else:
 				results.append({'attack_defended': True, 'message': Message(f'{self.owner.name.subject_name} hits, but the {target.name.object_name} {defense_choice}s the attack.')})	
 		else:
-			results.append({'missile_attack_miss': True, 'message': Message(f'{self.owner.name.subject_name} fires their {self.owner.equipment.main_hand.name.true_name} but misses {target.name.object_name}.')})
+			verb1 = "fire" if self.owner.name.true_name == "Player" else "fires"
+			pronoun = "your" if self.owner.name.true_name == "Player" else "their"
+			verb2 = "miss" if self.owner.name.true_name == "Player" else "misses"
+			results.append({'missile_attack_miss': True, 'message': Message(f'{self.owner.name.subject_name} {verb1} {pronoun} {self.owner.equipment.main_hand.name.true_name} but {verb2} {target.name.object_name}.')})
 		if dice_roll(1, 0) > 2:
 			results.append({'missile_dropped': True, 'missile_type': self.owner.equipment.ammunition.name.true_name, 'dropped_location': (target.x, target.y)})
 		results.append({'fired_weapon': True})

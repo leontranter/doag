@@ -14,6 +14,7 @@ from dlevel import Dlevel
 from spells import Spell
 from components.equippable import make_dropped_missile
 import components.inventory
+from systems import move_system
 #from map_objects.game_map import check_floor_is_explored, save_floor, load_floor
 
 def main():
@@ -108,24 +109,12 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 		fire_weapon = action.get('fire_weapon')
 		load_weapon = action.get('load_weapon')
 
-		left_click = mouse_action.get('left_click')
-		right_click = mouse_action.get('right_click')
+		left_click, right_click = mouse_action.get('left_click'), mouse_action.get('right_click')
 
 		player_turn_results = []
 
 		if move and game_state == GameStates.PLAYERS_TURN:
-			dx, dy = move
-			destination_x = player.x + dx
-			destination_y = player.y + dy
-			if not game_map.is_blocked(destination_x, destination_y):
-				target = get_blocking_entities_at_location(entities, destination_x, destination_y)
-				if target:
-					attack_results = player.fighter.melee_attack(target)
-					player_turn_results.extend(attack_results)
-				else:	
-					player.move(dx, dy)
-					fov_recompute = True
-				game_state = GameStates.ENEMY_TURN
+			player_turn_results, fov_recompute, game_state = move_system.attempt_move_entity(move, game_map, player, entities, game_state, player_turn_results, fov_recompute)
 
 		elif wait:
 			game_state = GameStates.ENEMY_TURN

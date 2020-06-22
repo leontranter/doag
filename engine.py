@@ -3,7 +3,7 @@ from input_handlers import handle_keys, handle_mouse, handle_main_menu
 from loader_functions.initialize_new_game import get_game_variables
 from loader_functions.constants import get_constants
 from loader_functions.data_loaders import load_game, save_game
-from entity import Entity, get_blocking_entities_at_location
+from entity import Entity
 from render_functions import clear_all, render_all
 from fov_functions import initialize_fov, recompute_fov
 from game_states import GameStates
@@ -256,7 +256,6 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 			equip = player_turn_result.get('equip')
 			cast = player_turn_result.get('cast')
 			not_cast = player_turn_result.get('not_cast')
-			not_fired = player_turn_result.get('not_fired')
 			missile_targeting = player_turn_result.get('missile_targeting')
 			no_missile_attack_weapon = player_turn_result.get("no_missile_attack_weapon")
 			fired_weapon = player_turn_result.get("fired_weapon")
@@ -337,8 +336,6 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 			if not_cast:
 				message_log.add_message(Message("You don't have enough mana to cast that spell.", libtcod.yellow))
 				game_state = GameStates.ENEMY_TURN
-			if not_fired:
-				message_log.add_message(Message("Nothing fired..."))
 			if no_ammunition:
 				message_log.add_message(Message("You don't have any ammunition to fire."))
 			if loaded:

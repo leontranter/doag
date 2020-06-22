@@ -26,6 +26,7 @@ from systems.attack import weapon_skill_lookup, get_weapon_skill_for_attack
 from systems.effects_manager import add_effect, tick_down_effects
 from systems.name_system import get_display_name
 from systems.damage import get_basic_thrust_damage, get_basic_swing_damage
+from systems.move_system import distance_to
 from components.inventory import Inventory
 from item_functions import heal
 from fov_functions import initialize_fov
@@ -490,6 +491,11 @@ class UseTests(unittest.TestCase):
 		results = test_char.inventory.use(test_potion)
 		self.assertEqual(len(test_char.identified.identified_potions), 1)
 
+class MoveTests(unittest.TestCase):
+	def test_can_calculate_distance_to(self):
+		test_entity_1 = entity.Entity(1, 1, 'A', libtcod.white)
+		test_entity_2 = entity.Entity(4, 5, 'A', libtcod.white)
+		self.assertEqual(distance_to(test_entity_1, test_entity_2), 5)
 
 
 if __name__ == "__main__":

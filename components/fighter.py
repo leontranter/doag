@@ -141,7 +141,7 @@ class Fighter:
 		if not self.owner.equipment.main_hand.missile_weapon:
 			results.append({"no_missile_attack_weapon": True})
 		elif not self.owner.equipment.main_hand.missile_weapon.loaded:
-			results.append({"not_loaded": True})
+			results.append({'message': "You don't have any ammunition loaded."})
 			return results
 		if not (kwargs.get("target_x") or kwargs.get("target_y")):
 			results.append({'missile_targeting': True})

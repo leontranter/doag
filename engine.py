@@ -211,7 +211,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 			if player.equipment.ammunition and player.equipment.ammunition.equippable.quantity > 0:
 				player_turn_results.extend(player.fighter.fire_weapon())
 			else:
-				player_turn_results.append({"no_ammunition": True})
+				player_turn_results.append({"message": "You don't have any ammunition to fire!"})
 
 		if load_weapon:
 			player_turn_results = player.fighter.load_missile_weapon()
@@ -259,7 +259,6 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 			missile_targeting = player_turn_result.get('missile_targeting')
 			no_missile_attack_weapon = player_turn_result.get("no_missile_attack_weapon")
 			fired_weapon = player_turn_result.get("fired_weapon")
-			no_ammunition = player_turn_result.get("no_ammunition")
 			missile_attack_miss = player_turn_result.get("missile_attack_miss")
 			melee_attack_miss = player_turn_result.get("melee_attack_miss")
 			miss_message = player_turn_result.get("miss_message")
@@ -268,7 +267,6 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 			dropped_location = player_turn_result.get("dropped_location")
 			missile_type = player_turn_result.get("missile_type")
 			monster_drops = player_turn_result.get("monster_drops")
-			not_loaded = player_turn_result.get("not_loaded")
 			loaded = player_turn_result.get("loaded")
 
 			if message:
@@ -309,8 +307,6 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 			if missile_dropped:
 				missile_entity = make_dropped_missile(missile_type, dropped_location)
 				entities.append(missile_entity)
-			if not_loaded:
-				message_log.add_message(Message("Your missile weapon is not loaded with any ammunition!"))
 			if item_dropped:
 				entities.append(item_dropped)
 				game_state = GameStates.ENEMY_TURN
@@ -336,8 +332,6 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 			if not_cast:
 				message_log.add_message(Message("You don't have enough mana to cast that spell.", libtcod.yellow))
 				game_state = GameStates.ENEMY_TURN
-			if no_ammunition:
-				message_log.add_message(Message("You don't have any ammunition to fire."))
 			if loaded:
 				game_state = GameStates.ENEMY_TURN
 			if xp:

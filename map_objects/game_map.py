@@ -176,7 +176,7 @@ class GameMap:
 				item = item_generator(item_choice, x, y)
 				entities.append(item)
 
-	def next_floor(self, player, message_log, constants, floor_direction):
+	def next_floor(self, player, constants, floor_direction):
 		self.dungeon_level += floor_direction
 		entities = [player]
 
@@ -185,12 +185,21 @@ class GameMap:
 		
 		return entities
 
+	def new_floor(self, player, constants, direction, dlevels):
+		entities = self.next_floor(player, constants, direction)
+		dlevels[self.dungeon_level].explored = True
+		dlevels[self.dungeon_level].tiles = self.tiles
+		dlevels[self.dungeon_level].entities = entities
+		return entities, dlevels
+
 	def save_floor(self, dlevels, entities):
 		dlevels["dlevel_" + str(self.dungeon_level)].entities = entities
 		dlevels["dlevel_" + str(self.dungeon_level)].tiles = self.tiles
 
-	def load_floor(self, dlevels, dungeon_level):
-		entities = dlevels[dungeon_level].entities
-		tiles = dlevels[dungeon_level].tiles
+	def load_floor(self, entities, player, dlevels):
+		entities, tiles = dlevels[self.dungeon_level+1].entities, dlevels[self.dungeon_level+1].tiles
 		self.dungeon_level += 1
-		return entities, tiles, self.dungeon_level
+		for entity in entities:
+			if entity.name.true_name == "Upward stairs":
+				player.x, player.y = entity.x, entity.y
+		return entities, tiles, player

@@ -143,18 +143,9 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 				if entity.stairs and entity.x == player.x and entity.y == player.y:
 					# go down the stairs
 					if dlevels[game_map.dungeon_level+1].explored:
-						#entities, game_map.tiles, player = game_map.load_floor(entities, player, dlevels)
-
-						entities, game_map.tiles = dlevels[game_map.dungeon_level+1].entities, dlevels[game_map.dungeon_level+1].tiles
-						game_map.dungeon_level += 1
-						for entity in entities:
-							if entity.name.true_name == "Upward stairs":
-								player.x, player.y = entity.x, entity.y
+						entities, game_map.tiles, player = game_map.load_floor(entities, player, dlevels)
 					else:
-						entities = game_map.next_floor(player, message_log, constants, +1)
-						dlevels[game_map.dungeon_level].explored = True
-						dlevels[game_map.dungeon_level].tiles = game_map.tiles
-						dlevels[game_map.dungeon_level].entities = entities
+						entities, dlevels = game_map.new_floor(player, constants, 1, dlevels)
 					fov_map = initialize_fov(game_map)
 					fov_recompute = True
 					libtcod.console_clear(con)

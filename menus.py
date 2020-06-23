@@ -76,7 +76,7 @@ def message_box(con, header, width, screen_width, screen_height):
 	menu(con, header, [], width, screen_width, screen_height)
 
 def level_up_menu(con, header, player, menu_width, screen_width, screen_height):
-	options = buildTextMenu(['Constitution (+20HP)', 'Strength (+1 attack)', 'Agility (+1 defense)'])
+	options = build_text_menu(['Constitution (+20HP)', 'Strength (+1 attack)', 'Agility (+1 defense)'])
 
 	menu(con, header, options, menu_width, screen_width, screen_height)
 

@@ -7,7 +7,7 @@ from entity import Entity
 from render_functions import clear_all, render_all
 from fov_functions import initialize_fov, recompute_fov
 from game_states import GameStates
-from death_functions import kill_monster, kill_player
+from death_functions import kill_monster, kill_player, handle_death
 from game_messages import Message
 from menus import main_menu, message_box
 from dlevel import Dlevel
@@ -91,24 +91,19 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 		action = handle_keys(key, game_state)
 		mouse_action = handle_mouse(mouse)
 
-		move = action.get('move')
-		wait = action.get('wait')
+		move, wait = action.get('move'), action.get('wait')
 		pickup = action.get('pickup')
-		show_inventory = action.get('show_inventory')
-		drop_inventory = action.get('drop_inventory')
+		show_inventory, drop_inventory = action.get('show_inventory'), action.get('drop_inventory')
 		inventory_index = action.get('inventory_index')
-		take_stairs = action.get('take_stairs')
-		take_stairs_up = action.get('take_stairs_up')
+		take_stairs, take_stairs_up = action.get('take_stairs'), action.get('take_stairs_up')
 		level_up = action.get('level_up')
 		show_character_screen = action.get('show_character_screen')
 		exit = action.get('exit')
 		fullscreen = action.get('fullscreen')
 		equipment_screen = action.get('show_equipment_screen')
-		spells_screen = action.get('show_spells_screen')
-		spells_index = action.get('spells_index')
-		fire_weapon = action.get('fire_weapon')
-		load_weapon = action.get('load_weapon')
-
+		spells_screen, spells_index = action.get('show_spells_screen'), action.get('spells_index')
+		fire_weapon, load_weapon = action.get('fire_weapon'), action.get('load_weapon')
+		
 		left_click, right_click = mouse_action.get('left_click'), mouse_action.get('right_click')
 
 		player_turn_results = []
@@ -146,18 +141,20 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 		if take_stairs and game_state == GameStates.PLAYERS_TURN:
 			for entity in entities:
 				if entity.stairs and entity.x == player.x and entity.y == player.y:
-					level_check = "dlevel_" + str(game_map.dungeon_level + 1)
-					if dlevels[level_check].explored:
-						entities, game_map.tiles = dlevels[level_check].entities, dlevels[level_check].tiles
+					# go down the stairs
+					if dlevels[game_map.dungeon_level+1].explored:
+						#entities, game_map.tiles, player = game_map.load_floor(entities, player, dlevels)
+
+						entities, game_map.tiles = dlevels[game_map.dungeon_level+1].entities, dlevels[game_map.dungeon_level+1].tiles
 						game_map.dungeon_level += 1
 						for entity in entities:
 							if entity.name.true_name == "Upward stairs":
 								player.x, player.y = entity.x, entity.y
 					else:
-						dlevels[level_check].explored = True
 						entities = game_map.next_floor(player, message_log, constants, +1)
-						dlevels["dlevel_" + str(game_map.dungeon_level)].tiles = game_map.tiles
-						dlevels["dlevel_" + str(game_map.dungeon_level)].entities = entities
+						dlevels[game_map.dungeon_level].explored = True
+						dlevels[game_map.dungeon_level].tiles = game_map.tiles
+						dlevels[game_map.dungeon_level].entities = entities
 					fov_map = initialize_fov(game_map)
 					fov_recompute = True
 					libtcod.console_clear(con)
@@ -168,9 +165,9 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 		if take_stairs_up and game_state == GameStates.PLAYERS_TURN:
 			for entity in entities:
 				if entity.stairs and entity.x == player.x and entity.y == player.y:
-					level_check = "dlevel_" + str(game_map.dungeon_level - 1)
-					if level_check in dlevels:
-						prev_level = dlevels[level_check]
+					# go up the stairs
+					if game_map.dungeon_level-1 in dlevels.keys():
+						prev_level = dlevels[game_map.dungeon_level-1]
 						entities, game_map.tiles, game_map.dungeon_level = prev_level.entities, prev_level.tiles, prev_level.floor
 						for entity in entities:
 							if entity.name.true_name == "Stairs":
@@ -272,11 +269,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 			if message:
 				message_log.add_message(message)
 			if dead_entity:
-				if dead_entity == player:
-					message, game_state = kill_player(dead_entity)
-				else:
-					message = kill_monster(dead_entity)
-					entities = dead_entity.inventory.drop_on_death(entities, dead_entity)
+				message, game_state, entities = handle_death(entities, dead_entity, player, game_state)
 				message_log.add_message(message)
 			if item_added:
 				entities.remove(item_added)

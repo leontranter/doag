@@ -52,22 +52,22 @@ def move_astar(moving_entity, target, entities, game_map):
 	else:
 		# keep the old move funtion as a backup so that if there are no paths
 		# it will still try to move towards the player
-		move_towards(target.x, target.y, game_map, entities)
+		move_towards(moving_entity, target.x, target.y, game_map, entities)
 	# delete the path to free memory
 	libtcod.path_delete(my_path)
 
 def move_towards(moving_entity, target_x, target_y, game_map, entities):
-	dx = target_x - self.x
-	dy = target_y - self.y
+	dx = target_x - moving_entity.x
+	dy = target_y - moving_entity.y
 	distance = math.sqrt(dx ** 2 + dy ** 2)
 	dx = int(round(dx / distance))
 	dy = int(round(dy / distance))
 
-	if not (game_map.is_blocked(self.x + dx, self.y + dy) or get_blocking_entities_at_location(entities, self.x + dx, self.y + dy)):
-		move_entity(self, dx, dy)
+	if not (game_map.is_blocked(moving_entity.x + dx, moving_entity.y + dy) or get_blocking_entities_at_location(entities, moving_entity.x + dx, moving_entity.y + dy)):
+		move_entity(moving_entity, dx, dy)
 
 def distance(moving_entity, x, y):
-	return math.sqrt((x - self.x) ** 2 + (y - self.y) ** 2)
+	return math.sqrt((x - moving_entity.x) ** 2 + (y - moving_entity.y) ** 2)
 
 def distance_to(moving_entity, other_entity):
 	dx = other_entity.x - moving_entity.x

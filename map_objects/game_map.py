@@ -109,7 +109,7 @@ class GameMap:
 		# if this isn't level 1, create an up stairway
 		if self.dungeon_level != 1:
 			stairs_component_up = Stairs(self.dungeon_level - 1)
-			up_stairs_name = Name("Upward Stairs")
+			up_stairs_name = Name("Upward stairs")
 			up_stairs = Entity(player.x, player.y, '<', libtcod.white, render_order=RenderOrder.STAIRS, stairs=stairs_component_up, name=up_stairs_name)
 			entities.append(up_stairs)
 

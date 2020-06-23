@@ -23,3 +23,11 @@ def kill_monster(monster):
 	monster.render_order = RenderOrder.CORPSE	
 
 	return death_message
+
+def handle_death(entities, dead_entity, player, game_state):
+	if dead_entity == player:
+		message, game_state = kill_player(dead_entity)
+	else:
+		message = kill_monster(dead_entity)
+		entities = dead_entity.inventory.drop_on_death(entities, dead_entity)
+	return message, game_state, entities

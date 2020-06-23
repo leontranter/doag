@@ -26,17 +26,20 @@ def make_confusion_potion(x=1, y=1):
 
 def make_lightning_scroll(x=1, y=1):
 	lightning_scroll_component = Item(use_function=cast_lightning, damage=40, maximum_range=5)
-	tempItem = Entity(x, y, '?', libtcod.yellow, render_order=RenderOrder.ITEM, item=lightning_scroll_component)
+	lightning_scroll_name = Name(true_name="Lightning Scroll")
+	tempItem = Entity(x, y, '?', libtcod.yellow, render_order=RenderOrder.ITEM, item=lightning_scroll_component, name=lightning_scroll_name)
 	return tempItem
 
 def make_fireball_scroll(x=1, y=1):
 	fireball_scroll_component = Item(use_function=cast_fireball, targeting=True, targeting_message=Message('Left-click a target tile for the fireball, or right-click to cancel.', libtcod.light_cyan), damage=25, radius=3)
-	tempItem = Entity(x, y, '?', libtcod.red, render_order=RenderOrder.ITEM, item=fireball_scroll_component)
+	fireball_scroll_name = Name(true_name="Fireball Scroll")
+	tempItem = Entity(x, y, '?', libtcod.red, render_order=RenderOrder.ITEM, item=fireball_scroll_component, name=fireball_scroll_name)
 	return tempItem
 
 def make_confusion_scroll(x=1, y=1):
 	confusion_scroll_component = Item(use_function=cast_confuse, targeting=True, targeting_message=Message('Left-click on an enemy to confuse it or right-click to cancel.', libtcod.light_cyan))
-	tempItem = Entity(x, y, '?', libtcod.light_pink, render_order=RenderOrder.ITEM, item=confusion_scroll_component)
+	confusion_scroll_name = Name(true_name="Confusion Scroll")
+	tempItem = Entity(x, y, '?', libtcod.light_pink, render_order=RenderOrder.ITEM, item=confusion_scroll_component, name=confusion_scroll_name)
 	return tempItem
 
 def make_fireball_book(x=1, y=1):

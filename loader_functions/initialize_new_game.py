@@ -82,7 +82,7 @@ def get_game_variables(constants, start_equipped=False):
 	dlevel_4 = Dlevel([], [], 4)
 	dlevel_5 = Dlevel([], [], 5)
 	dlevel_6 = Dlevel([], [], 6)
-	dlevels = {'dlevel_1': dlevel_1, 'dlevel_2': dlevel_2, 'dlevel_3': dlevel_3, 'dlevel_4': dlevel_4, 'dlevel_5': dlevel_5, 'dlevel_6': dlevel_6}
+	dlevels = {1: dlevel_1, 2: dlevel_2, 3: dlevel_3, 4: dlevel_4, 5: dlevel_5, 6: dlevel_6}
 
 	message_log = MessageLog(constants['message_x'], constants['message_width'], constants['message_height'])
 

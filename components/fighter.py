@@ -35,7 +35,7 @@ class Fighter:
 			dice, modifier = get_basic_swing_damage(self.owner)
 			damage_type = self.owner.equipment.main_hand.melee_weapon.melee_damage_type
 		else:
-			dice, modifier = self.get_basic_thrust_damage(self.owner)
+			dice, modifier = get_basic_thrust_damage(self.owner)
 			damage_type = self.owner.equipment.main_hand.melee_weapon.melee_damage_type
 		modifier += self.owner.equipment.melee_damage_bonus
 		return (dice, modifier, damage_type)

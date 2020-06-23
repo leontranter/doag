@@ -37,8 +37,8 @@ def makeOrc(x, y):
 	return monster
 
 def makeTroll(x, y):
-	fighter_component = Fighter(base_dr=1, xp=100)
-	stats_components = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)
+	fighter_component = Fighter(xp=100)
+	stats_component = Stats(Strength=11, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)
 	ai_component = BasicMonster()
 	equipment_component = Equipment()
 	inventory_component = Inventory(26)

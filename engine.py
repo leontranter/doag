@@ -15,6 +15,7 @@ from spells import Spell
 from components.equippable import make_dropped_missile
 import components.inventory
 from systems import move_system
+from systems import time_system
 #from map_objects.game_map import check_floor_is_explored, save_floor, load_floor
 
 def main():
@@ -112,6 +113,9 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 			player_turn_results, fov_recompute, game_state = move_system.attempt_move_entity(move, game_map, player, entities, game_state, player_turn_results, fov_recompute)
 
 		elif wait:
+			time_results = time_system.process_entity_turn(player)
+			if time_results:
+				player_turn_results.extend(time_results)
 			game_state = GameStates.ENEMY_TURN
 
 		elif pickup and game_state == GameStates.PLAYERS_TURN:
@@ -218,6 +222,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 					player_turn_results.extend(missile_attack_results)
 			elif right_click:
 				player_turn_results.append({'targeting_cancelled': True})
+		
 		if exit:
 			if game_state in (GameStates.SHOW_INVENTORY, GameStates.DROP_INVENTORY, GameStates.CHARACTER_SCREEN, GameStates.SPELLS_SCREEN):
 				game_state = previous_game_state

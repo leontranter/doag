@@ -23,7 +23,7 @@ from loader_functions.constants import get_basic_damage, WeaponTypes, get_consta
 from loader_functions.initialize_new_game import get_game_variables, assign_potion_descriptions
 from loader_functions.data_loaders import save_game, load_game
 from systems.attack import weapon_skill_lookup, get_weapon_skill_for_attack
-from systems.effects_manager import add_effect, tick_down_effects
+from systems.effects_manager import add_effect, tick_down_effects, process_damage_over_time
 from systems.name_system import get_display_name
 from systems.damage import get_basic_thrust_damage, get_basic_swing_damage
 from systems.move_system import distance_to
@@ -475,6 +475,16 @@ class EffectsTests(unittest.TestCase):
 		for _ in range(5):
 			tick_down_effects(test_entity)
 		self.assertEqual(len(test_entity.effects.effect_list), 0)
+
+	def test_damage_over_time_effects_work(self):
+		effects_component = Effects()
+		fighter_component = Fighter(xp=100)
+		stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)
+		test_entity = entity.Entity(1, 1, 'A', libtcod.white, stats=stats_component, fighter=fighter_component, effects=effects_component)
+		test_effect = {'name': "Poison", 'turns_left': 5, 'damage_per_turn': 3}
+		add_effect(test_effect, test_entity)
+		process_damage_over_time(test_entity)
+		self.assertEqual(test_entity.stats.hp, 16)
 
 class UseTests(unittest.TestCase):
 	def test_can_use_healing_potion(self):

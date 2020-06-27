@@ -15,9 +15,11 @@ def get_effects_names(entity):
 		list_of_effects.append(effect.get("name"))
 
 def process_damage_over_time(entity):
-	for currect_effect in entity.effects.effect_list:
-		if current_effect.get("damage_over_time") and entity.fighter:
-			entity.fighter.take_damage(current_effect.get("damage_over_time"))
+	results = []
+	for effect in entity.effects.effect_list:
+		if effect.get("damage_per_turn") and entity.fighter:
+			results.extend(entity.fighter.take_damage(effect.get("damage_per_turn")))
+	return results
 
 def tick_down_effects(entity):
 	for i in range(len(entity.effects.effect_list)-1, -1, -1):

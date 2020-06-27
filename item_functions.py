@@ -25,7 +25,7 @@ def poison(*args, **kwargs):
 	amount = kwargs.get('amount')
 
 	results = []
-	poison_effect = {'name': "Poison", "turns_left": 5, "damage_over_time": 3}
+	poison_effect = {'name': "Poison", "turns_left": 5, "damage_per_turn": 3}
 	add_effect(poison_effect, entity)
 	results.append({'consumed': True, 'message': Message('You drink a potion of poison! You feel terrible!', libtcod.green)})
 	return results

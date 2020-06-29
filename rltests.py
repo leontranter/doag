@@ -25,8 +25,9 @@ from loader_functions.data_loaders import save_game, load_game
 from systems.attack import weapon_skill_lookup, get_weapon_skill_for_attack
 from systems.effects_manager import add_effect, tick_down_effects, process_damage_over_time
 from systems.name_system import get_display_name
-from systems.damage import get_basic_thrust_damage, get_basic_swing_damage
+from systems.damage import get_basic_thrust_damage, get_basic_swing_damage, get_damage_modifier_from_status_effects, get_damage_modifier_from_equipment
 from systems.move_system import distance_to
+from systems.attack import get_hit_modifier_from_status_effects, get_hit_modifier_from_equipment
 from components.inventory import Inventory
 from item_functions import heal
 from fov_functions import initialize_fov
@@ -58,21 +59,21 @@ class EntityTests(unittest.TestCase):
 	def test_can_make_entity_with_caster_who_knows_spells(self):
 		test_caster = Caster(spells=[], max_mana=50)
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", caster=test_caster)
-		test_caster.learnFireballSpell()
+		test_caster.learn_fireball_spell()
 		self.assertEqual(test_caster.spells[0].name, "Fireball")
 
 class SpellTests(unittest.TestCase):
 	def test_can_learn_heal(self):
 		test_caster = Caster(spells=[], max_mana=50)
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", caster=test_caster)
-		test_caster.learnHealSpell()
+		test_caster.learn_heal_spell()
 		self.assertEqual(test_caster.spells[0].name, "Heal")
 
 	def test_can_learn_multiple_spells(self):
 		test_caster = Caster(spells=[], max_mana=50)
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", caster=test_caster)
-		test_caster.learnHealSpell()
-		test_caster.learnFireballSpell()
+		test_caster.learn_heal_spell()
+		test_caster.learn_fireball_spell()
 		self.assertEqual(test_caster.spells[0].name, "Heal")
 		self.assertEqual(test_caster.spells[1].name, "Fireball")		
 
@@ -167,6 +168,15 @@ class DamageTests(unittest.TestCase):
 		self.assertEqual(dice, 1)
 		self.assertEqual(modifier, -2)
 
+	def test_can_calculate_damage_bonus_from_equipment(self):
+		test_equipment = Equipment()
+		padded_armor_equippable = Equippable(EquipmentSlots.BODY, DR_bonus=1, weight=6, damage_modifier=2)
+		padded_armor_name = Name("Padded Armor")
+		padded_armor_entity = entity.Entity(1, 1, ')', libtcod.purple, equippable=padded_armor_equippable, name=padded_armor_name)
+		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", equipment=test_equipment)
+		test_equipment.body = padded_armor_entity
+		self.assertEqual(get_damage_modifier_from_equipment(test_entity), 2)
+
 class AttackTests(unittest.TestCase):
 	def test_can_lookup_weapon_skill(self):
 		test_weapon = EquippableFactory.make_sword()
@@ -177,6 +187,15 @@ class AttackTests(unittest.TestCase):
 		weapon = test_char.equipment.main_hand.melee_weapon
 		skill_num = get_weapon_skill_for_attack(test_char, weapon)
 		self.assertEqual(skill_num, 12)
+
+	def test_can_get_equipment_attack_bonus(self):
+		test_equipment = Equipment()
+		padded_armor_equippable = Equippable(EquipmentSlots.BODY, DR_bonus=1, weight=6, hit_modifier=2)
+		padded_armor_name = Name("Padded Armor")
+		padded_armor_entity = entity.Entity(1, 1, ')', libtcod.purple, equippable=padded_armor_equippable, name=padded_armor_name)
+		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", equipment=test_equipment)
+		test_equipment.body = padded_armor_entity
+		self.assertEqual(get_hit_modifier_from_equipment(test_entity), 2)
 
 
 class DefenderTests(unittest.TestCase):
@@ -486,6 +505,24 @@ class EffectsTests(unittest.TestCase):
 		process_damage_over_time(test_entity)
 		self.assertEqual(test_entity.stats.hp, 16)
 
+	def test_can_calculate_hit_bonus_from_effects(self):
+		effects_component = Effects()
+		test_entity = entity.Entity(1, 1, 'A', libtcod.white, effects=effects_component)
+		test_effect = {'name': "Poison", 'turns_left': 5, 'damage_per_turn': 3}
+		add_effect(test_effect, test_entity)
+		self.assertEqual(get_hit_modifier_from_status_effects(test_entity), 0)
+		test_effect2 = {'name': "Bless", 'turns_left': 5, 'hit_bonus': 3}
+		add_effect(test_effect2, test_entity)
+		self.assertEqual(get_hit_modifier_from_status_effects(test_entity), 3)
+
+	def test_can_calculate_damage_bonus_from_effects(self):
+		effects_component = Effects()
+		test_entity = entity.Entity(1, 1, 'A', libtcod.white, effects=effects_component)
+		self.assertEqual(get_damage_modifier_from_status_effects(test_entity), 0)
+		test_effect = {'name': "Bless", 'turns_left': 5, 'damage_bonus': 3}
+		add_effect(test_effect, test_entity)
+		self.assertEqual(get_damage_modifier_from_status_effects(test_entity), 3)
+
 class UseTests(unittest.TestCase):
 	def test_can_use_healing_potion(self):
 		test_potion = make_healing_potion()
@@ -506,6 +543,11 @@ class MoveTests(unittest.TestCase):
 		test_entity_1 = entity.Entity(1, 1, 'A', libtcod.white)
 		test_entity_2 = entity.Entity(4, 5, 'A', libtcod.white)
 		self.assertEqual(distance_to(test_entity_1, test_entity_2), 5)
+
+class TimeTests(unittest.TestCase):
+	def test_can_get_time_results(self):
+		pass		
+
 
 
 if __name__ == "__main__":

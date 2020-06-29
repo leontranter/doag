@@ -12,10 +12,13 @@ class Spell:
 		self.function_kwargs = kwargs
 
 class SpellFactory:
-	def makeFireballSpell():
+	def make_fireball_spell():
 		spell = Spell("Fireball", 10, cast_fireball, targeting=True, targeting_message=Message('Left-click a target tile for the fireball, or right-click to cancel.', libtcod.light_cyan), damage=30, radius=3)
 		return spell
 
-	def makeHealSpell():
+	def make_heal_spell():
 		spell = Spell("Heal", 5, heal, amount=10)
 		return spell
+
+	def make_bless_spell():
+		spell = Spell("Bless", 4, bless, targeting=True, targeting_message=Message('Left-click a target to cast Bless on, or right-click to cancel.', libtcod.light_cyan), bonus=1)

@@ -9,13 +9,18 @@ class Caster:
 		self.max_mana = max_mana
 		self.mana = max_mana
 
-	def learnFireballSpell(self):
-		spell = SpellFactory.makeFireballSpell()
+	def learn_fireball_spell(self):
+		spell = SpellFactory.make_fireball_spell()
 		self.spells.append(spell)
 
-	def learnHealSpell(self):
-		spell = SpellFactory.makeHealSpell()
+	def learn_heal_spell(self):
+		spell = SpellFactory.make_heal_spell()
 		self.spells.append(spell)
+
+	def learn_bless_spell(self):
+		spell = SpellFactory.make_bless_spell()
+		self.spells.append(spell)
+
 	# TODO: do we need this?
 	#def removeSpell(self, spell):
 		#pass

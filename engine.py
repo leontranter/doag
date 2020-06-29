@@ -16,7 +16,6 @@ from components.equippable import make_dropped_missile
 import components.inventory
 from systems import move_system
 from systems import time_system
-#from map_objects.game_map import check_floor_is_explored, save_floor, load_floor
 
 def main():
 	constants = get_constants()
@@ -111,11 +110,10 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 
 		if move and game_state == GameStates.PLAYERS_TURN:
 			player_turn_results, fov_recompute, game_state = move_system.attempt_move_entity(move, game_map, player, entities, game_state, player_turn_results, fov_recompute)
+			player_turn_results.extend(time_system.process_entity_turn(player))
 
 		elif wait:
-			time_results = time_system.process_entity_turn(player)
-			if time_results:
-				player_turn_results.extend(time_results)
+			player_turn_results.extend(time_system.process_entity_turn(player))
 			game_state = GameStates.ENEMY_TURN
 
 		elif pickup and game_state == GameStates.PLAYERS_TURN:
@@ -123,6 +121,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 				if entity.item and entity.x == player.x and entity.y == player.y:
 					pickup_results = player.inventory.add_item(entity)
 					player_turn_results.extend(pickup_results)
+					player_turn_results.extend(time_system.process_entity_turn(player))
 					break
 			else:
 				message_log.add_message(Message('There is nothing here to pick up.', libtcod.yellow))
@@ -138,6 +137,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 			item = player.inventory.items[inventory_index]
 			if game_state == GameStates.SHOW_INVENTORY:
 				player_turn_results.extend(player.inventory.use(item, entities=entities, fov_map=fov_map))
+				player_turn_results.extend(time_system.process_entity_turn(player))
 			elif game_state == GameStates.DROP_INVENTORY:
 				player_turn_results.extend(player.inventory.drop_item(item))
 		
@@ -198,15 +198,18 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 		if spells_index is not None and spells_index < len(player.caster.spells):
 			spell = player.caster.spells[spells_index]
 			player_turn_results.extend(player.caster.cast(spell, entities=entities, fov_map=fov_map))
+			player_turn_results.extend(time_system.process_entity_turn(player))
 
 		if fire_weapon:
 			if player.equipment.ammunition and player.equipment.ammunition.equippable.quantity > 0:
 				player_turn_results.extend(player.fighter.fire_weapon())
+				player_turn_results.extend(time_system.process_entity_turn(player))
 			else:
 				player_turn_results.append({"message": "You don't have any ammunition to fire!"})
 
 		if load_weapon:
 			player_turn_results = player.fighter.load_missile_weapon()
+			player_turn_results.extend(time_system.process_entity_turn(player))
 
 		if game_state == GameStates.TARGETING:
 			if left_click:
@@ -214,12 +217,15 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 				if targeting_item:	
 					item_use_results = player.inventory.use(targeting_item, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y)
 					player_turn_results.extend(item_use_results)
+					player_turn_results.extend(time_system.process_entity_turn(player))
 				elif spell_targeting:
 					spell_use_results = player.caster.cast(spell_targeting, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y)
 					player_turn_results.extend(spell_use_results)
+					player_turn_results.extend(time_system.process_entity_turn(player))
 				elif missile_targeting:
 					missile_attack_results = player.fighter.fire_weapon(weapon=player.equipment.main_hand.equippable, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y)
 					player_turn_results.extend(missile_attack_results)
+					player_turn_results.extend(time_system.process_entity_turn(player))
 			elif right_click:
 				player_turn_results.append({'targeting_cancelled': True})
 		

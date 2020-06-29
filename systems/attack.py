@@ -1,5 +1,24 @@
 from loader_functions.constants import WeaponTypes
 
+def get_hit_modifier_from_status_effects(entity):
+	modifier = 0
+	for effect in entity.effects.effect_list:
+		modifier += effect.get("hit_bonus") or 0
+	return modifier
+
+def get_hit_modifier_from_equipment(entity):
+	modifier = 0
+	# TODO: could refactor this into iterating through a list??
+	if entity.equipment.main_hand:
+		modifier += entity.equipment.main_hand.equippable.hit_modifier or 0	
+	if entity.equipment.off_hand:
+		modifier += entity.equipment.off_hand.equippable.hit_modifier or 0
+	if entity.equipment.body:
+		modifier += entity.equipment.body.equippable.hit_modifier or 0
+	if entity.equipment.ammunition:
+		modifier += entity.equipment.ammunition.equippable.hit_modifier or 0
+	return modifier	
+
 def get_weapon_skill_for_attack(attacker, weapon):
 	if attacker.skills:
 		weapon_skill = weapon_skill_lookup(weapon)

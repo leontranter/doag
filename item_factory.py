@@ -44,10 +44,18 @@ def make_confusion_scroll(x=1, y=1):
 
 def make_fireball_book(x=1, y=1):
 	fireball_book_component = Item(use_function=learn_fireball, spell="Fireball")
-	tempItem = Entity(x, y, '#', libtcod.red, render_order=RenderOrder.ITEM, item=fireball_book_component)
+	fireball_book_name = Name("Fireball spellbook")
+	tempItem = Entity(x, y, '#', libtcod.red, render_order=RenderOrder.ITEM, item=fireball_book_component, name=fireball_book_name)
 	return tempItem
 
 def make_heal_book(x=1, y=1):
 	heal_book_component = Item(use_function=learn_heal, spell="Heal")
-	tempItem = Entity(x, y, '#', libtcod.red, render_order=RenderOrder.ITEM, item=heal_book_component)
+	heal_book_name = Name("Heal spellbook")
+	tempItem = Entity(x, y, '#', libtcod.red, render_order=RenderOrder.ITEM, item=heal_book_component, name=heal_book_name)
+	return tempItem
+
+def make_bless_book(x=1, y=1):
+	heal_book_component = Item(use_function=learn_heal, spell="Heal")
+	bless_book_name = Name("Bless spellbook")
+	tempItem = Entity(x, y, '#', libtcod.red, render_order=RenderOrder.ITEM, item=heal_book_component, name=bless_book_name)
 	return tempItem

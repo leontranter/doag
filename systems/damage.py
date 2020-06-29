@@ -4,6 +4,25 @@ from damage_types import DamageTypes, damage_type_modifiers
 from game_messages import Message
 from loader_functions.constants import get_basic_damage
 
+def get_damage_modifier_from_status_effects(entity):
+	modifier = 0
+	for effect in entity.effects.effect_list:
+		modifier += effect.get("damage_bonus")
+	return modifier	
+
+def get_damage_modifier_from_equipment(entity):
+	modifier = 0
+	# TODO: could refactor this into iterating through a list??
+	if entity.equipment.main_hand:
+		modifier += entity.equipment.main_hand.equippable.damage_modifier or 0	
+	if entity.equipment.off_hand:
+		modifier += entity.equipment.off_hand.equippable.damage_modifier or 0
+	if entity.equipment.body:
+		modifier += entity.equipment.body.equippable.damage_modifier or 0
+	if entity.equipment.ammunition:
+		modifier += entity.equipment.ammunition.equippable.damage_modifier or 0
+	return modifier	
+
 def get_basic_swing_damage(entity):
 	ST = entity.stats.get_strength_in_range()
 	swing_damage, thrust_damage = get_basic_damage()

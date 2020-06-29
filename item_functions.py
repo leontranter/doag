@@ -30,6 +30,14 @@ def poison(*args, **kwargs):
 	results.append({'consumed': True, 'message': Message('You drink a potion of poison! You feel terrible!', libtcod.green)})
 	return results
 
+def bless(*args, **kwargs):
+	entity = args[0]
+	bonus = kwargs.get('bonus')
+	bless_effect = {'name': "Bless", "turns_left": 7, "hit_bonus": bonus, "damage_bonus": bonus}
+	add_effect(bless_effect, entity)
+	results.append({'consumed': True, 'message': Message('You cast bless on the target.', libtcod.green)})
+	return results
+
 def cast_lightning(*args, **kwargs):
 	caster = args[0]
 	entities = kwargs.get('entities')
@@ -117,7 +125,7 @@ def learn_fireball(*args, **kwargs):
 			results.append({'consumed': False, 'message': Message("You already know that spell.", libtcod.light_green)})
 			break
 	else:
-		entity.caster.learnFireballSpell()
+		entity.caster.lean_fireball_spell()
 		results.append({'consumed': True, 'message': Message('You learned the Fireball spell!', libtcod.light_green)})
 	return results
 
@@ -129,6 +137,18 @@ def learn_heal(*args, **kwargs):
 			results.append({'consumed': False, 'message': Message("You already know that spell.", libtcod.light_green)})
 			break
 	else:
-		entity.caster.learnHealSpell()
+		entity.caster.learn_heal_spell()
 		results.append({'consumed': True, 'message': Message('You learned the Heal spell!', libtcod.light_green)})
+	return results
+
+def learn_bless(*args, **kwargs):
+	entity = args[0]
+	results = []
+	for spell in entity.caster.spells:
+		if spell.name == "Bless":
+			results.append({'consumed': False, 'message': Message("You already know that spell.", libtcod.light_green)})
+			break
+	else:
+		entity.caster.learn_bless_spell()
+		results.append({'consumed': True, 'message': Message('You learned the Bless spell!', libtcod.light_green)})
 	return results

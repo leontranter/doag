@@ -8,7 +8,7 @@ from components.name import Name
 import tcod as libtcod
 
 class Equippable:
-	def __init__(self, slot, DR_bonus=0, max_hp_bonus=0, two_handed=False, quantity=0, isShield=False, weight=1, missile_damage_bonus=0):
+	def __init__(self, slot, DR_bonus=0, max_hp_bonus=0, two_handed=False, quantity=0, isShield=False, weight=1, missile_damage_bonus=0, hit_modifier=0, damage_modifier=0):
 		self.slot = slot
 		self.DR_bonus = DR_bonus
 		self.max_hp_bonus = max_hp_bonus
@@ -17,6 +17,8 @@ class Equippable:
 		self.isShield = isShield
 		self.weight = weight
 		self.missile_damage_bonus = missile_damage_bonus
+		self.hit_modifier = hit_modifier
+		self.damage_modifier = damage_modifier
 
 def make_dropped_missile(missile_type, location):
 	# TODO: dictionary needs to be MUCH bigger, and include all types of ammunition and corresponding functions

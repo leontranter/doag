@@ -9,27 +9,11 @@ class Caster:
 		self.max_mana = max_mana
 		self.mana = max_mana
 
-	def learn_fireball_spell(self):
-		spell = SpellFactory.make_fireball_spell()
-		self.spells.append(spell)
-
-	def learn_heal_spell(self):
-		spell = SpellFactory.make_heal_spell()
-		self.spells.append(spell)
-
-	def learn_bless_spell(self):
-		spell = SpellFactory.make_bless_spell()
-		self.spells.append(spell)
-
-	# TODO: do we need this?
-	#def removeSpell(self, spell):
-		#pass
-
 	def cast(self, spell, **kwargs):
 		results = []
 
 		if spell.mana_cost > self.mana:
-			results.append({'not_cast': spell.name})
+			results.append({'message': Message("You don't have enough mana to cast that spell.")})
 			return results
 
 		if spell.targeting and not (kwargs.get('target_x') or kwargs.get('target_y')):
@@ -42,3 +26,25 @@ class Caster:
 			results.extend(spell_cast_results)
 			results.append({'cast': spell.name})
 		return results
+
+def learn_fireball_spell(entity, **kwargs):
+	results = []
+	spell = SpellFactory.make_fireball_spell()
+	entity.caster.spells.append(spell)
+	results.append({'message': Message("You learned the fireball spell.")})
+	results.append({'consumed': True})
+	return results
+
+def learn_heal_spell(entity):
+	spell = SpellFactory.make_heal_spell()
+	entity.caster.spells.append(spell)
+
+def learn_bless_spell(entity):
+	spell = SpellFactory.make_bless_spell()
+	entity.caster.spells.append(spell)
+
+	# TODO: do we need this?
+	#def removeSpell(self, spell):
+		#pass
+
+	

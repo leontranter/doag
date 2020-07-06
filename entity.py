@@ -1,13 +1,13 @@
 import math
 import tcod as libtcod
 from render_functions import RenderOrder
-from components.item import Item
 
 class Entity:
 	"""
 	A generic object for anything
 	"""
-	def __init__(self, x, y, char, color, blocks=False, render_order=RenderOrder.CORPSE, fighter=None, ai=None, item=None, inventory=None, stairs=None, level=None, equipment=None, equippable=None, caster=None, stats=None, defender=None, skills=None, melee_weapon=None, missile_weapon=None, name=None, identified=None, effects=None):
+	def __init__(self, x, y, char, color, blocks=False, render_order=RenderOrder.CORPSE, fighter=None, ai=None, item=None, inventory=None, stairs=None, level=None, equipment=None,
+		equippable=None, caster=None, stats=None, defender=None, skills=None, melee_weapon=None, missile_weapon=None, name=None, identified=None, effects=None, consumable=None):
 		self.x = x
 		self.y = y
 		self.char = char
@@ -31,6 +31,7 @@ class Entity:
 		self.name = name
 		self.identified = identified
 		self.effects = effects
+		self.consumable = consumable
 
 		if self.fighter:
 			self.fighter.owner = self
@@ -48,10 +49,6 @@ class Entity:
 			self.equipment.owner = self
 		if self.equippable:
 			self.equippable.owner = self
-			if not self.item:
-				item = Item()
-				self.item = item
-				self.item.owner = self
 		if caster:
 			self.caster.owner = self
 		if stats:
@@ -70,3 +67,5 @@ class Entity:
 			self.identified.owner = self
 		if self.effects:
 			self.effects.owner = self
+		if self.consumable:
+			self.consumable.owner = self

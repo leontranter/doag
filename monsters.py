@@ -70,7 +70,7 @@ def makeKobold(x, y):
 	item = EquippableFactory.make_bow()
 	monster.inventory.items.append(item)
 	monster.equipment.main_hand = item
-	item = EquippableFactory.make_arrows(quantity=5)
+	item = EquippableFactory.make_arrows(1, 1, 5)
 	monster.inventory.items.append(item)
 	monster.equipment.ammunition = item
 	return monster

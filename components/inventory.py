@@ -2,6 +2,7 @@ import tcod as libtcod
 from game_messages import Message
 from loader_functions import constants
 from systems.name_system import get_display_name
+from components.consumable import ConsumableTypes
 
 class Inventory:
 	def __init__(self, capacity):
@@ -37,25 +38,30 @@ class Inventory:
 	def use(self, item_entity, **kwargs):
 		results = []
 		game_constants = constants.get_constants()
-		item_component = item_entity.item
 
-		# TODO: Fix this up - need to clearly categorise potions and scrolls and handle them accordingly
-		if self.owner.identified:
-			if item_entity.name.true_name in game_constants["potion_types"] and item_entity.name.true_name not in self.owner.identified.identified_potions:
-				self.owner.identified.identified_potions.append(item_entity.name.true_name)
-
-		if item_component.use_function is None:
+		# identify the potion or scroll if it is unidentified
+		if self.owner.identified and item_entity.consumable:
+			# identify potion
+			if item_entity.consumable.consumable_type == ConsumableTypes.POTION:
+				if item_entity.name.true_name in game_constants["potion_types"] and item_entity.name.true_name not in self.owner.identified.identified_potions:
+					self.owner.identified.identified_potions.append(item_entity.name.true_name)
+			# identify scroll
+			elif item_entity.consumable.consumable_type == ConsumableTypes.SCROLL:
+				if item_entity.name.true_name in game_constants["scroll_types"] and item_entity.name.true_name not in self.owner.identified.identified_scrolls:
+					self.owner.identified.identified_scrolls.append(item_entity.name.true_name)
+		# TODO: Fix this, the logic sucks
+		if not item_entity.consumable:
 			equippable_component = item_entity.equippable
 			if equippable_component:
 				results.append({'equip': item_entity})
 			else:
 				results.append({'message': Message('The {0} cannot be used'.format(item_entity.name.true_name), libtcod.yellow)})
 		else:
-			if item_component.targeting and not (kwargs.get('target_x') or kwargs.get('target_y')):
+			if item_entity.consumable.targeting and not (kwargs.get('target_x') or kwargs.get('target_y')):
 				results.append({'targeting': item_entity})
 			else:
-				kwargs = {**item_component.function_kwargs, **kwargs}
-				item_use_results = item_component.use_function(self.owner, **kwargs)
+				kwargs = {**item_entity.consumable.function_kwargs, **kwargs}
+				item_use_results = item_entity.consumable.use_function(self.owner, **kwargs)
 
 				for item_use_result in item_use_results:
 					if item_use_result.get('consumed'):

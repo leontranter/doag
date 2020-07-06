@@ -109,7 +109,7 @@ def cast_confuse(*args, **kwargs):
 			confused_ai.owner = entity
 			entity.ai = confused_ai
 
-			results.append({'consumed': True, 'message': Message('The {} becomes confused!'.format(entity.name), libtcod.light_green)})
+			results.append({'consumed': True, 'message': Message('The {} becomes confused!'.format(entity.name.true_name), libtcod.light_green)})
 
 			break
 	else:

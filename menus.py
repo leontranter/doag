@@ -41,8 +41,6 @@ def menu(con, header, options, width, screen_width, screen_height, inventory=Non
 	y = int(screen_height / 2 - height / 2)
 	libtcod.console_blit(window, 0, 0, width, height, 0, x, y, 1.0, 0.7)
 
-#def construct_menu_options(options, y):
-
 
 def inventory_menu(con, header, inventory_width, screen_width, screen_height, player=None):
 	# show a menu with each item of the inventory as an option
@@ -55,7 +53,7 @@ def inventory_menu(con, header, inventory_width, screen_width, screen_height, pl
 	menu(con, header, options, inventory_width, screen_width, screen_height, inventory, player)
 
 def equipment_menu(con, header, inventory, inventory_width, screen_width, screen_height, equipment, player=None):
-	equipped_items = equipment.getEquippedItems()
+	equipped_items = equipment.get_equipped_items()
 	if len(equipped_items) == 0:
 		options = ["Nothing equipped."]
 	else:
@@ -132,3 +130,11 @@ def build_text_menu(optionsList):
 		tempOption = MenuOption(optionText)
 		returnList.append(tempOption)
 	return returnList
+
+def potion_menu(inventory):
+	potions = []
+	for item in inventory:
+		if item.consumable:
+			if consumable.consumable_type == ConsumableTypes.POTION:
+				potions.append(item)
+	menu2()

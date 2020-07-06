@@ -205,7 +205,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 				player_turn_results.extend(player.fighter.fire_weapon())
 				player_turn_results.extend(time_system.process_entity_turn(player))
 			else:
-				player_turn_results.append({"message": "You don't have any ammunition to fire!"})
+				player_turn_results.append({"message": Message("You don't have any ammunition to fire!")})
 
 		if load_weapon:
 			player_turn_results = player.fighter.load_missile_weapon()
@@ -256,7 +256,6 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 			cast = player_turn_result.get('cast')
 			not_cast = player_turn_result.get('not_cast')
 			missile_targeting = player_turn_result.get('missile_targeting')
-			no_missile_attack_weapon = player_turn_result.get("no_missile_attack_weapon")
 			fired_weapon = player_turn_result.get("fired_weapon")
 			missile_attack_miss = player_turn_result.get("missile_attack_miss")
 			melee_attack_miss = player_turn_result.get("melee_attack_miss")
@@ -269,6 +268,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 			loaded = player_turn_result.get("loaded")
 
 			if message:
+				print(message)
 				message_log.add_message(message)
 			if dead_entity:
 				message, game_state, entities = handle_death(entities, dead_entity, player, game_state)
@@ -285,7 +285,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 				previous_game_state = GameStates.PLAYERS_TURN
 				game_state = GameStates.TARGETING
 				targeting_item = targeting
-				message_log.add_message(targeting_item.item.targeting_message)
+				message_log.add_message(targeting_item.consumable.targeting_message)
 			if spell_targeting:
 				previous_game_state = GameStates.PLAYERS_TURN
 				game_state = GameStates.TARGETING
@@ -294,9 +294,6 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 				previous_game_state = GameStates.PLAYERS_TURN
 				game_state = GameStates.TARGETING
 				message_log.add_message(Message("Choose a target for your missile attack..."))
-			if no_missile_attack_weapon:
-				game_state = GameStates.TARGETING
-				message_log.add_message(Message("You don't have a missile weapon equipped!"))
 			if missile_attack_miss or melee_attack_miss or attack_defended:
 				game_state = GameStates.ENEMY_TURN
 			if missile_dropped:
@@ -323,9 +320,6 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 				message_log.add_message(Message('Targeting cancelled'))
 			if cast:
 				message_log.add_message(Message('You cast the {} spell.'.format(cast), libtcod.yellow))
-				game_state = GameStates.ENEMY_TURN
-			if not_cast:
-				message_log.add_message(Message("You don't have enough mana to cast that spell.", libtcod.yellow))
 				game_state = GameStates.ENEMY_TURN
 			if loaded:
 				game_state = GameStates.ENEMY_TURN

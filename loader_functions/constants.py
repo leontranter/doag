@@ -30,6 +30,9 @@ def get_constants():
 	
 	potion_descriptions = ["dark potion", "fizzy potion", "cloudy potion"]
 	potion_types = ["Healing Potion", "Poison Potion", "Confusion Potion"]
+	
+	scroll_descriptions = ["dusty scroll", "tidy scroll", "faded scroll"]
+	scroll_types = ['Confusion Scroll', 'Lightning Scroll', 'Fireball Scroll']
 
 	colors = {
 		'dark_wall': libtcod.Color(0, 0, 100),
@@ -60,7 +63,9 @@ def get_constants():
 		'max_items_per_room': max_items_per_room,
 		'colors': colors,
 		'potion_descriptions': potion_descriptions,
-		'potion_types': potion_types
+		'potion_types': potion_types,
+		'scroll_descriptions': scroll_descriptions,
+		'scroll_types': scroll_types
 	}
 
 	return constants

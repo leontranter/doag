@@ -139,9 +139,9 @@ class Fighter:
 	def fire_weapon(self, **kwargs):
 		results = []
 		if not self.owner.equipment.main_hand.missile_weapon:
-			results.append({"no_missile_attack_weapon": True})
+			results.append({'message': Message("You have no missile weapon equipped.")})
 		elif not self.owner.equipment.main_hand.missile_weapon.loaded:
-			results.append({'message': "You don't have any ammunition loaded."})
+			results.append({'message': Message("You don't have any ammunition loaded.")})
 			return results
 		if not (kwargs.get("target_x") or kwargs.get("target_y")):
 			results.append({'missile_targeting': True})

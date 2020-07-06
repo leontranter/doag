@@ -5,17 +5,17 @@ from entity import Entity
 from components.meleeweapon import MeleeWeapon
 from components.missileweapon import MissileWeapon
 from components.name import Name
+from components.item import Item
 import tcod as libtcod
 
 class Equippable:
-	def __init__(self, slot, DR_bonus=0, max_hp_bonus=0, two_handed=False, quantity=0, isShield=False, weight=1, missile_damage_bonus=0, hit_modifier=0, damage_modifier=0):
+	def __init__(self, slot, DR_bonus=0, max_hp_bonus=0, two_handed=False, quantity=0, isShield=False, missile_damage_bonus=0, hit_modifier=0, damage_modifier=0):
 		self.slot = slot
 		self.DR_bonus = DR_bonus
 		self.max_hp_bonus = max_hp_bonus
 		self.two_handed = two_handed
 		self.quantity = quantity
 		self.isShield = isShield
-		self.weight = weight
 		self.missile_damage_bonus = missile_damage_bonus
 		self.hit_modifier = hit_modifier
 		self.damage_modifier = damage_modifier
@@ -24,135 +24,155 @@ def make_dropped_missile(missile_type, location):
 	# TODO: dictionary needs to be MUCH bigger, and include all types of ammunition and corresponding functions
 	# figure out what missile needs to be dropped, and call the corresponding factory function to make it
 	missiles = {"Arrows": EquippableFactory.make_arrows, "Bolts": EquippableFactory.make_bolts}
-	dropped_missile = missiles[missile_type](x=location[0], y=location[1], quantity=1)
+	dropped_missile = missiles[missile_type](x=location[0], y=location[1], number=1)
 	return dropped_missile
 
 class EquippableFactory:
 
 	def make_axe(x=1, y=1):
-		axe_equippable = Equippable(EquipmentSlots.MAIN_HAND, weight=8)
+		axe_equippable = Equippable(EquipmentSlots.MAIN_HAND)
 		axe_name = Name("Axe")
-		axe_melee_weapon = MeleeWeapon(WeaponTypes.AXE, "swing", 2, DamageTypes.SLASHING, min_strenght=12)
-		axe_entity = Entity(x, y, '(', libtcod.red, equippable=axe_equippable, melee_weapon=axe_melee_weapon, name=axe_name)
+		axe_melee_weapon = MeleeWeapon(WeaponTypes.AXE, melee_attack_type="swing", melee_damage_bonus=2, melee_damage_type=DamageTypes.SLASHING, min_strenght=12)
+		axe_item = Item(8, 1)
+		axe_entity = Entity(x, y, '(', libtcod.red, equippable=axe_equippable, melee_weapon=axe_melee_weapon, name=axe_name, item=axe_item)
 		return axe_entity
 
 	def make_mace(x=1, y=1):
-		mace_equippable = Equippable(EquipmentSlots.MAIN_HAND, weight=10)
+		mace_equippable = Equippable(EquipmentSlots.MAIN_HAND)
 		mace_name = Name("Mace")
-		mace_melee_weapon = MeleeWeapon(WeaponTypes.AXE, "swing", 3, DamageTypes.CRUSHING, min_strength=13)
-		mace_entity = Entity(x, y, '(', libtcod.dark, equippable=axe_equippable, melee_weapon=mace_melee_weapon, name=mace_name)
+		mace_melee_weapon = MeleeWeapon(WeaponTypes.AXE, melee_attack_type="swing", melee_damage_bonus=3, melee_damage_type=DamageTypes.CRUSHING, min_strength=13)
+		mace_item = Item(9, 1)
+		mace_entity = Entity(x, y, '(', libtcod.dark, equippable=axe_equippable, melee_weapon=mace_melee_weapon, name=mace_name, item=mace_item)
 		return mace_entity
 
 	def make_dagger(x=1, y=1):
-		dagger_equippable = Equippable(EquipmentSlots.MAIN_HAND, weight=3)
+		dagger_equippable = Equippable(EquipmentSlots.MAIN_HAND)
 		dagger_name = Name("Dagger")
-		dagger_melee_weapon = MeleeWeapon(WeaponTypes.DAGGER, "thrust", 0, DamageTypes.PIERCING, min_strength=7)
-		dagger_entity = Entity(x, y, '(', libtcod.orange, equippable=dagger_equippable, melee_weapon=dagger_melee_weapon, name=dagger_name)
+		dagger_melee_weapon = MeleeWeapon(WeaponTypes.DAGGER, melee_attack_type="thrust", melee_damage_bonus=0, melee_damage_type=DamageTypes.PIERCING, min_strength=7)
+		dagger_item = Item(3, 1)
+		dagger_entity = Entity(x, y, '(', libtcod.orange, equippable=dagger_equippable, melee_weapon=dagger_melee_weapon, name=dagger_name, item=dagger_item)
 		return dagger_entity
 
 	def make_sword(x=1, y=1):
-		sword_equippable = Equippable(EquipmentSlots.MAIN_HAND, weight=7)
+		sword_equippable = Equippable(EquipmentSlots.MAIN_HAND)
 		sword_name = Name("Sword")
-		sword_melee_weapon = MeleeWeapon(WeaponTypes.SWORD, "swing", 1, DamageTypes.SLASHING, min_strength=11)
-		sword_entity = Entity(x, y, '(', libtcod.sky, equippable=sword_equippable, melee_weapon=sword_melee_weapon, name=sword_name)
+		sword_melee_weapon = MeleeWeapon(WeaponTypes.SWORD, melee_attack_type="swing", melee_damage_bonus=1, melee_damage_type=DamageTypes.SLASHING, min_strength=11)
+		sword_item = Item(7, 1)
+		sword_entity = Entity(x, y, '(', libtcod.sky, equippable=sword_equippable, melee_weapon=sword_melee_weapon, name=sword_name, item=sword_item)
 		return sword_entity
 
 	def make_greatsword(x=1, y=1):
-		greatsword_equippable = Equippable(EquipmentSlots.MAIN_HAND, weight=18, two_handed=True)
+		greatsword_equippable = Equippable(EquipmentSlots.MAIN_HAND, two_handed=True)
 		greatsword_name = Name("Greatsword")
-		greatsword_melee_weapon = MeleeWeapon(weapon_type = WeaponTypes.SWORD, melee_attack_type="swing", melee_damage_bonus=3, melee_damage_type=DamageTypes.SLASHING, min_strength=14)
-		greatsword_entity = Entity(x, y, '(', libtcod.red, equippable=greatsword_equippable, melee_weapon=greatsword_melee_weapon, name=greatsword_name)
+		greatsword_melee_weapon = MeleeWeapon(weapon_type=WeaponTypes.SWORD, melee_attack_type="swing", melee_damage_bonus=3, melee_damage_type=DamageTypes.SLASHING, min_strength=14)
+		greatsword_item = Item(14, 1)
+		greatsword_entity = Entity(x, y, '(', libtcod.red, equippable=greatsword_equippable, melee_weapon=greatsword_melee_weapon, name=greatsword_name, item=greatsword_item)
 		return greatsword_entity
 
 	def make_rapier(x=1, y=1):
-		rapier_equippable = Equippable(EquipmentSlots.MAIN_HAND, weight=10)
+		rapier_equippable = Equippable(EquipmentSlots.MAIN_HAND)
 		rapier_name = Name("Rapier")
 		rapier_melee_weapon = MeleeWeapon(weapon_type=WeaponTypes.SWORD, melee_attack_type="thrust", melee_damage_bonus=1, melee_damage_type=DamageTypes.PIERCING, min_strength=10)
-		rapier_entity = Entity(x, y, '(', libtcod.green, equippable=rapier_equippable, melee_weapon=rapier_melee_weapon, name=rapier_name)
+		rapier_item = Item(7, 1)
+		rapier_entity = Entity(x, y, '(', libtcod.green, equippable=rapier_equippable, melee_weapon=rapier_melee_weapon, name=rapier_name, item=rapier_item)
 		return rapier_entity
 
 	def make_bow(x=1, y=1):
-		bow_equippable = Equippable(EquipmentSlots.MAIN_HAND, two_handed=True, weight=6)
+		bow_equippable = Equippable(EquipmentSlots.MAIN_HAND, two_handed=True)
 		bow_name = Name("Bow")
 		bow_missile_weapon = MissileWeapon(weapon_type=WeaponTypes.CROSSBOW, missile_damage=(1, 0), missile_damage_type=DamageTypes.PIERCING)
-		bow_entity = Entity(x, y, ')', libtcod.orange, equippable=bow_equippable, missile_weapon=bow_missile_weapon, name=bow_name)
+		bow_item = Item(6, 1)
+		bow_entity = Entity(x, y, ')', libtcod.orange, equippable=bow_equippable, missile_weapon=bow_missile_weapon, name=bow_name, item=bow_item)
 		return bow_entity
 
 	def make_crossbow(x=1, y=1):
-		crossbow_equippable = Equippable(EquipmentSlots.MAIN_HAND, two_handed=True, weight=7)
+		crossbow_equippable = Equippable(EquipmentSlots.MAIN_HAND, two_handed=True)
 		crossbow_name = Name("Crossbow")
 		crossbow_missile_weapon = MissileWeapon(weapon_type=WeaponTypes.CROSSBOW, missile_damage=(1, 3), missile_damage_type=DamageTypes.PIERCING)
-		crossbow_entity = Entity(x, y, ')', libtcod.red, equippable = crossbow_equippable, missile_weapon=crossbow_missile_weapon, name=crossbow_name)
+		crossbow_item = Item(7, 1)
+		crossbow_entity = Entity(x, y, ')', libtcod.red, equippable=crossbow_equippable, missile_weapon=crossbow_missile_weapon, name=crossbow_name, item=crossbow_item)
 		return crossbow_entity
 
-	def make_arrows(x=1, y=1, quantity=10):
-		arrows_equippable = Equippable(EquipmentSlots.AMMUNITION, missile_damage_bonus=1, quantity=quantity)
+	def make_arrows(x=1, y=1, number=1):
+		arrows_equippable = Equippable(EquipmentSlots.AMMUNITION, missile_damage_bonus=1, quantity=number)
 		arrows_name = Name("Arrows")
-		arrows_entity = Entity(x, y, ')', libtcod.flame, equippable = arrows_equippable, name=arrows_name)
+		arrows_item = Item(1, number)
+		arrows_entity = Entity(x, y, ')', libtcod.flame, equippable=arrows_equippable, name=arrows_name, item=arrows_item)
 		return arrows_entity
 
-	def make_steel_arrows(x=1, y=1, quantity=10):
+	def make_steel_arrows(x=1, y=1, quantity=1):
 		arrows_equippable = Equippable(EquipmentSlots.AMMUNITION, missile_damage_bonus=2, quantity=quantity)
 		steel_arrows_name = Name("Steel Arrows")
-		arrows_entity = Entity(x, y, ')', libtcod.flame, equippable = arrows_equippable, name=steel_arrows_name)
+		steel_arrows_item = Item(1, number)
+		arrows_entity = Entity(x, y, ')', libtcod.flame, equippable=arrows_equippable, name=steel_arrows_name)
 		return arrows_entity	
 
-	def make_obsidian_arrows(x=1, y=1, quantity=10):
+	def make_obsidian_arrows(x=1, y=1, quantity=1):
 		arrows_equippable = Equippable(EquipmentSlots.AMMUNITION, missile_damage_bonus=3, quantity=quantity)
 		obsidian_arrows_name = Name("Obsidian Arrows")
-		arrows_entity = Entity(x, y, ')', libtcod.flame, equippable = arrows_equippable, name=obsidian_arrows_name)
+		obsidian_arrows_item = Item(1, number)
+		arrows_entity = Entity(x, y, ')', libtcod.flame, equippable=arrows_equippable, name=obsidian_arrows_name, item=obsidian_arrows_item)
 		return arrows_entity
 
-	def make_bolts(x=1, y=1, quantity=10):
+	def make_bolts(x=1, y=1, quantity=1):
 		arrows_equippable = Equippable(EquipmentSlots.AMMUNITION, missile_damage_bonus=1, quantity=quantity)
 		bolts_name = Name("Bolts")
-		bolts_entity = Entity(x, y, ')', libtcod.flame, equippable = crossbow_equippable, name=bolts_name)
+		bolts_item = Item(1, number)
+		bolts_entity = Entity(x, y, ')', libtcod.flame, equippable=crossbow_equippable, name=bolts_name, item=bolts_item)
 		return bolts_entity
 
 	def make_small_shield(x=1, y=1):
-		small_shield_equippable = Equippable(EquipmentSlots.OFF_HAND, isShield=True, weight=10)
+		small_shield_equippable = Equippable(EquipmentSlots.OFF_HAND, isShield=True)
 		small_shield_name = Name("Small Shield")
-		small_shield_entity = Entity(x, y, '[', equippable=small_shield_equippable, name=small_shield_name)
+		small_shield_item = Item(10, 1)
+		small_shield_entity = Entity(x, y, '[', equippable=small_shield_equippable, name=small_shield_name, item=small_shield_item)
 		return small_shield_entity
 
 	def make_shield(x=1, y=1):
-		shield_equippable = Equippable(EquipmentSlots.OFF_HAND, isShield=True, weight=15)
+		shield_equippable = Equippable(EquipmentSlots.OFF_HAND, isShield=True)
 		shield_name = Name("Shield")
-		shield_entity = Entity(x, y, '[', libtcod.green, equippable=shield_equippable, name=shield_name)
+		shield_item = Item(15, 1)
+		shield_entity = Entity(x, y, '[', libtcod.green, equippable=shield_equippable, name=shield_name, item=shield_item)
 		return shield_entity
 
 	def make_tower_shield(x=1, y=1):
-		towershield_equippable = Equippable(EquipmentSlots.OFF_HAND, isShield=True, weight=20)
+		towershield_equippable = Equippable(EquipmentSlots.OFF_HAND, isShield=True)
 		tower_shield_name = Name("Tower Shield")
-		tower_shield_entity = Entity(x, y, '[', libtcod.green, equippable=tower_shield_equippable, name=tower_shield_name)
+		tower_shield_item = Item(20, 1)
+		tower_shield_entity = Entity(x, y, '[', libtcod.green, equippable=tower_shield_equippable, name=tower_shield_name, item=tower_shield_item)
 		return tower_shield_entity
 	
 	def make_padded_armor(x=1, y=1):
-		padded_armor_equippable = Equippable(EquipmentSlots.BODY, DR_bonus=1, weight=6)
+		padded_armor_equippable = Equippable(EquipmentSlots.BODY, DR_bonus=1)
 		padded_armor_name = Name("Padded Armor")
-		padded_armor_entity = Entity(x, y, ')', libtcod.purple, equippable=padded_armor_equippable, name=padded_armor_name)
+		padded_armor_item = Item(6, 1)
+		padded_armor_entity = Entity(x, y, ')', libtcod.purple, equippable=padded_armor_equippable, name=padded_armor_name, item=padded_armor_item)
 		return padded_armor_entity
 
 	def make_leather_armor(x=1, y=1):
-		leather_armor_equippable = Equippable(EquipmentSlots.BODY, DR_bonus=1, weight=12)
+		leather_armor_equippable = Equippable(EquipmentSlots.BODY, DR_bonus=1)
 		leather_armor_name = Name("Leather Armor")
-		leather_armor_entity = Entity(x, y, ')', libtcod.purple, equippable=leather_armor_equippable, name=leather_armor_name)
+		leather_armor_item = Item(12, 1)
+		leather_armor_entity = Entity(x, y, ')', libtcod.purple, equippable=leather_armor_equippable, name=leather_armor_name, item=leather_armor_item)
 		return leather_armor_entity
 
 	def make_chain_armor(x=1, y=1):
-		chain_armor_equippable = Equippable(EquipmentSlots.BODY, DR_bonus=2, weight=25)
+		chain_armor_equippable = Equippable(EquipmentSlots.BODY, DR_bonus=2)
 		chain_armor_name = Name("Chain Armor")
-		chain_armor_entity = Entity(x, y, ')', libtcod.sky, equippable=padded_armor_equippable, name=chain_armor_name)
+		chain_armor_item = Item(25, 1)
+		chain_armor_entity = Entity(x, y, ')', libtcod.sky, equippable=padded_armor_equippable, name=chain_armor_name, item=chain_armor_item)
 		return chain_armor_entity
 
 	def make_scale_armor(x=1, y=1):
-		scale_armor_equippable = Equippable(EquipmentSlots.BODY, DR_bonus=3, weight=35)
+		scale_armor_equippable = Equippable(EquipmentSlots.BODY, DR_bonus=3)
 		scale_armor_name = Name("Scale Armor")
-		scale_armor_entity = Entity(x, y, ')', libtcod.sky, equippable=padded_armor_equippable, name=scale_armor_name)
+		scale_armor_item = Item(35, 1)
+		scale_armor_entity = Entity(x, y, ')', libtcod.sky, equippable=padded_armor_equippable, name=scale_armor_name, item=scale_armor_item)
 		return scale_armor_entity		
 
 	def make_plate_armor(x=1, y=1):
-		plate_armor_equippable = Equippable(EquipmentSlots.BODY, DR_bonus=5, weight=50)
+		plate_armor_equippable = Equippable(EquipmentSlots.BODY, DR_bonus=5)
 		plate_armor_name = Name("Plate Armor")
-		plate_armor_entity = Entity(x, y, ')', libtcod.darker, equippable=padded_armor_equippable, name=plate_armor_name)
+		plate_armor_item = Item(45, 1)
+		plate_armor_entity = Entity(x, y, ')', libtcod.darker, equippable=padded_armor_equippable, name=plate_armor_name, item=plate_armor_item)
 		return plate_armor_entity

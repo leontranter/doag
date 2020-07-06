@@ -95,7 +95,7 @@ class Equipment:
 			equippable_entity, results = self.toggle_ammunition(equippable_entity, results)
 		return results
 
-	def getEquippedItems(self):
+	def get_equipped_items(self):
 		equipped_items = []
 		equipped_items.append(self.main_hand)
 		equipped_items.append(self.off_hand)

@@ -7,7 +7,7 @@ import tcod as libtcod
 from equipment_slots import EquipmentSlots
 import map_objects.rectangle as rectangle
 from components.fighter import Fighter
-from components.caster import Caster
+from components.caster import Caster, learn_fireball_spell, learn_heal_spell
 from components.equipment import Equipment
 from components.equippable import Equippable, EquippableFactory, make_dropped_missile
 from components.skills import Skills
@@ -18,9 +18,10 @@ from components.item import Item
 from components.name import Name
 from components.identified import Identified
 from components.effects import Effects
+from components.consumable import ConsumableTypes
 from damage_types import DamageTypes
 from loader_functions.constants import get_basic_damage, WeaponTypes, get_constants
-from loader_functions.initialize_new_game import get_game_variables, assign_potion_descriptions
+from loader_functions.initialize_new_game import get_game_variables, assign_potion_descriptions, assign_scroll_descriptions
 from loader_functions.data_loaders import save_game, load_game
 from systems.attack import weapon_skill_lookup, get_weapon_skill_for_attack
 from systems.effects_manager import add_effect, tick_down_effects, process_damage_over_time
@@ -32,7 +33,7 @@ from components.inventory import Inventory
 from item_functions import heal
 from fov_functions import initialize_fov
 from render_functions import get_names_under_mouse
-from item_factory import make_healing_potion, make_lightning_scroll, make_fireball_scroll, make_confusion_scroll, make_fireball_book, make_heal_book
+from item_factory import make_healing_potion, make_lightning_scroll, make_fireball_scroll, make_confusion_scroll, make_fireball_book, make_heal_book, make_bless_book
 import monsters
 import mocks
 from menus import menu, build_text_menu
@@ -59,21 +60,21 @@ class EntityTests(unittest.TestCase):
 	def test_can_make_entity_with_caster_who_knows_spells(self):
 		test_caster = Caster(spells=[], max_mana=50)
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", caster=test_caster)
-		test_caster.learn_fireball_spell()
+		learn_fireball_spell(test_entity)
 		self.assertEqual(test_caster.spells[0].name, "Fireball")
 
 class SpellTests(unittest.TestCase):
 	def test_can_learn_heal(self):
 		test_caster = Caster(spells=[], max_mana=50)
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", caster=test_caster)
-		test_caster.learn_heal_spell()
+		learn_heal_spell(test_entity)
 		self.assertEqual(test_caster.spells[0].name, "Heal")
 
 	def test_can_learn_multiple_spells(self):
 		test_caster = Caster(spells=[], max_mana=50)
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", caster=test_caster)
-		test_caster.learn_heal_spell()
-		test_caster.learn_fireball_spell()
+		learn_heal_spell(test_entity)
+		learn_fireball_spell(test_entity)
 		self.assertEqual(test_caster.spells[0].name, "Heal")
 		self.assertEqual(test_caster.spells[1].name, "Fireball")		
 
@@ -170,7 +171,7 @@ class DamageTests(unittest.TestCase):
 
 	def test_can_calculate_damage_bonus_from_equipment(self):
 		test_equipment = Equipment()
-		padded_armor_equippable = Equippable(EquipmentSlots.BODY, DR_bonus=1, weight=6, damage_modifier=2)
+		padded_armor_equippable = Equippable(EquipmentSlots.BODY, DR_bonus=1, damage_modifier=2)
 		padded_armor_name = Name("Padded Armor")
 		padded_armor_entity = entity.Entity(1, 1, ')', libtcod.purple, equippable=padded_armor_equippable, name=padded_armor_name)
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", equipment=test_equipment)
@@ -190,7 +191,7 @@ class AttackTests(unittest.TestCase):
 
 	def test_can_get_equipment_attack_bonus(self):
 		test_equipment = Equipment()
-		padded_armor_equippable = Equippable(EquipmentSlots.BODY, DR_bonus=1, weight=6, hit_modifier=2)
+		padded_armor_equippable = Equippable(EquipmentSlots.BODY, DR_bonus=1, hit_modifier=2)
 		padded_armor_name = Name("Padded Armor")
 		padded_armor_entity = entity.Entity(1, 1, ')', libtcod.purple, equippable=padded_armor_equippable, name=padded_armor_name)
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", equipment=test_equipment)
@@ -393,18 +394,35 @@ class ItemNamesTests(unittest.TestCase):
 		constants = get_constants()
 		self.assertNotEqual(len(constants['potion_descriptions']), 0)
 
+	def test_game_has_list_of_scroll_names(self):
+		constants = get_constants()
+		self.assertNotEqual(len(constants['scroll_descriptions']), 0)
+
 	def test_game_has_list_of_potion_types(self):
 		constants = get_constants()
 		self.assertNotEqual(len(constants['potion_types']), 0)
+
+	def test_game_has_list_of_scroll_types(self):
+		constants = get_constants()
+		self.assertNotEqual(len(constants['scroll_types']), 0)	
 
 	def test_same_number_of_potion_names_and_types(self):
 		constants = get_constants()
 		self.assertEqual(len(constants['potion_descriptions']), len(constants['potion_types']))
 
+	def test_same_number_of_scroll_names_and_types(self):
+		constants = get_constants()
+		self.assertEqual(len(constants['scroll_descriptions']), len(constants['scroll_types']))	
+
 	def test_can_assign_a_potion_name_to_a_type(self):
 		constants = get_constants()
 		potion_description_links = assign_potion_descriptions(constants['potion_descriptions'], constants['potion_types'])
 		self.assertNotEqual(len(potion_description_links), 0)
+
+	def test_can_assign_a_scroll_name_to_a_type(self):
+		constants = get_constants()
+		scroll_description_links = assign_scroll_descriptions(constants['scroll_descriptions'], constants['scroll_types'])
+		self.assertNotEqual(len(scroll_description_links), 0)
 
 	def test_player_has_potion_links(self):
 		constants = get_constants()
@@ -412,6 +430,14 @@ class ItemNamesTests(unittest.TestCase):
 		test_identified_component = Identified(potion_description_links)
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, identified=test_identified_component)
 		self.assertEqual(isinstance(test_entity.identified.potion_links, dict), True)
+
+	def test_player_has_scroll_links(self):
+		constants = get_constants()
+		scroll_description_links = assign_scroll_descriptions(constants['scroll_descriptions'], constants['scroll_types'])
+		potion_description_links = assign_potion_descriptions(constants['potion_descriptions'], constants['potion_types'])
+		test_identified_component = Identified(potion_description_links, scroll_description_links)
+		test_entity = entity.Entity(1, 1, 'A', libtcod.white, identified=test_identified_component)
+		self.assertEqual(isinstance(test_entity.identified.scroll_links, dict), True)
 
 	def test_identified_potion_has_correct_display_name(self):
 		constants = get_constants()
@@ -430,8 +456,45 @@ class ItemNamesTests(unittest.TestCase):
 		test_identified_component = Identified(potion_description_links)
 		test_player = entity.Entity(1, 1, 'A', libtcod.white, identified=test_identified_component)
 		test_potion = make_healing_potion()
+		self.assertEqual(test_potion.consumable.consumable_type, ConsumableTypes.POTION)
 		self.assertEqual(test_potion.name.true_name, "Healing Potion")
 		self.assertEqual(get_display_name(test_player, test_potion), potion_description_links[test_potion.name.true_name])
+
+	def test_identified_scroll_has_correct_display_name(self):
+		constants = get_constants()
+		scroll_description_links = assign_scroll_descriptions(constants['scroll_descriptions'], constants['scroll_types'])
+		potion_description_links = assign_potion_descriptions(constants['potion_descriptions'], constants['potion_types'])
+		test_identified_component = Identified(potion_description_links, scroll_description_links)
+		test_identified_component.identified_scrolls.append("Confusion Scroll")
+		test_player = entity.Entity(1, 1, 'A', libtcod.white, identified=test_identified_component)
+		test_scroll = make_confusion_scroll()
+		self.assertEqual(test_scroll.name.true_name, "Confusion Scroll")
+		self.assertTrue("Confusion Scroll" in test_player.identified.identified_scrolls)
+		self.assertEqual(get_display_name(test_player, test_scroll), "Confusion Scroll")
+
+	def test_unidentified_scroll_has_correct_display_name(self):
+		constants = get_constants()
+		potion_description_links = assign_potion_descriptions(constants['potion_descriptions'], constants['potion_types'])
+		scroll_description_links = assign_scroll_descriptions(constants['scroll_descriptions'], constants['scroll_types'])
+		test_identified_component = Identified(potion_description_links, scroll_description_links)
+		test_player = entity.Entity(1, 1, 'A', libtcod.white, identified=test_identified_component)
+		test_scroll = make_confusion_scroll()
+		self.assertEqual(test_scroll.consumable.consumable_type, ConsumableTypes.SCROLL)
+		self.assertEqual(test_scroll.name.true_name, "Confusion Scroll")
+		self.assertEqual(get_display_name(test_player, test_scroll), scroll_description_links[test_scroll.name.true_name])
+
+	def test_using_an_unidentified_scroll_identifies_it(self):
+		constants = get_constants()
+		potion_description_links = assign_potion_descriptions(constants['potion_descriptions'], constants['potion_types'])
+		scroll_description_links = assign_scroll_descriptions(constants['scroll_descriptions'], constants['scroll_types'])
+		test_identified_component = Identified(potion_description_links, scroll_description_links)
+		test_inventory = Inventory(10)
+		test_player = entity.Entity(1, 1, 'A', libtcod.white, identified=test_identified_component, inventory=test_inventory)
+		test_scroll = make_confusion_scroll()
+		self.assertEqual(len(test_identified_component.identified_scrolls), 0)
+		test_inventory.use(test_scroll)
+		self.assertEqual(len(test_identified_component.identified_scrolls), 1)
+		#self.assertTrue('onfusion' in test_identified_component.identified_scrolls)
 
 class BasicGameTests(unittest.TestCase):
 	def test_can_create_new_game(self):
@@ -548,7 +611,14 @@ class TimeTests(unittest.TestCase):
 	def test_can_get_time_results(self):
 		pass		
 
-
+class BookTests(unittest.TestCase):
+	def test_can_make_and_hold_bless_book(self):
+		test_book = make_bless_book()
+		test_inventory = Inventory(10)
+		test_entity = entity.Entity(1, 1, 'A', libtcod.white, inventory=test_inventory)
+		test_inventory.add_item(test_book)
+		self.assertTrue(len(test_inventory.items) == 1)
+		self.assertEqual(test_inventory.items[0].name.true_name, "Bless spellbook")
 
 if __name__ == "__main__":
 	unittest.main()

@@ -18,6 +18,8 @@ def handle_keys(key, game_state):
 		return handle_spells_screen(key)
 	elif game_state == GameStates.POTION_SCREEN:
 		return handle_potions_menu(key)
+	elif game_state == GameStates.EQUIPMENT_SCREEN:
+		return handle_equipment_menu(key)
 	return {}
 
 
@@ -43,13 +45,10 @@ def handle_player_turn_keys(key):
 		return {'move': (1, 1)}
 	elif key_char == 'z':
 		return {'wait': True}
-	
 	if key_char == 'g':
 		return {'pickup': True}
-	
 	if key.vk == libtcod.KEY_ENTER and key.lalt:
 		return {'fullscreen': True}
-
 	elif key_char == 'i':
 		return {'show_inventory': True}
 	elif key_char == 'd':
@@ -74,7 +73,6 @@ def handle_player_turn_keys(key):
 	elif key.vk == libtcod.KEY_ESCAPE:
 		#exit the game
 		return {'exit': True}
-
 	return {}
 
 def handle_inventory_keys(key):
@@ -86,7 +84,6 @@ def handle_inventory_keys(key):
 		return {'fullscreen': True}
 	elif key.vk == libtcod.KEY_ESCAPE:
 		return {'exit': True}
-
 	return {}
 
 def handle_player_dead_keys(key):
@@ -99,13 +96,11 @@ def handle_player_dead_keys(key):
 		return {'fullscreen': True}
 	elif key.vk == libtcod.KEY_ESCAPE:
 		return {'exit': True}
-
 	return {}
 
 def handle_targeting_keys(key):
 	if key.vk == libtcod.KEY_ESCAPE:
 		return {'exit': True}
-
 	return {}
 
 def handle_mouse(mouse):
@@ -115,7 +110,6 @@ def handle_mouse(mouse):
 		return {'left_click': (x, y)}
 	elif mouse.rbutton_pressed:
 		return {'right_click': (x, y)}
-
 	return {}
 
 def handle_main_menu(key):
@@ -127,7 +121,6 @@ def handle_main_menu(key):
 		return {'load_game': True}
 	elif key_char == 'c' or key.vk == libtcod.KEY_ESCAPE:
 		return {'exit': True}
-
 	return {}
 
 def handle_level_up_menu(key):
@@ -140,7 +133,6 @@ def handle_level_up_menu(key):
 			return {'level_up': 'str'}
 		elif key_char == 'c':
 			return {'level_up': 'def'}
-
 	return {}
 
 def handle_character_screen(key):
@@ -163,12 +155,20 @@ def handle_spells_screen(key):
 
 def handle_potions_menu(key):
 	index = key.c - ord('a')
-
 	if index >= 0:
 		return {'potion_index': index}
 	elif key.vk == libtcod.KEY_ENTER and key.lalt:
 		return {'fullscreen': True}
 	elif key.vk == libtcod.KEY_ESCAPE:
 		return {'exit': True}
-
 	return {}
+
+def handle_equipment_menu(key):
+	index = key.c - ord('a')
+	if index >= 0:
+		return {'equipment_index': index}
+	elif key.vk == libtcod.KEY_ENTER and key.lalt:
+		return {'fullscreen': True}
+	elif key.vk == libtcod.KEY_ESCAPE:
+		return {'exit': True}
+	return {}	

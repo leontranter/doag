@@ -136,6 +136,13 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 			previous_game_state = game_state
 			game_state = GameStates.DROP_INVENTORY
 
+		if equipment_screen:
+			previous_game_state = game_state
+			game_state = GameStates.EQUIPMENT_SCREEN
+
+		if equipment_index is not None:
+			pass
+
 		if quaff_potion:
 			previous_game_state = game_state
 			game_state = GameStates.POTION_SCREEN
@@ -148,12 +155,13 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 			elif game_state == GameStates.DROP_INVENTORY:
 				player_turn_results.extend(player.inventory.drop_item(item))
 		
-		if potion_index:
+		if potion_index is not None:
 			potions = get_carried_potions(player)
+			# TODO: this blows up if someone chooses a leter outside of index!! not good!! other menus probably do too?
 			used_potion = potions[potion_index]
 			player_turn_results.extend(player.inventory.use(used_potion))
 
-		# TODO: refactor this stairs / level stuff, it's a bit messy
+		# TODO: still needs some work
 		if take_stairs and game_state == GameStates.PLAYERS_TURN:
 			for entity in entities:
 				if entity.stairs and entity.x == player.x and entity.y == player.y:
@@ -224,20 +232,19 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 			player_turn_results.extend(time_system.process_entity_turn(player))
 
 		if game_state == GameStates.TARGETING:
+			# TODO: fix this up, ugly as all hell
 			if left_click:
 				target_x, target_y = left_click
 				if targeting_item:	
 					item_use_results = player.inventory.use(targeting_item, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y)
 					player_turn_results.extend(item_use_results)
-					player_turn_results.extend(time_system.process_entity_turn(player))
 				elif spell_targeting:
 					spell_use_results = player.caster.cast(spell_targeting, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y)
 					player_turn_results.extend(spell_use_results)
-					player_turn_results.extend(time_system.process_entity_turn(player))
 				elif missile_targeting:
 					missile_attack_results = player.fighter.fire_weapon(weapon=player.equipment.main_hand.equippable, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y)
-					player_turn_results.extend(missile_attack_results)
-					player_turn_results.extend(time_system.process_entity_turn(player))
+					player_turn_results.extend(missile_attack_results)	
+				player_turn_results.extend(time_system.process_entity_turn(player))
 			elif right_click:
 				player_turn_results.append({'targeting_cancelled': True})
 		
@@ -263,15 +270,11 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 			spell_targeting = player_turn_result.get('spell_targeting')
 			targeting_cancelled = player_turn_result.get('targeting_cancelled')
 			xp = player_turn_result.get('xp')
-			equip_message = player_turn_result.get('equip_message')
 			equip = player_turn_result.get('equip')
 			cast = player_turn_result.get('cast')
-			not_cast = player_turn_result.get('not_cast')
 			missile_targeting = player_turn_result.get('missile_targeting')
 			fired_weapon = player_turn_result.get("fired_weapon")
-			missile_attack_miss = player_turn_result.get("missile_attack_miss")
-			melee_attack_miss = player_turn_result.get("melee_attack_miss")
-			miss_message = player_turn_result.get("miss_message")
+			attack_miss = player_turn_result.get("attack_miss")
 			attack_defended = player_turn_result.get("attack_defended")
 			missile_dropped = player_turn_result.get("missile_dropped")
 			dropped_location = player_turn_result.get("dropped_location")
@@ -280,7 +283,6 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 			loaded = player_turn_result.get("loaded")
 
 			if message:
-				print(message)
 				message_log.add_message(message)
 			if dead_entity:
 				message, game_state, entities = handle_death(entities, dead_entity, player, game_state)
@@ -306,7 +308,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 				previous_game_state = GameStates.PLAYERS_TURN
 				game_state = GameStates.TARGETING
 				message_log.add_message(Message("Choose a target for your missile attack..."))
-			if missile_attack_miss or melee_attack_miss or attack_defended:
+			if attack_miss or attack_defended:
 				game_state = GameStates.ENEMY_TURN
 			if missile_dropped:
 				missile_entity = make_dropped_missile(missile_type, dropped_location)

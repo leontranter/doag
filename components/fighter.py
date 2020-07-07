@@ -80,7 +80,7 @@ class Fighter:
 				results.append({'attack_defended': True, 'message': Message(f'{self.owner.name.subject_name} {verb}, but {target.name.object_name} {defense_choice}s the attack.')})
 		else:
 			verb = "miss" if self.owner.name.true_name == "Player" else "misses"
-			results.append({'melee_attack_miss': True, 'message': Message(f'{self.owner.name.subject_name} {verb} {target.name.object_name}.')})
+			results.append({'attack_miss': True, 'message': Message(f'{self.owner.name.subject_name} {verb} {target.name.object_name}.')})
 		return results
 
 	def missile_attack(self, target):
@@ -100,7 +100,7 @@ class Fighter:
 			verb1 = "fire" if self.owner.name.true_name == "Player" else "fires"
 			pronoun = "your" if self.owner.name.true_name == "Player" else "their"
 			verb2 = "miss" if self.owner.name.true_name == "Player" else "misses"
-			results.append({'missile_attack_miss': True, 'message': Message(f'{self.owner.name.subject_name} {verb1} {pronoun} {self.owner.equipment.main_hand.name.true_name} but {verb2} {target.name.object_name}.')})
+			results.append({'attack_miss': True, 'message': Message(f'{self.owner.name.subject_name} {verb1} {pronoun} {self.owner.equipment.main_hand.name.true_name} but {verb2} {target.name.object_name}.')})
 		if dice_roll(1, 0) > 2:
 			results.append({'missile_dropped': True, 'missile_type': self.owner.equipment.ammunition.name.true_name, 'dropped_location': (target.x, target.y)})
 		results.append({'fired_weapon': True})

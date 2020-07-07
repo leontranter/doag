@@ -2,6 +2,7 @@ import tcod as libtcod
 from game_messages import Message
 from components.ai import ConfusedMonster
 from systems.effects_manager import add_effect
+from systems.move_system import distance
 
 def heal(*args, **kwargs):
 	entity = args[0]
@@ -81,8 +82,8 @@ def cast_fireball(*args, **kwargs):
 	results.append({'consumed': True, 'message': Message('The fireball explodes, burning everything within {0} tiles!'.format(radius), libtcod.orange)})
 
 	for entity in entities:
-		if entity.distance(target_x, target_y) <= radius and entity.fighter:
-			results.append({'message': Message('The {0} gets burned for {1} points.'.format(entity.name, damage), libtcod.orange)})
+		if distance(entity, target_x, target_y) <= radius and entity.fighter:
+			results.append({'message': Message('The {0} gets burned for {1} points.'.format(entity.name.true_name, damage), libtcod.orange)})
 			results.extend(entity.fighter.take_damage(damage))
 	return results
 

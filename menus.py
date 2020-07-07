@@ -55,11 +55,10 @@ def inventory_menu(con, header, inventory_width, screen_width, screen_height, pl
 
 def spells_menu(con, header, spells_width, screen_width, screen_height, player):
 	if len(player.caster.spells) == 0:
-		options = ["You don't know any spells yet."]
-	else:
-		options = []
-		for spell in player.caster.spells:
-			options.append(spell.name)
+		header = "You don't know any spells yet."
+	options = []
+	for spell in player.caster.spells:
+		options.append(spell.name)
 
 	menu2(con, header, options, spells_width, screen_width, screen_height)
 
@@ -73,11 +72,11 @@ def potion_menu(con, header, menu_width, screen_width, screen_height, player):
 def equipment_menu(con, header, inventory, inventory_width, screen_width, screen_height, equipment, player=None):
 	equipped_items = equipment.get_equipped_items()
 	if len(equipped_items) == 0:
-		options = ["Nothing equipped."]
-	else:
-		options = [equipment.name.true_name for equipment in equipped_items]
+		header = "Nothing equipped."
+	# TODO: Fix this - should calculat display name
+	options = [equipment.name.true_name for equipment in equipped_items]
 
-	menu(con, header, options, inventory_width, screen_width, screen_height, inventory, player)
+	menu2(con, header, options, inventory_width, screen_width, screen_height, inventory, player)
 
 def main_menu(con, backgrond_image, screen_width, screen_height):
 	libtcod.image_blit_2x(backgrond_image, 0, 0, 0)

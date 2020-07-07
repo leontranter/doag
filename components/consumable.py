@@ -8,6 +8,13 @@ class Consumable:
 		self.targeting_message = targeting_message
 		self.function_kwargs = kwargs
 
+def get_carried_potions(carrying_entity):
+	potions = []
+	for item in carrying_entity.inventory.items:
+		if item.consumable:
+			if item.consumable.consumable_type == ConsumableTypes.POTION:
+				potions.append(item)
+	return potions
 
 class ConsumableTypes(Enum):
 	POTION = 1

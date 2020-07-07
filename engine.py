@@ -13,6 +13,7 @@ from menus import main_menu, message_box
 from dlevel import Dlevel
 from spells import Spell
 from components.equippable import make_dropped_missile
+from components.consumable import get_carried_potions
 import components.inventory
 from systems import move_system
 from systems import time_system
@@ -103,6 +104,8 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 		equipment_screen = action.get('show_equipment_screen')
 		spells_screen, spells_index = action.get('show_spells_screen'), action.get('spells_index')
 		fire_weapon, load_weapon = action.get('fire_weapon'), action.get('load_weapon')
+		potion_index = action.get('potion_index')
+		quaff_potion = action.get('quaff_potion')
 		
 		left_click, right_click = mouse_action.get('left_click'), mouse_action.get('right_click')
 
@@ -133,6 +136,10 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 			previous_game_state = game_state
 			game_state = GameStates.DROP_INVENTORY
 
+		if quaff_potion:
+			previous_game_state = game_state
+			game_state = GameStates.POTION_SCREEN
+
 		if inventory_index is not None and previous_game_state != GameStates.PLAYER_DEAD and inventory_index < len(player.inventory.items):
 			item = player.inventory.items[inventory_index]
 			if game_state == GameStates.SHOW_INVENTORY:
@@ -141,6 +148,11 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 			elif game_state == GameStates.DROP_INVENTORY:
 				player_turn_results.extend(player.inventory.drop_item(item))
 		
+		if potion_index:
+			potions = get_carried_potions(player)
+			used_potion = potions[potion_index]
+			player_turn_results.extend(player.inventory.use(used_potion))
+
 		# TODO: refactor this stairs / level stuff, it's a bit messy
 		if take_stairs and game_state == GameStates.PLAYERS_TURN:
 			for entity in entities:

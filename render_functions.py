@@ -1,7 +1,7 @@
 import tcod as libtcod
 from enum import Enum
 from game_states import GameStates
-from menus import inventory_menu, level_up_menu, character_screen, spells_menu
+from menus import inventory_menu, level_up_menu, character_screen, spells_menu, potion_menu
 from systems.name_system import get_display_name
 
 class RenderOrder(Enum):
@@ -89,7 +89,11 @@ def render_all(con, panel, entities, player, game_map, fov_map, fov_recompute, m
 		character_screen(player, 30, 10, screen_width, screen_height)
 
 	elif game_state == GameStates.SPELLS_SCREEN:
-		spells_menu(con, "Choose a spell to cast...", player.caster, 50, screen_width, screen_height, player)
+		spells_menu(con, "Choose a spell to cast...", 50, screen_width, screen_height, player)
+
+	elif game_state == GameStates.POTION_SCREEN:
+		menu_title = "Choose a potion to quaff."
+		potion_menu(con, menu_title, 50, screen_width, screen_height, player)
 
 def clear_all(con, entities):
 	for entity in entities:

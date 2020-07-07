@@ -18,7 +18,7 @@ from components.item import Item
 from components.name import Name
 from components.identified import Identified
 from components.effects import Effects
-from components.consumable import ConsumableTypes
+from components.consumable import ConsumableTypes, get_carried_potions
 from damage_types import DamageTypes
 from loader_functions.constants import get_basic_damage, WeaponTypes, get_constants
 from loader_functions.initialize_new_game import get_game_variables, assign_potion_descriptions, assign_scroll_descriptions
@@ -33,7 +33,7 @@ from components.inventory import Inventory
 from item_functions import heal
 from fov_functions import initialize_fov
 from render_functions import get_names_under_mouse
-from item_factory import make_healing_potion, make_lightning_scroll, make_fireball_scroll, make_confusion_scroll, make_fireball_book, make_heal_book, make_bless_book
+from item_factory import make_healing_potion, make_lightning_scroll, make_fireball_scroll, make_confusion_scroll, make_fireball_book, make_heal_book, make_bless_book, make_poison_potion
 import monsters
 import mocks
 from menus import menu, build_text_menu
@@ -619,6 +619,17 @@ class BookTests(unittest.TestCase):
 		test_inventory.add_item(test_book)
 		self.assertTrue(len(test_inventory.items) == 1)
 		self.assertEqual(test_inventory.items[0].name.true_name, "Bless spellbook")
+
+class PotionMenuTests(unittest.TestCase):
+	def test_can_produce_list_of_potions_for_menu(self):
+		test_potion = make_healing_potion()
+		test_potion2 = make_poison_potion()
+		test_inventory = Inventory(10)
+		test_inventory.items.append(test_potion)
+		test_inventory.items.append(test_potion2)
+		test_player = entity.Entity(1, 1, 'A', libtcod.white, inventory=test_inventory)
+		potions = get_carried_potions(test_player)
+		self.assertEqual(len(potions), 2)
 
 if __name__ == "__main__":
 	unittest.main()

@@ -16,6 +16,8 @@ def handle_keys(key, game_state):
 		return handle_character_screen(key)
 	elif game_state == GameStates.SPELLS_SCREEN:
 		return handle_spells_screen(key)
+	elif game_state == GameStates.POTION_SCREEN:
+		return handle_potions_menu(key)
 	return {}
 
 
@@ -67,6 +69,8 @@ def handle_player_turn_keys(key):
 		return {'fire_weapon': True}
 	elif key_char == 'l':
 		return {'load_weapon': True}
+	elif key_char == 'q':
+		return {'quaff_potion': True}
 	elif key.vk == libtcod.KEY_ESCAPE:
 		#exit the game
 		return {'exit': True}
@@ -151,6 +155,18 @@ def handle_spells_screen(key):
 	if index >= 0:
 		return {'spells_index': index}
 	if key.vk == libtcod.KEY_ENTER and key.lalt:
+		return {'fullscreen': True}
+	elif key.vk == libtcod.KEY_ESCAPE:
+		return {'exit': True}
+
+	return {}
+
+def handle_potions_menu(key):
+	index = key.c - ord('a')
+
+	if index >= 0:
+		return {'potion_index': index}
+	elif key.vk == libtcod.KEY_ENTER and key.lalt:
 		return {'fullscreen': True}
 	elif key.vk == libtcod.KEY_ESCAPE:
 		return {'exit': True}

@@ -2,6 +2,7 @@ import tcod as libtcod
 import components.equipment
 from menu_options import MenuOption
 from systems.name_system import get_display_name
+from components.consumable import get_carried_potions
 
 #TODO: clean up these parameters - inventory and player probably not needed
 
@@ -52,6 +53,23 @@ def inventory_menu(con, header, inventory_width, screen_width, screen_height, pl
 	inventory = player.inventory
 	menu(con, header, options, inventory_width, screen_width, screen_height, inventory, player)
 
+def spells_menu(con, header, spells_width, screen_width, screen_height, player):
+	if len(player.caster.spells) == 0:
+		options = ["You don't know any spells yet."]
+	else:
+		options = []
+		for spell in player.caster.spells:
+			options.append(spell.name)
+
+	menu2(con, header, options, spells_width, screen_width, screen_height)
+
+def potion_menu(con, header, menu_width, screen_width, screen_height, player):
+	potions = get_carried_potions(player)
+	options = []
+	for potion in potions:
+		options.append(get_display_name(player, potion))
+	menu2(con, header, options, menu_width, screen_width, screen_height)
+
 def equipment_menu(con, header, inventory, inventory_width, screen_width, screen_height, equipment, player=None):
 	equipped_items = equipment.get_equipped_items()
 	if len(equipped_items) == 0:
@@ -77,14 +95,6 @@ def level_up_menu(con, header, player, menu_width, screen_width, screen_height):
 	options = build_text_menu(['Constitution (+20HP)', 'Strength (+1 attack)', 'Agility (+1 defense)'])
 
 	menu(con, header, options, menu_width, screen_width, screen_height)
-
-def spells_menu(con, header, caster, spells_width, screen_width, screen_height, player=None):
-	if len(caster.spells) == 0:
-		options = [MenuOption("You don't know any spells yet.")]
-	else:
-		options = player.caster.spells
-
-	menu(con, header, options, spells_width, screen_width, screen_height)
 
 def character_screen(player, character_screen_width, character_screen_height, screen_width, screen_height):
 	window = libtcod.console_new(character_screen_width, character_screen_height)
@@ -131,10 +141,32 @@ def build_text_menu(optionsList):
 		returnList.append(tempOption)
 	return returnList
 
-def potion_menu(inventory):
-	potions = []
-	for item in inventory:
-		if item.consumable:
-			if consumable.consumable_type == ConsumableTypes.POTION:
-				potions.append(item)
-	menu2()
+def menu2(con, header, options, width, screen_width, screen_height, inventory=None, player=None, text_menu=False):
+	if len(options) > 26:
+		raise ValueError('Cannot have a menu with more than 26 options!')
+
+	# calculate total height for the header and one line per option
+	header_height = libtcod.console_get_height_rect(con, 0, 0, width, screen_height, header)
+	height = len(options) + header_height
+
+	# create an off-screen console that represent's the menu's window
+	window = libtcod.console_new(width, height)
+
+	# print the header, with autowrap
+	libtcod.console_set_default_foreground(window, libtcod.white)
+	libtcod.console_print_rect_ex(window, 0, 0, width, height, libtcod.BKGND_NONE, libtcod.LEFT, header)
+
+	#print all the options
+	y = header_height
+	letter_index = ord('a')
+	
+	for option in options:
+		text = '(' + chr(letter_index) + ')' + option
+		libtcod.console_print_ex(window, 0, y, libtcod.BKGND_NONE, libtcod.LEFT, text)
+		y += 1
+		letter_index += 1
+
+	# blit the contents of "window" to the console
+	x = int(screen_width / 2 - width / 2)
+	y = int(screen_height / 2 - height / 2)
+	libtcod.console_blit(window, 0, 0, width, height, 0, x, y, 1.0, 0.7)

@@ -10,3 +10,4 @@ class GameStates(Enum):
 	LEVEL_UP = 7
 	CHARACTER_SCREEN = 8
 	SPELLS_SCREEN = 9
+	POTION_SCREEN = 10

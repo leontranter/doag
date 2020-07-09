@@ -7,7 +7,6 @@ class Skills:
 
 	def get_skill_rank(self, skill):
 		skill_rank = self.skills.get(skill) or 0
-		# TODO: Put in defaults (link to global skill book)
 		return skill_rank
 
 	def get_skill_check(self, skill):

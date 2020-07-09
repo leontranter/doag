@@ -42,9 +42,3 @@ def learn_heal_spell(entity):
 def learn_bless_spell(entity):
 	spell = SpellFactory.make_bless_spell()
 	entity.caster.spells.append(spell)
-
-	# TODO: do we need this?
-	#def removeSpell(self, spell):
-		#pass
-
-	

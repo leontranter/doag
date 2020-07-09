@@ -20,7 +20,7 @@ from systems import time_system
 
 def main():
 	constants = get_constants()
-	libtcod.console_set_custom_font('arial10x10.png', libtcod.FONT_TYPE_GREYSCALE | libtcod.FONT_LAYOUT_TCOD)
+	libtcod.console_set_custom_font('dejavu10x10_gs_tc.png', libtcod.FONT_TYPE_GREYSCALE | libtcod.FONT_LAYOUT_TCOD)
 	libtcod.console_init_root(constants['screen_width'], constants['screen_height'], constants['window_title'], False)
 
 	con = libtcod.console_new(constants['screen_width'], constants['screen_height'])
@@ -140,8 +140,9 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 			previous_game_state = game_state
 			game_state = GameStates.EQUIPMENT_SCREEN
 
-		if equipment_index is not None:
-			pass
+		# TODO: Fix this up
+		#if equipment_index is not None:
+		#	pass
 
 		if quaff_potion:
 			previous_game_state = game_state

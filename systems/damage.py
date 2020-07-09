@@ -14,13 +14,13 @@ def get_damage_modifier_from_equipment(entity):
 	modifier = 0
 	# TODO: could refactor this into iterating through a list??
 	if entity.equipment.main_hand:
-		modifier += entity.equipment.main_hand.equippable.damage_modifier or 0	
+		modifier += entity.equipment.main_hand.equippable.physical_damage_modifier or 0	
 	if entity.equipment.off_hand:
-		modifier += entity.equipment.off_hand.equippable.damage_modifier or 0
+		modifier += entity.equipment.off_hand.equippable.physical_damage_modifier or 0
 	if entity.equipment.body:
-		modifier += entity.equipment.body.equippable.damage_modifier or 0
+		modifier += entity.equipment.body.equippable.physical_damage_modifier or 0
 	if entity.equipment.ammunition:
-		modifier += entity.equipment.ammunition.equippable.damage_modifier or 0
+		modifier += entity.equipment.ammunition.equippable.physical_damage_modifier or 0
 	return modifier	
 
 def get_basic_swing_damage(entity):

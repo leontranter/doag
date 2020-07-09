@@ -46,7 +46,7 @@ def get_game_variables(constants, start_equipped=False):
 	# TODO: Refactor this to a function!!! No excuses!!!
 	if start_equipped:
 		x, y = 1, 1
-		item = EquippableFactory.make_bow()
+		item = EquippableFactory.make_shortbow()
 		player.inventory.items.append(item)
 		#player.equipment.main_hand = item
 		item = EquippableFactory.make_arrows()

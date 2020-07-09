@@ -20,7 +20,7 @@ from components.identified import Identified
 from components.effects import Effects
 from components.consumable import ConsumableTypes, get_carried_potions
 from damage_types import DamageTypes
-from loader_functions.constants import get_basic_damage, WeaponTypes, get_constants
+from loader_functions.constants import get_basic_damage, WeaponTypes, WeaponCategories, get_constants
 from loader_functions.initialize_new_game import get_game_variables, assign_potion_descriptions, assign_scroll_descriptions
 from loader_functions.data_loaders import save_game, load_game
 from systems.attack import weapon_skill_lookup, get_weapon_skill_for_attack
@@ -82,7 +82,7 @@ class EquipmentTests(unittest.TestCase):
 	def test_can_equip_main_hand(self):
 		test_equipment = Equipment()
 		test_player_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", equipment=test_equipment)
-		test_item_entity = EquippableFactory.make_sword()
+		test_item_entity = EquippableFactory.make_longsword()
 		test_equipment.toggle_equip(test_item_entity)
 		self.assertEqual(test_player_entity.equipment.main_hand.equippable, test_item_entity.equippable)
 
@@ -171,7 +171,7 @@ class DamageTests(unittest.TestCase):
 
 	def test_can_calculate_damage_bonus_from_equipment(self):
 		test_equipment = Equipment()
-		padded_armor_equippable = Equippable(EquipmentSlots.BODY, DR_bonus=1, damage_modifier=2)
+		padded_armor_equippable = Equippable(EquipmentSlots.BODY, DR_bonus=1, physical_damage_modifier=2)
 		padded_armor_name = Name("Padded Armor")
 		padded_armor_entity = entity.Entity(1, 1, ')', libtcod.purple, equippable=padded_armor_equippable, name=padded_armor_name)
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", equipment=test_equipment)
@@ -180,7 +180,7 @@ class DamageTests(unittest.TestCase):
 
 class AttackTests(unittest.TestCase):
 	def test_can_lookup_weapon_skill(self):
-		test_weapon = EquippableFactory.make_sword()
+		test_weapon = EquippableFactory.make_longsword()
 		self.assertEqual(weapon_skill_lookup(test_weapon.melee_weapon), "sword")
 
 	def test_can_lookup_correct_weapon_skill(self):
@@ -294,7 +294,7 @@ class DroppedMissileTests(unittest.TestCase):
 class MissileWeaponTests(unittest.TestCase):
 	def test_can_equip_missile_weapon(self):
 		test_char = mocks.create_mockchar_1()
-		test_bow = EquippableFactory.make_bow()
+		test_bow = EquippableFactory.make_shortbow()
 		test_char.equipment.toggle_equip(test_bow)
 		self.assertEqual(test_char.equipment.main_hand, test_bow)
 		self.assertNotEqual(test_char.equipment.main_hand.missile_weapon.missile_damage, None)
@@ -311,7 +311,7 @@ class MissileWeaponTests(unittest.TestCase):
 
 class MeleeWeaponTests(unittest.TestCase):
 	def test_can_create_melee_weapon_component(self):
-		test_component = MeleeWeapon(WeaponTypes.AXE, "swing", 1, DamageTypes.CRUSHING)
+		test_component = MeleeWeapon(WeaponTypes.AXE, WeaponCategories.AXE, "swing", 1, DamageTypes.CRUSHING)
 		self.assertEqual(test_component.weapon_type, WeaponTypes.AXE)
 
 	def test_has_melee_weapon(self):

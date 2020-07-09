@@ -26,20 +26,20 @@ class Equipment:
 		return bonus
 
 	@property
-	def melee_damage_bonus(self):
+	def physical_damage_modifier(self):
 		bonus = 0
 		# TODO: Fix this! Make melee damage bonus actually work properly
 		if self.main_hand and self.main_hand.melee_weapon:
-			bonus += self.main_hand.melee_weapon.melee_damage_bonus
-		#if self.off_hand and self.off_hand.equippable:
-		#	bonus += self.off_hand.equippable.melee_damage_bonus
-		#if self.body and self.body.equippable:
-		#	bonus += self.body.equippable.melee_damage_bonus
-		#if self.ammunition and self.ammunition.equippable:
-		#	bonus += self.ammunition.equippable.melee_damage_bonus			
+			bonus += self.main_hand.equippable.physical_damage_modifier
+		if self.off_hand and self.off_hand.equippable:
+			bonus += self.off_hand.equippable.physical_damage_modifier
+		if self.body and self.body.equippable:
+			bonus += self.body.equippable.physical_damage_modifier
+		if self.ammunition and self.ammunition.equippable:
+			bonus += self.ammunition.equippable.physical_damage_modifier			
 
 		return bonus
-
+# TODO: Get rid of this?
 	@property
 	def missile_damage_bonus(self):
 		bonus = 0
@@ -78,17 +78,7 @@ class Equipment:
 			equippable_entity, results = self.toggle_main_hand(equippable_entity, results)
 		# TODO: Fix this up!!!
 		elif slot == EquipmentSlots.OFF_HAND:
-			if self.off_hand == equippable_entity:
-				self.off_hand = None
-				results.append({'dequipped': equippable_entity})
-			else:
-				if self.main_hand and self.main_hand.equippable.two_handed:
-					results.append({'fail_equip': "You can't equip your off-hand while wielding a 2-handed weapon."})
-				else:
-					if self.off_hand:
-						results.append({'dequipped': self.off_hand})
-					self.off_hand = equippable_entity
-					results.append({'equipped': equippable_entity})
+			equippable_entity, results = self.toggle_off_hand(equippable_entity, results)
 		elif slot == EquipmentSlots.BODY:
 			equippable_entity, results = self.toggle_body(equippable_entity, results)
 		elif slot == EquipmentSlots.AMMUNITION:
@@ -125,7 +115,18 @@ class Equipment:
 
 	# TGDO: do I need this??
 	def toggle_off_hand(self, equippable_entity, results):
-		pass
+		if self.off_hand == equippable_entity:
+			self.off_hand = None
+			results.append({'dequipped': equippable_entity})
+		else:
+			if self.main_hand and self.main_hand.equippable.two_handed:
+				results.append({'fail_equip': "You can't equip your off-hand while wielding a 2-handed weapon."})
+			else:
+				if self.off_hand:
+					results.append({'dequipped': self.off_hand})
+				self.off_hand = equippable_entity
+				results.append({'equipped': equippable_entity})
+		return equippable_entity, results
 	
 	def toggle_body(self, equippable_entity, results):
 		if self.body == equippable_entity:

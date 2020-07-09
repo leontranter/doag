@@ -28,7 +28,7 @@ def makeOrc(x, y):
 	skill_component.set_skill_rank("dagger", 12)
 	orc_name = Name("Orc")
 	monster = Entity(x, y, 'o', libtcod.desaturated_green, blocks=True, render_order=RenderOrder.ACTOR, fighter = fighter_component, inventory=inventory_component, ai = ai_component, equipment=equipment_component, stats=stats_component, skills=skill_component, defender=defender_component, name=orc_name)
-	item = EquippableFactory.make_sword()
+	item = EquippableFactory.make_longsword()
 	monster.inventory.items.append(item)
 	monster.equipment.main_hand = item
 	item = EquippableFactory.make_leather_armor()
@@ -48,7 +48,7 @@ def makeTroll(x, y):
 	skill_component.set_skill_rank("dagger", 12)
 	troll_name = Name("Troll")
 	monster = Entity(x, y, 't', libtcod.darker_green, "Troll", blocks=True, render_order=RenderOrder.ACTOR, fighter = fighter_component, inventory=inventory_component, ai = ai_component, equipment=equipment_component, stats=stats_component, skills=skill_component, defender=defender_component, name=troll_name)
-	item = EquippableFactory.make_sword()
+	item = EquippableFactory.make_longsword()
 	monster.inventory.items.append(item)
 	monster.equipment.main_hand = item
 	return monster
@@ -67,7 +67,7 @@ def makeKobold(x, y):
 	monster = Entity(x, y, 'k', libtcod.blue, blocks=True, render_order=RenderOrder.ACTOR, fighter=fighter_component, inventory=inventory_component, ai=ai_component, equipment=equipment_component, stats=stats_component, skills=skill_component, defender=defender_component, name=kobold_name)
 	item = EquippableFactory.make_dagger()
 	monster.inventory.items.append(item)
-	item = EquippableFactory.make_bow()
+	item = EquippableFactory.make_shortbow()
 	monster.inventory.items.append(item)
 	monster.equipment.main_hand = item
 	item = EquippableFactory.make_arrows(1, 1, 5)

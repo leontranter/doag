@@ -1,5 +1,5 @@
 import tcod as libtcod
-from enum import Enum
+from enum import Enum, auto
 
 def get_constants():
 	window_title = "Roguelike Tutorial Revised"
@@ -79,10 +79,30 @@ potion_descriptions = ["dark", "fizzy", "cloudy"]
 potion_types = ["Healing Potion", "Poison Potion", "Confusion Potion"]
 
 class WeaponTypes(Enum):
+	DAGGER = auto()
+	STILLETO = auto()
+	LONGSWORD = auto()
+	RAPIER = auto()
+	SABER = auto()
+	GREATSWORD = auto()
+	CLUB = auto()
+	MACE = auto()
+	FLAIL = auto()
+	MAUL = auto()
+	SHORTBOW = auto()
+	LONGBOW = auto()
+	CROSSBOW = auto()
+	HEAVY_CROSSBOW = auto()
+	AXE = auto()
+	GREATAXE = auto()
+	STAFF = auto()
+	WARSTAFF = auto()
+
+class WeaponCategories(Enum):
 	DAGGER = 1
 	SWORD = 2
 	BOW = 3
 	CROSSBOW = 4
 	AXE = 5
 	STAFF = 6
-	POLEARM = 7
+	MACE = 7

@@ -38,7 +38,7 @@ def create_mockchar_3():
 	test_defender_component = Defender()
 	test_skills_component = Skills()
 	test_equipment_component = Equipment()
-	test_item_entity = EquippableFactory.make_sword()
+	test_item_entity = EquippableFactory.make_longsword()
 	test_equipment_component.main_hand = test_item_entity	
 	test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)
 	test_entity = Entity(1, 1, 'A', libtcod.white, "Player", skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component, defender=test_defender_component)	
@@ -51,7 +51,7 @@ def create_mockchar_4():
 	test_skills_component = Skills()
 	test_equipment_component = Equipment()
 	test_shield = EquippableFactory.make_shield()
-	test_sword = EquippableFactory.make_sword()
+	test_sword = EquippableFactory.make_longsword()
 	test_equipment_component.main_hand = test_sword	
 	test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)
 	test_entity = Entity(1, 1, 'A', libtcod.white, "Player", skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component, defender=test_defender_component)	
@@ -64,7 +64,7 @@ def create_mockchar_5():
 	test_skills_component = Skills()
 	test_equipment_component = Equipment()
 	test_shield = EquippableFactory.make_shield()
-	test_sword = EquippableFactory.make_sword()
+	test_sword = EquippableFactory.make_longsword()
 	test_equipment_component.main_hand = test_sword
 	test_equipment_component.off_hand = test_shield	
 	test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)
@@ -79,7 +79,7 @@ def create_mockchar_6():
 	test_skills_component = Skills()
 	test_equipment_component = Equipment()
 	test_shield = EquippableFactory.make_shield()
-	test_sword = EquippableFactory.make_sword()
+	test_sword = EquippableFactory.make_longsword()
 	test_equipment_component.main_hand = test_sword
 	test_equipment_component.off_hand = test_shield
 	test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)
@@ -94,7 +94,7 @@ def create_mockchar_7():
 	test_skills_component = Skills()
 	test_equipment_component = Equipment()
 	test_shield = EquippableFactory.make_shield()
-	test_sword = EquippableFactory.make_sword()
+	test_sword = EquippableFactory.make_longsword()
 	test_equipment_component.main_hand = test_sword
 	test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)
 	test_entity = Entity(1, 1, 'A', libtcod.white, "Player", skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component, defender=test_defender_component)	
@@ -108,7 +108,7 @@ def create_mockchar_8():
 	test_skills_component = Skills()
 	test_equipment_component = Equipment()
 	test_shield = EquippableFactory.make_shield()
-	test_sword = EquippableFactory.make_sword()
+	test_sword = EquippableFactory.make_longsword()
 	test_equipment_component.main_hand = test_sword
 	test_equipment_component.off_hand = test_shield	
 	test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)
@@ -122,7 +122,7 @@ def create_mockchar_9():
 	test_skills_component = Skills()
 	test_equipment_component = Equipment()
 	test_fighter = Fighter()
-	test_bow = EquippableFactory.make_bow()
+	test_bow = EquippableFactory.make_shortbow()
 	test_equipment_component.main_hand = test_bow
 	test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)
 	test_entity = Entity(1, 1, 'A', libtcod.white, "Player", fighter=test_fighter, skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component, defender=test_defender_component)	
@@ -134,7 +134,7 @@ def create_mockchar_10():
 	test_skills_component = Skills()
 	test_equipment_component = Equipment()
 	test_fighter = Fighter()
-	test_bow = EquippableFactory.make_bow()
+	test_bow = EquippableFactory.make_shortbow()
 	test_arrows = EquippableFactory.make_arrows()
 	test_equipment_component.main_hand = test_bow
 	test_equipment_component.ammunition = test_arrows

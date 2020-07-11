@@ -39,21 +39,6 @@ class Equipment:
 			bonus += self.ammunition.equippable.physical_damage_modifier			
 
 		return bonus
-# TODO: Get rid of this?
-	@property
-	def missile_damage_bonus(self):
-		bonus = 0
-		
-		if self.main_hand and self.main_hand.equippable:
-			bonus += self.main_hand.equippable.missile_damage_bonus
-		if self.off_hand and self.off_hand.equippable:
-			bonus += self.off_hand.equippable.missile_damage_bonus
-		if self.body and self.body.equippable:
-			bonus += self.body.equippable.missile_damage_bonus
-		if self.ammunition and self.ammunition.equippable:
-			bonus += self.ammunition.equippable.missile_damage_bonus			
-
-		return bonus
 
 	@property
 	def DR_bonus(self):
@@ -76,7 +61,6 @@ class Equipment:
 		slot = equippable_entity.equippable.slot
 		if slot == EquipmentSlots.MAIN_HAND:
 			equippable_entity, results = self.toggle_main_hand(equippable_entity, results)
-		# TODO: Fix this up!!!
 		elif slot == EquipmentSlots.OFF_HAND:
 			equippable_entity, results = self.toggle_off_hand(equippable_entity, results)
 		elif slot == EquipmentSlots.BODY:
@@ -113,7 +97,6 @@ class Equipment:
 				results.append({'equipped': equippable_entity})
 		return equippable_entity, results
 
-	# TGDO: do I need this??
 	def toggle_off_hand(self, equippable_entity, results):
 		if self.off_hand == equippable_entity:
 			self.off_hand = None

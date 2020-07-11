@@ -4,13 +4,13 @@ from damage_types import DamageTypes, damage_type_modifiers
 from game_messages import Message
 from loader_functions.constants import get_basic_damage
 
-def get_damage_modifier_from_status_effects(entity):
+def get_physical_damage_modifier_from_status_effects(entity):
 	modifier = 0
 	for effect in entity.effects.effect_list:
-		modifier += effect.get("damage_bonus")
+		modifier += effect.get("physical_damage_modifier")
 	return modifier	
 
-def get_damage_modifier_from_equipment(entity):
+def get_physical_damage_modifier_from_equipment(entity):
 	modifier = 0
 	# TODO: could refactor this into iterating through a list??
 	if entity.equipment.main_hand:

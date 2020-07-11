@@ -28,30 +28,6 @@ class Caster:
 			results.append({'cast': spell.name})
 		return results
 
-def learn_fireball_spell(entity, **kwargs):
-	results = []
-	spell = SpellFactory.make_fireball_spell()
-	entity.caster.spells.append(spell)
-	results.append({'message': Message("You learned the Fireball spell.")})
-	results.append({'consumed': True})
-	return results
-
-def learn_heal_spell(entity, **kwargs):
-	results = []
-	spell = SpellFactory.make_heal_spell()
-	entity.caster.spells.append(spell)
-	results.append({'message': Message("You learned the Heal spell.")})
-	results.append({'consumed': True})
-	return results
-
-def learn_bless_spell(entity, **kwargs):
-	results = []
-	spell = SpellFactory.make_bless_spell()
-	entity.caster.spells.append(spell)
-	results.append({'message': Message("You learned the Bless spell.")})
-	results.append({'consumed': True})
-	return results
-
 def learn_spell(entity, spell_name):
 	results = []
 	spell = spell_function_lookup[spell_name]()

@@ -3,6 +3,7 @@ from game_messages import Message
 from components.ai import ConfusedMonster
 from systems.effects_manager import add_effect
 from systems.move_system import distance
+from components.caster import learn_spell
 
 def heal(*args, **kwargs):
 	entity = args[0]
@@ -121,38 +122,7 @@ def cast_confuse(*args, **kwargs):
 
 	return results
 
-def learn_fireball(*args, **kwargs):
-	entity = args[0]
-	results = []
-	for spell in entity.caster.spells:
-		if spell.name == "Fireball":
-			results.append({'consumed': False, 'message': Message("You already know that spell.", libtcod.light_green)})
-			break
-	else:
-		entity.caster.lean_fireball_spell()
-		results.append({'consumed': True, 'message': Message('You learned the Fireball spell!', libtcod.light_green)})
-	return results
-
-def learn_heal(*args, **kwargs):
-	entity = args[0]
-	results = []
-	for spell in entity.caster.spells:
-		if spell.name == "Heal":
-			results.append({'consumed': False, 'message': Message("You already know that spell.", libtcod.light_green)})
-			break
-	else:
-		entity.caster.learn_heal_spell()
-		results.append({'consumed': True, 'message': Message('You learned the Heal spell!', libtcod.light_green)})
-	return results
-
-def learn_bless(*args, **kwargs):
-	entity = args[0]
-	results = []
-	for spell in entity.caster.spells:
-		if spell.name == "Bless":
-			results.append({'consumed': False, 'message': Message("You already know that spell.", libtcod.light_green)})
-			break
-	else:
-		entity.caster.learn_bless_spell()
-		results.append({'consumed': True, 'message': Message('You learned the Bless spell!', libtcod.light_green)})
-	return results
+def learn_spell_from_book(*args, **kwargs):
+	reader = args[0]
+	spell_name = kwargs.get('spell_name')
+	learn_spell(reader, spell_name)

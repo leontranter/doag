@@ -1,13 +1,11 @@
 import unittest
-import map_objects.game_map as maps
-import engine
 import map_objects.tile
 import entity
 import tcod as libtcod
 from equipment_slots import EquipmentSlots
 import map_objects.rectangle as rectangle
 from components.fighter import Fighter
-from components.caster import Caster, learn_fireball_spell, learn_heal_spell, learn_spell
+from components.caster import Caster, learn_spell
 from components.equipment import Equipment
 from components.equippable import Equippable, EquippableFactory, make_dropped_missile
 from components.skills import Skills
@@ -30,7 +28,7 @@ from systems.damage import get_basic_thrust_damage, get_basic_swing_damage, get_
 from systems.move_system import distance_to
 from systems.attack import get_hit_modifier_from_status_effects, get_hit_modifier_from_equipment
 from components.inventory import Inventory
-from item_functions import heal
+from item_functions import heal, learn_spell_from_book
 from fov_functions import initialize_fov
 from render_functions import get_names_under_mouse
 from item_factory import make_healing_potion, make_lightning_scroll, make_fireball_scroll, make_confusion_scroll, make_fireball_book, make_heal_book, make_bless_book, make_poison_potion
@@ -38,7 +36,6 @@ import monsters
 import mocks
 from menus import menu, build_text_menu
 import menu_options
-import engine
 
 class EntityTests(unittest.TestCase):
 	def test_can_make_entity(self):
@@ -76,6 +73,12 @@ class SpellTests(unittest.TestCase):
 		learn_spell(test_entity, 'bless')
 		self.assertEqual(test_caster.spells[0].name, "Bless")
 
+	def test_can_learn_bless_from_book(self):
+		test_caster = Caster(spells=[], max_mana=50)
+		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", caster=test_caster)
+		learn_spell_from_book(test_entity, spell_name='bless')
+		self.assertEqual(test_caster.spells[0].name, "Bless")
+
 	def test_can_learn_multiple_spells(self):
 		test_caster = Caster(spells=[], max_mana=50)
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", caster=test_caster)
@@ -85,7 +88,7 @@ class SpellTests(unittest.TestCase):
 		self.assertEqual(test_caster.spells[1].name, "Fireball")
 
 	def test_can_cast_bless_spell(self):
-		test_caster = Caster(spells=[], max_mana=50)
+		test_effects = Effects()
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", caster=test_caster)
 		learn_spell(test_entity, 'bless')
 
@@ -138,14 +141,6 @@ class SkillsTests(unittest.TestCase):
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", stats=test_stats, skills=test_skillset)
 		skill_test = test_skillset.get_skill_check("sword")
 		self.assertEqual(skill_test, 6)
-
-class MapTests(unittest.TestCase):
-	def test_can_make_map(self):
-		test_map = maps.GameMap(80, 45)
-		self.assertEqual(test_map.width, 80)
-		self.assertEqual(test_map.height, 45)
-		self.assertEqual(len(test_map.tiles), 80)
-		self.assertEqual(len(test_map.tiles[0]), 45)
 
 class StatsTests(unittest.TestCase):
 	def test_can_create_entity_with_stats(self):

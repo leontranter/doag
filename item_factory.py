@@ -1,7 +1,7 @@
 from components.item import Item
 from entity import Entity
 from item_functions import heal, cast_lightning, cast_fireball, cast_confuse, poison
-from components.caster import learn_fireball_spell, learn_heal_spell, learn_bless_spell
+from components.caster import learn_spell
 import tcod as libtcod
 from render_functions import RenderOrder
 from game_messages import Message
@@ -52,21 +52,21 @@ def make_confusion_scroll(x=1, y=1):
 	return temp_entity
 
 def make_fireball_book(x=1, y=1):
-	fireball_book_consumable = Consumable(ConsumableTypes.SPELLBOOK, use_function=learn_fireball_spell, spell="Fireball")
+	fireball_book_consumable = Consumable(ConsumableTypes.SPELLBOOK, use_function=learn_spell_from_book, spell_name="fireball")
 	fireball_book_name = Name("Fireball spellbook")
 	fireball_book_item = Item(1, 1)
 	temp_entity = Entity(x, y, '#', libtcod.red, render_order=RenderOrder.ITEM, item=fireball_book_item, name=fireball_book_name, consumable=fireball_book_consumable)
 	return temp_entity
 
 def make_heal_book(x=1, y=1):
-	heal_book_consumable = Consumable(ConsumableTypes.SPELLBOOK, use_function=learn_heal_spell, spell="Heal")
+	heal_book_consumable = Consumable(ConsumableTypes.SPELLBOOK, use_function=learn_spell_from_book, spell_name="heal")
 	heal_book_name = Name("Heal spellbook")
 	heal_book_item = Item(1, 1)
 	temp_entity = Entity(x, y, '#', libtcod.red, render_order=RenderOrder.ITEM, item=heal_book_component, name=heal_book_name, consumable=heal_book_consumable)
 	return temp_entity
 
 def make_bless_book(x=1, y=1):
-	bless_book_consumable = Consumable(ConsumableTypes.SPELLBOOK, use_function=learn_bless_spell, spell="Heal")
+	bless_book_consumable = Consumable(ConsumableTypes.SPELLBOOK, use_function=learn_spell_from_book, spell_name="bless")
 	bless_book_name = Name("Bless spellbook")
 	bless_book_item = Item(1, 1)
 	temp_entity = Entity(x, y, '#', libtcod.red, render_order=RenderOrder.ITEM, item=bless_book_item, name=bless_book_name, consumable=bless_book_consumable)

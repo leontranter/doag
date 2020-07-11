@@ -5,7 +5,7 @@ import tcod as libtcod
 from equipment_slots import EquipmentSlots
 import map_objects.rectangle as rectangle
 from components.fighter import Fighter
-from components.caster import Caster, learn_spell
+from components.caster import Caster
 from components.equipment import Equipment
 from components.equippable import Equippable, EquippableFactory, make_dropped_missile
 from components.skills import Skills
@@ -27,6 +27,7 @@ from systems.name_system import get_display_name
 from systems.damage import get_basic_thrust_damage, get_basic_swing_damage, get_physical_damage_modifier_from_status_effects, get_physical_damage_modifier_from_equipment
 from systems.move_system import distance_to
 from systems.attack import get_hit_modifier_from_status_effects, get_hit_modifier_from_equipment
+from systems.spell_system import learn_spell
 from components.inventory import Inventory
 from item_functions import heal, learn_spell_from_book
 from fov_functions import initialize_fov
@@ -57,7 +58,7 @@ class EntityTests(unittest.TestCase):
 	def test_can_make_entity_with_caster_who_knows_spells(self):
 		test_caster = Caster(spells=[], max_mana=50)
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", caster=test_caster)
-		learn_fireball_spell(test_entity)
+		learn_spell(test_entity, 'fireball')
 		self.assertEqual(test_caster.spells[0].name, "Fireball")
 
 class SpellTests(unittest.TestCase):
@@ -89,6 +90,7 @@ class SpellTests(unittest.TestCase):
 
 	def test_can_cast_bless_spell(self):
 		test_effects = Effects()
+		test_caster = Caster(spells=[], max_mana=50)
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", caster=test_caster)
 		learn_spell(test_entity, 'bless')
 

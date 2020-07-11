@@ -3,7 +3,19 @@ from game_messages import Message
 from components.ai import ConfusedMonster
 from systems.effects_manager import add_effect
 from systems.move_system import distance
-from components.caster import learn_spell
+from spells import Spell
+
+def make_fireball_spell():
+	spell = Spell("Fireball", 10, cast_fireball, targeting=True, targeting_message=Message('Left-click a target tile for the fireball, or right-click to cancel.', libtcod.light_cyan), damage=30, radius=3)
+	return spell
+
+def make_heal_spell():
+	spell = Spell("Heal", 5, heal, amount=10)
+	return spell
+
+def make_bless_spell():
+	spell = Spell("Bless", 4, bless, targeting=True, targeting_message=Message('Left-click a target to cast Bless on, or right-click to cancel.', libtcod.light_cyan), bonus=1)
+	return spell
 
 def heal(*args, **kwargs):
 	entity = args[0]
@@ -123,6 +135,18 @@ def cast_confuse(*args, **kwargs):
 	return results
 
 def learn_spell_from_book(*args, **kwargs):
-	reader = args[0]
+	results = []
+	entity = args[0]
 	spell_name = kwargs.get('spell_name')
-	learn_spell(reader, spell_name)
+	spell = spell_function_lookup[spell_name]()
+	entity.caster.spells.append(spell)
+	results.append({'message': Message("You learned the {spell_name} spell.")})
+	results.append({'consumed': True})
+	return results
+
+spell_function_lookup = {
+	'fireball': make_fireball_spell,
+	'bless': make_bless_spell,
+	'heal': make_heal_spell
+}
+

@@ -11,7 +11,6 @@ from components.equipment import EquipmentSlots
 from components.equippable import Equippable, EquippableFactory
 from components.name import Name
 from components.stairs import Stairs
-from item_functions import cast_fireball, cast_lightning, heal, cast_confuse
 from game_messages import Message
 from generators import item_generator
 from random_utils import from_dungeon_level, random_choice_from_dict

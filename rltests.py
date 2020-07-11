@@ -7,7 +7,7 @@ import tcod as libtcod
 from equipment_slots import EquipmentSlots
 import map_objects.rectangle as rectangle
 from components.fighter import Fighter
-from components.caster import Caster, learn_fireball_spell, learn_heal_spell
+from components.caster import Caster, learn_fireball_spell, learn_heal_spell, learn_spell
 from components.equipment import Equipment
 from components.equippable import Equippable, EquippableFactory, make_dropped_missile
 from components.skills import Skills
@@ -70,13 +70,25 @@ class SpellTests(unittest.TestCase):
 		learn_heal_spell(test_entity)
 		self.assertEqual(test_caster.spells[0].name, "Heal")
 
+	def test_can_learn_bless(self):
+		test_caster = Caster(spells=[], max_mana=50)
+		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", caster=test_caster)
+		learn_spell(test_entity, 'bless')
+		self.assertEqual(test_caster.spells[0].name, "Bless")		
+
 	def test_can_learn_multiple_spells(self):
 		test_caster = Caster(spells=[], max_mana=50)
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", caster=test_caster)
 		learn_heal_spell(test_entity)
 		learn_fireball_spell(test_entity)
 		self.assertEqual(test_caster.spells[0].name, "Heal")
-		self.assertEqual(test_caster.spells[1].name, "Fireball")		
+		self.assertEqual(test_caster.spells[1].name, "Fireball")
+
+	def test_can_cast_bless_spell(self):
+		test_caster = Caster(spells=[], max_mana=50)
+		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", caster=test_caster)
+		#learn_bless_spell(test_entity)
+
 
 class EquipmentTests(unittest.TestCase):
 	def test_can_equip_main_hand(self):

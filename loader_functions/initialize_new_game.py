@@ -19,7 +19,7 @@ from components.name import Name
 from components.effects import Effects
 from components.identified import Identified
 from random import shuffle
-from item_factory import make_healing_potion, make_poison_potion, make_fireball_book, make_confusion_scroll
+from item_factory import make_healing_potion, make_poison_potion, make_fireball_book, make_confusion_scroll, make_bless_book
 
 def get_game_variables(constants, start_equipped=False):
 	# create the player character
@@ -49,7 +49,7 @@ def get_game_variables(constants, start_equipped=False):
 		item = EquippableFactory.make_shortbow()
 		player.inventory.items.append(item)
 		#player.equipment.main_hand = item
-		item = EquippableFactory.make_arrows()
+		item = EquippableFactory.make_arrows(1, 1, 10)
 		player.inventory.items.append(item)
 		item2 = EquippableFactory.make_dagger()
 		player.inventory.items.append(item2)
@@ -65,7 +65,7 @@ def get_game_variables(constants, start_equipped=False):
 		player.inventory.items.append(potion1)
 		potion2 = make_poison_potion()
 		player.inventory.items.append(potion2)
-		book = make_fireball_book()
+		book = make_bless_book()
 		player.inventory.items.append(book)
 		scroll = make_confusion_scroll()
 		player.inventory.items.append(scroll)

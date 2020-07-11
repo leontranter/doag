@@ -80,7 +80,7 @@ class EquippableFactory:
 	def make_shortbow(x=1, y=1):
 		bow_equippable = Equippable(EquipmentSlots.MAIN_HAND, two_handed=True)
 		bow_name = Name("Bow")
-		bow_missile_weapon = MissileWeapon(WeaponTypes.SHORTBOW, WeaponCategories.BOW, missile_damage=(1, 0), missile_damage_type=DamageTypes.PIERCING)
+		bow_missile_weapon = MissileWeapon(WeaponTypes.SHORTBOW, WeaponCategories.BOW, missile_damage=(2, 0), missile_damage_type=DamageTypes.PIERCING)
 		bow_item = Item(6, 1)
 		bow_entity = Entity(x, y, ')', libtcod.orange, equippable=bow_equippable, missile_weapon=bow_missile_weapon, name=bow_name, item=bow_item)
 		return bow_entity
@@ -106,13 +106,6 @@ class EquippableFactory:
 		steel_arrows_item = Item(1, number)
 		arrows_entity = Entity(x, y, ')', libtcod.flame, equippable=arrows_equippable, name=steel_arrows_name)
 		return arrows_entity	
-
-	def make_obsidian_arrows(x=1, y=1, quantity=1):
-		arrows_equippable = Equippable(EquipmentSlots.AMMUNITION, missile_damage_bonus=3, quantity=quantity)
-		obsidian_arrows_name = Name("Obsidian Arrows")
-		obsidian_arrows_item = Item(1, number)
-		arrows_entity = Entity(x, y, ')', libtcod.flame, equippable=arrows_equippable, name=obsidian_arrows_name, item=obsidian_arrows_item)
-		return arrows_entity
 
 	def make_bolts(x=1, y=1, quantity=1):
 		arrows_equippable = Equippable(EquipmentSlots.AMMUNITION, missile_damage_bonus=1, quantity=quantity)

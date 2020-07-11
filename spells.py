@@ -1,5 +1,5 @@
 import tcod as libtcod
-from item_functions import heal, cast_fireball, cast_lightning, cast_confuse
+from item_functions import heal, cast_fireball, cast_lightning, cast_confuse, bless
 from game_messages import Message
 
 class Spell:
@@ -22,3 +22,4 @@ class SpellFactory:
 
 	def make_bless_spell():
 		spell = Spell("Bless", 4, bless, targeting=True, targeting_message=Message('Left-click a target to cast Bless on, or right-click to cancel.', libtcod.light_cyan), bonus=1)
+		return spell

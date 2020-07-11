@@ -69,10 +69,7 @@ class Fighter:
 		if self.check_hit(target):
 			defense_result, defense_choice = target.defender.defend_melee_attack()
 			if not defense_result:
-				verb = "hit" if self.owner.name.true_name == "Player" else "hits"
-				verb2 = "try" if target.name.true_name == "Player" else "tries"
-				verb3 = "fail" if target.name.true_name == "Player" else "fails"
-				results.append({'message': Message(f"{self.owner.name.subject_name} {verb}! {target.name.subject_name} {verb2} to {defense_choice} the attack but {verb3}.")})
+				results.append(self.hit_message(target, defense_choice))
 				dice, modifier, damage_type = self.get_current_melee_damage()
 				results = self.resolve_hit(results, dice, modifier, damage_type, target)
 			else:
@@ -88,14 +85,12 @@ class Fighter:
 		if self.check_hit(target):
 			defense_result, defense_choice = target.defender.defend_missile_attack()
 			if not defense_result:
-				verb = "hit" if self.owner.name.true_name == "Player" else "hits"
-				verb2 = "try" if target.name.true_name == "Player" else "tries"
-				verb3 = "fail" if target.name.true_name == "Player" else "fails"
-				results.append({'message': Message(f"{self.owner.name.subject_name} {verb}! {target.name.object_name} {verb2} to {defense_choice} the attack but {verb3}.")})
+				results.append(self.hit_message(target, defense_choice))
 				dice, modifier, damage_type = self.get_current_missile_damage()
 				results = self.resolve_hit(results, dice, modifier, damage_type, target)
 			else:
-				results.append({'attack_defended': True, 'message': Message(f'{self.owner.name.subject_name} hits, but the {target.name.object_name} {defense_choice}s the attack.')})	
+				verb = "hit" if self.owner.name.true_name == "Player" else "hits"
+				results.append({'attack_defended': True, 'message': Message(f'{self.owner.name.subject_name} {verb}, but the {target.name.object_name} {defense_choice}s the attack.')})	
 		else:
 			verb1 = "fire" if self.owner.name.true_name == "Player" else "fires"
 			pronoun = "your" if self.owner.name.true_name == "Player" else "their"
@@ -110,13 +105,21 @@ class Fighter:
 		# TODO: Fix this!
 		if self.owner.equipment.main_hand and self.owner.equipment.main_hand.melee_weapon:
 			skill_target = get_weapon_skill_for_attack(self.owner, self.owner.equipment.main_hand.melee_weapon)
-		else:
-			skill_target = 8
+		elif self.owner.equipment.main_hand and self.owner.equipment.main_hand.missile_weapon:
+			skill_target = get_weapon_skill_for_attack(self.owner, self.owner.equipment.main_hand.missile_weapon)
+		print(f"skill target is {skill_target}")
 		numberRolled = dice_roll(3, 0)
 		if numberRolled <= skill_target:
 			return True
 		else:
 			return False
+
+	def hit_message(self, target, defense_choice):
+		verb = "hit" if self.owner.name.true_name == "Player" else "hits"
+		verb2 = "try" if target.name.true_name == "Player" else "tries"
+		verb3 = "fail" if target.name.true_name == "Player" else "fails"
+		message = {'message':  Message(f"{self.owner.name.subject_name} {verb}! {target.name.subject_name} {verb2} to {defense_choice} the attack but {verb3}.")} 
+		return message
 
 	def heal(self, amount):
 		self.owner.stats.hp += amount

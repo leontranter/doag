@@ -23,6 +23,7 @@ def get_weapon_skill_for_attack(attacker, weapon):
 	if attacker.skills:
 		weapon_skill = weapon_skill_lookup(weapon)
 		weapon_skill_num = attacker.skills.get_skill_check(weapon_skill)
+		print(f"weapon skill num is {weapon_skill_num}")
 		return weapon_skill_num
 	elif attacker.stats:
 		return attacker.stats.DX - 5

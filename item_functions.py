@@ -34,6 +34,8 @@ def poison(*args, **kwargs):
 def bless(*args, **kwargs):
 	entity = args[0]
 	bonus = kwargs.get('bonus')
+	
+	results = []
 	bless_effect = {'name': "Bless", "turns_left": 7, "hit_bonus": bonus, "damage_bonus": bonus}
 	add_effect(bless_effect, entity)
 	results.append({'consumed': True, 'message': Message('You cast bless on the target.', libtcod.green)})

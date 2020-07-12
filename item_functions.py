@@ -45,14 +45,23 @@ def poison(*args, **kwargs):
 	return results
 
 def bless(*args, **kwargs):
-	entity = args[0]
+	entities = kwargs.get('entities')
+	fov_map = kwargs.get('fov_map')
+	target_x = kwargs.get('target_x')
+	target_y = kwargs.get('target_y')
+	target_self = kwargs.get('target_self')
 	bonus = kwargs.get('hit_modifier')
 	bonus = kwargs.get('physical_damage_modifier')
 	
 	results = []
 	bless_effect = {'name': "Bless", "turns_left": 7, "hit_modifier": bonus, "damage_modifier": bonus}
-	add_effect(bless_effect, entity)
-	results.append({'consumed': True, 'message': Message('You cast bless on the target.', libtcod.green)})
+	for entity in entities:
+		if entity.x == target_x and entity.y == target_y and entity.fighter:
+			add_effect(bless_effect, entity)
+			results.append({'consumed': True, 'message': Message('You cast bless on the target.', libtcod.green)})
+			break
+	else:
+		results.append({'message': Message("There is no target there to cast that spell on.", libtcod.red)})
 	return results
 
 def cast_lightning(*args, **kwargs):
@@ -112,6 +121,7 @@ def cast_confuse(*args, **kwargs):
 	target_self = kwargs.get('target_self')
 	results = []
 
+	# TODO: Fix this! probably need to split out into cast confuse and resolve confuse functions
 	if target_self:
 		results.append({'consumed': True, 'message': Message("You are confused!", libtcod.yellow)})
 		return results
@@ -140,7 +150,7 @@ def learn_spell_from_book(*args, **kwargs):
 	spell_name = kwargs.get('spell_name')
 	spell = spell_function_lookup[spell_name]()
 	entity.caster.spells.append(spell)
-	results.append({'message': Message("You learned the {spell_name} spell.")})
+	results.append({'message': Message(f"You learned the {spell_name} spell.")})
 	results.append({'consumed': True})
 	return results
 

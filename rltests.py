@@ -27,9 +27,9 @@ from systems.name_system import get_display_name
 from systems.damage import get_basic_thrust_damage, get_basic_swing_damage, get_physical_damage_modifier_from_status_effects, get_physical_damage_modifier_from_equipment
 from systems.move_system import distance_to
 from systems.attack import get_hit_modifier_from_status_effects, get_hit_modifier_from_equipment
-from systems.spell_system import learn_spell
+from systems.spell_system import learn_spell, cast
 from components.inventory import Inventory
-from item_functions import heal, learn_spell_from_book
+from item_functions import heal, learn_spell_from_book, make_bless_spell
 from fov_functions import initialize_fov
 from render_functions import get_names_under_mouse
 from item_factory import make_healing_potion, make_lightning_scroll, make_fireball_scroll, make_confusion_scroll, make_fireball_book, make_heal_book, make_bless_book, make_poison_potion
@@ -91,9 +91,12 @@ class SpellTests(unittest.TestCase):
 	def test_can_cast_bless_spell(self):
 		test_effects = Effects()
 		test_caster = Caster(spells=[], max_mana=50)
-		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", caster=test_caster)
+		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", caster=test_caster, effects=test_effects)
 		learn_spell(test_entity, 'bless')
-
+		spell = make_bless_spell()
+		results = cast(test_entity, spell)
+		self.assertTrue(len(results), 1)
+		self.assertTrue(len(test_effects.effect_list), 1)
 
 
 class EquipmentTests(unittest.TestCase):

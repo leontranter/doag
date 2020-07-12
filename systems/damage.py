@@ -50,9 +50,6 @@ def damage_messages(results, attacker, target, base_damage, final_damage, damage
 		verb = "takes" if attacker.name.true_name == "Player" else "take"
 		results.append({'message': Message(f'After DR of {target.fighter.DR} is applied, {target.name.object_name} {verb} {str(final_damage)} {damage_type.name.lower()} damage.', libtcod.white)})
 		results.extend(target.fighter.take_damage(final_damage))
-		if target.stats.hp > 0:
-			verb = "have" if target.name.true_name == "Player" else "has"
-			results.append({'message': Message(f'{target.name.subject_name.capitalize()} {verb} {target.stats.hp} hp remaining.', libtcod.white)})
 	else:
 		verb = "don't" if attacker.name.true_name == "Player" else "doesn't"
 		verb2 = "your" if target.name.true_name == "Player" else target.name.object_name

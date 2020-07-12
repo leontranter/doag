@@ -11,6 +11,7 @@ from components.stats import Stats
 from components.skills import Skills
 from components.defender import Defender
 from components.name import Name
+from components.effects import Effects
 
 
 def getMonsterByDungeonLevel(level):
@@ -23,11 +24,13 @@ def makeOrc(x, y):
 	equipment_component = Equipment()
 	inventory_component = Inventory(26)
 	defender_component = Defender()
+	effects_component = Effects()
 	skill_component = Skills()
 	skill_component.set_skill_rank("sword", 10)
 	skill_component.set_skill_rank("dagger", 12)
 	orc_name = Name("Orc")
-	monster = Entity(x, y, 'o', libtcod.desaturated_green, blocks=True, render_order=RenderOrder.ACTOR, fighter = fighter_component, inventory=inventory_component, ai = ai_component, equipment=equipment_component, stats=stats_component, skills=skill_component, defender=defender_component, name=orc_name)
+	monster = Entity(x, y, 'o', libtcod.desaturated_green, blocks=True, render_order=RenderOrder.ACTOR, fighter = fighter_component, inventory=inventory_component, ai=ai_component,
+		equipment=equipment_component, stats=stats_component, skills=skill_component, defender=defender_component, effects=effects_component, name=orc_name)
 	item = EquippableFactory.make_longsword()
 	monster.inventory.items.append(item)
 	monster.equipment.main_hand = item

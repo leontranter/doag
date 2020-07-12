@@ -17,6 +17,7 @@ from components.consumable import get_carried_potions
 import components.inventory
 from systems import move_system
 from systems import time_system
+from systems import spell_system
 
 def main():
 	constants = get_constants()
@@ -218,7 +219,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 
 		if spells_index is not None and spells_index < len(player.caster.spells):
 			spell = player.caster.spells[spells_index]
-			player_turn_results.extend(player.caster.cast(spell, entities=entities, fov_map=fov_map))
+			player_turn_results.extend(spell_system.cast(player, spell, entities=entities, fov_map=fov_map))
 			player_turn_results.extend(time_system.process_entity_turn(player))
 
 		if fire_weapon:
@@ -334,7 +335,6 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 				game_state = previous_game_state
 				message_log.add_message(Message('Targeting cancelled'))
 			if cast:
-				message_log.add_message(Message('You cast the {} spell.'.format(cast), libtcod.yellow))
 				game_state = GameStates.ENEMY_TURN
 			if loaded:
 				game_state = GameStates.ENEMY_TURN

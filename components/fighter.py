@@ -45,7 +45,8 @@ class Fighter:
 			return 0, 0, "crushing"
 		else:
 			dice, modifier = self.owner.equipment.main_hand.missile_weapon.missile_damage
-			modifier += self.owner.equipment.missile_damage_bonus
+			# TODO: Sort this missile damage stuff out once and for all
+			#modifier += self.owner.equipment.missile_damage_bonus
 			damage_type = self.owner.equipment.main_hand.missile_weapon.missile_damage_type
 			return (dice, modifier, damage_type)
 	

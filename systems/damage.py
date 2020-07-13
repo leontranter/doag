@@ -6,7 +6,7 @@ from loader_functions.constants import get_basic_damage
 
 def get_physical_damage_modifier_from_status_effects(entity):
 	physical_damage_modifier = 0
-	for effect in entity.effects.effect_list:
+	for effect in entity.fighter.effect_list:
 		physical_damage_modifier += effect.get("physical_damage_modifier") or 0
 	return physical_damage_modifier	
 

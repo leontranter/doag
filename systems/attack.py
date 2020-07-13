@@ -2,7 +2,7 @@ from loader_functions.constants import WeaponTypes, WeaponCategories
 
 def get_hit_modifier_from_status_effects(entity):
 	modifier = 0
-	for effect in entity.effects.effect_list:
+	for effect in entity.fighter.effect_list:
 		modifier += effect.get("hit_modifier") or 0
 	return modifier
 

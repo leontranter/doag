@@ -11,7 +11,7 @@ class Fighter:
 	def __init__(self, base_DR=0, xp=0):
 		self.base_DR = base_DR
 		self.xp = xp
-		self.effects_list = []
+		self.effect_list = []
 
 	@property
 	def DR(self):

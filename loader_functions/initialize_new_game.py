@@ -38,9 +38,8 @@ def get_game_variables(constants, start_equipped=False):
 	potion_description_links = assign_potion_descriptions(constants['potion_descriptions'], constants['potion_types'])
 	scroll_description_links = assign_scroll_descriptions(constants['scroll_descriptions'], constants['scroll_types'])
 	identified_component = Identified(potion_description_links, scroll_description_links)
-	player_effects = Effects()
 	player_name = Name("Player")
-	player = Entity(0, 0, '@', libtcod.white, blocks=True, render_order=RenderOrder.ACTOR, fighter=fighter_component, inventory=inventory_component, level=level_component, equipment=equipment_component, caster=caster_component, stats=stats_component, skills=skills_component, defender=defender_component, name=player_name, identified=identified_component, effects=player_effects)
+	player = Entity(0, 0, '@', libtcod.white, blocks=True, render_order=RenderOrder.ACTOR, fighter=fighter_component, inventory=inventory_component, level=level_component, equipment=equipment_component, caster=caster_component, stats=stats_component, skills=skills_component, defender=defender_component, name=player_name, identified=identified_component)
 	entities = [player]
 	
 	# TODO: Refactor this to a function!!! No excuses!!!

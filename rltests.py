@@ -223,7 +223,7 @@ class AttackTests(unittest.TestCase):
 		test_char = mocks.create_mockchar_3()
 		weapon = test_char.equipment.main_hand.melee_weapon
 		skill_num = get_weapon_skill_for_attack(test_char, weapon)
-		self.assertEqual(skill_num, 12)
+		self.assertEqual(skill_num, 10)
 
 	def test_can_get_equipment_attack_bonus(self):
 		test_equipment = Equipment()
@@ -242,11 +242,11 @@ class DefenderTests(unittest.TestCase):
 
 	def test_can_get_correct_parry(self):
 		test_char = mocks.create_mockchar_3()
-		self.assertEqual(test_char.defender.get_parry(), 6)
+		self.assertEqual(test_char.defender.get_parry(), 5)
 
 	def test_can_get_correct_block(self):
 		test_char = mocks.create_mockchar_5()
-		self.assertEqual(test_char.defender.get_block(), 6)
+		self.assertEqual(test_char.defender.get_block(), 5)
 
 	def test_can_get_correct_evade(self):
 		test_char = mocks.create_mockchar_2()
@@ -261,7 +261,7 @@ class DefenderTests(unittest.TestCase):
 		test_char = mocks.create_mockchar_3()
 		results = test_char.defender.get_best_melee_defense()
 		self.assertEqual(results[0], "parry")
-		self.assertEqual(results[1], 6)
+		self.assertEqual(results[1], 5)
 
 	#def test_defender_can_choose_best_melee_defense_with_shield_and_low_shield_skill(self):
 	#	test_char = mocks.create_mockchar_5()
@@ -272,9 +272,9 @@ class DefenderTests(unittest.TestCase):
 	def test_defender_can_choose_best_melee_defense_with_shield_and_high_shield_skill(self):
 		test_char = mocks.create_mockchar_6()
 		results = test_char.defender.get_best_melee_defense()
-		self.assertEqual(test_char.skills.get_skill_check(SkillNames.SHIELD), 12)
+		self.assertEqual(test_char.skills.get_skill_check(SkillNames.SHIELD), 10)
 		self.assertEqual(results[0], "block")
-		self.assertEqual(results[1], 6)
+		self.assertEqual(results[1], 5)
 
 	def test_defender_can_choose_best_missile_defense(self):
 		test_char = mocks.create_mockchar_1()
@@ -288,10 +288,10 @@ class DefenderTests(unittest.TestCase):
 		self.assertNotEqual(results[0], "parry")
 
 	def test_defender_can_choose_best_missile_defense_with_shield(self):
-		test_char = mocks.create_mockchar_5()
+		test_char = mocks.create_mockchar_11()
 		results = test_char.defender.get_best_missile_defense()
 		self.assertEqual(results[0], "block")
-		self.assertEqual(results[1], 6)
+		self.assertEqual(results[1], 7)
 
 
 class DeathDropTests(unittest.TestCase):

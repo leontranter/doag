@@ -100,13 +100,6 @@ class EquippableFactory:
 		arrows_entity = Entity(x, y, ')', libtcod.flame, equippable=arrows_equippable, name=arrows_name, item=arrows_item)
 		return arrows_entity
 
-	def make_steel_arrows(x=1, y=1, quantity=1):
-		arrows_equippable = Equippable(EquipmentSlots.AMMUNITION, missile_damage_bonus=2, quantity=quantity)
-		steel_arrows_name = Name("Steel Arrows")
-		steel_arrows_item = Item(1, number)
-		arrows_entity = Entity(x, y, ')', libtcod.flame, equippable=arrows_equippable, name=steel_arrows_name)
-		return arrows_entity	
-
 	def make_bolts(x=1, y=1, quantity=1):
 		arrows_equippable = Equippable(EquipmentSlots.AMMUNITION, missile_damage_bonus=1, quantity=quantity)
 		bolts_name = Name("Bolts")

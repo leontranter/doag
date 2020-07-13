@@ -1,4 +1,5 @@
 from loader_functions.constants import WeaponTypes, WeaponCategories
+from systems.skill_manager import SkillNames
 
 def get_hit_modifier_from_status_effects(entity):
 	modifier = 0
@@ -32,5 +33,5 @@ def get_weapon_skill_for_attack(attacker, weapon):
 def weapon_skill_lookup(weapon):
 	return weapon_skill_matches.get(weapon.weapon_category)
 
-weapon_skill_matches = {WeaponCategories.SWORD: "sword", WeaponCategories.BOW: "bow", WeaponCategories.CROSSBOW: "crossbow", WeaponCategories.STAFF: "staff",
-WeaponCategories.DAGGER: "dagger", WeaponCategories.AXE: "axe"}
+weapon_skill_matches = {WeaponCategories.SWORD: SkillNames.SWORD, WeaponCategories.BOW: SkillNames.BOW, WeaponCategories.CROSSBOW: SkillNames.CROSSBOW, WeaponCategories.STAFF: SkillNames.STAFF,
+WeaponCategories.DAGGER: SkillNames.DAGGER, WeaponCategories.AXE: SkillNames.AXE}

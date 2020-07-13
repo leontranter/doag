@@ -28,6 +28,7 @@ from systems.damage import get_basic_thrust_damage, get_basic_swing_damage, get_
 from systems.move_system import distance_to
 from systems.attack import get_hit_modifier_from_status_effects, get_hit_modifier_from_equipment
 from systems.spell_system import learn_spell, cast
+from systems.skill_manager import SkillNames
 from components.inventory import Inventory
 from item_functions import heal, learn_spell_from_book, make_bless_spell
 from fov_functions import initialize_fov
@@ -140,15 +141,15 @@ class SkillsTests(unittest.TestCase):
 		test_skillset = Skills()
 		test_stats = Stats()
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", stats=test_stats, skills=test_skillset)
-		test_skillset.set_skill_rank("sword", 1)
-		skill_test = test_skillset.get_skill_check("sword")
+		test_skillset.set_skill_rank(SkillNames.SWORD, 1)
+		skill_test = test_skillset.get_skill_check(SkillNames.SWORD)
 		self.assertEqual(skill_test, 10)
 	
 	def test_can_get_default(self):
 		test_skillset = Skills()
 		test_stats = Stats()
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", stats=test_stats, skills=test_skillset)
-		skill_test = test_skillset.get_skill_check("sword")
+		skill_test = test_skillset.get_skill_check(SkillNames.SWORD)
 		self.assertEqual(skill_test, 6)
 
 class StatsTests(unittest.TestCase):
@@ -216,7 +217,7 @@ class DamageTests(unittest.TestCase):
 class AttackTests(unittest.TestCase):
 	def test_can_lookup_weapon_skill(self):
 		test_weapon = EquippableFactory.make_longsword()
-		self.assertEqual(weapon_skill_lookup(test_weapon.melee_weapon), "sword")
+		self.assertEqual(weapon_skill_lookup(test_weapon.melee_weapon), SkillNames.SWORD)
 
 	def test_can_lookup_correct_weapon_skill(self):
 		test_char = mocks.create_mockchar_3()
@@ -271,7 +272,7 @@ class DefenderTests(unittest.TestCase):
 	def test_defender_can_choose_best_melee_defense_with_shield_and_high_shield_skill(self):
 		test_char = mocks.create_mockchar_6()
 		results = test_char.defender.get_best_melee_defense()
-		self.assertEqual(test_char.skills.get_skill_check("shield"), 12)
+		self.assertEqual(test_char.skills.get_skill_check(SkillNames.SHIELD), 12)
 		self.assertEqual(results[0], "block")
 		self.assertEqual(results[1], 6)
 

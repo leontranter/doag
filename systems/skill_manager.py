@@ -1,3 +1,17 @@
+from enum import Enum, auto
+
+class SkillNames(Enum):
+	SWORD = auto()
+	SHIELD = auto()
+	DAGGER = auto()
+	AXE = auto()
+	MACE = auto()
+	STAFF = auto()
+	BOW = auto()
+	CROSSBOW = auto()
+	ALCHEMY = auto()
+	HOLY = auto()
+
 def get_strength(entity):
 	if entity.stats:
 		return entity.stats.Strength
@@ -44,10 +58,14 @@ def get_endurance(entity):
 # the key is the skill name, value is a tuple containing the base skill lookup function, and the default penalty if you don't have the skill at rank 1
 
 skill_check_lookups = {
-	'sword': (get_agility, 4),
-	'shield': (get_agility, 3),
-	'dagger': (get_agility, 2),
-	'bow': (get_precision, 4),
-	'alchemy': (get_intellect, 8),
-	'holy': (get_willpower, 8)
+	SkillNames.SWORD: (get_agility, 4),
+	SkillNames.SHIELD: (get_agility, 3),
+	SkillNames.DAGGER: (get_agility, 2),
+	SkillNames.BOW: (get_precision, 4),
+	SkillNames.CROSSBOW: (get_precision, 3),
+	SkillNames.AXE: (get_precision, 4),
+	SkillNames.STAFF: (get_agility, 4),
+	SkillNames.ALCHEMY: (get_intellect, 8),
+	SkillNames.HOLY: (get_willpower, 8)
 }
+

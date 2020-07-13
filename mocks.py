@@ -10,6 +10,7 @@ from components.name import Name
 from components.identified import Identified
 from components.inventory import Inventory
 from entity import Entity
+from systems.skill_manager import SkillNames
 
 def create_mockchar_1():
 	# basic stats, no skills or equipment, can identify stuff
@@ -29,8 +30,8 @@ def create_mockchar_2():
 	test_equipment_component = Equipment()
 	test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)
 	test_entity = Entity(1, 1, 'A', libtcod.white, "Player", skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component, defender=test_defender_component)	
-	test_skills_component.set_skill_rank("sword", 1)
-	test_skills_component.set_skill_rank("shield", 12)
+	test_skills_component.set_skill_rank(SkillNames.SWORD, 1)
+	test_skills_component.set_skill_rank(SkillNames.SHIELD, 12)
 	return test_entity
 
 def create_mockchar_3():
@@ -42,7 +43,7 @@ def create_mockchar_3():
 	test_equipment_component.main_hand = test_item_entity	
 	test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)
 	test_entity = Entity(1, 1, 'A', libtcod.white, "Player", skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component, defender=test_defender_component)	
-	test_skills_component.set_skill_rank("sword", 14)
+	test_skills_component.set_skill_rank(SkillNames.SWORD, 14)
 	return test_entity
 
 def create_mockchar_4():
@@ -55,7 +56,7 @@ def create_mockchar_4():
 	test_equipment_component.main_hand = test_sword	
 	test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)
 	test_entity = Entity(1, 1, 'A', libtcod.white, "Player", skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component, defender=test_defender_component)	
-	test_skills_component.set_skill_rank("sword", 14)
+	test_skills_component.set_skill_rank(SkillNames.SWORD, 14)
 	return test_entity
 
 def create_mockchar_5():
@@ -69,8 +70,8 @@ def create_mockchar_5():
 	test_equipment_component.off_hand = test_shield	
 	test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)
 	test_entity = Entity(1, 1, 'A', libtcod.white, "Player", skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component, defender=test_defender_component)	
-	test_skills_component.set_skill_rank("sword", 1)
-	test_skills_component.set_skill_rank("shield", 1)
+	test_skills_component.set_skill_rank(SkillNames.SWORD, 1)
+	test_skills_component.set_skill_rank(SkillNames.SHIELD, 1)
 	return test_entity	
 
 def create_mockchar_6():
@@ -84,8 +85,8 @@ def create_mockchar_6():
 	test_equipment_component.off_hand = test_shield
 	test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)
 	test_entity = Entity(1, 1, 'A', libtcod.white, "Player", skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component, defender=test_defender_component)	
-	test_skills_component.set_skill_rank("sword", 1)
-	test_skills_component.set_skill_rank("shield", 1)
+	test_skills_component.set_skill_rank(SkillNames.SWORD, 1)
+	test_skills_component.set_skill_rank(SkillNames.SHIELD, 1)
 	return test_entity
 
 def create_mockchar_7():
@@ -98,8 +99,8 @@ def create_mockchar_7():
 	test_equipment_component.main_hand = test_sword
 	test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)
 	test_entity = Entity(1, 1, 'A', libtcod.white, "Player", skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component, defender=test_defender_component)	
-	test_skills_component.set_skill_rank("sword", 14)
-	test_skills_component.set_skill_rank("shield", 16)
+	test_skills_component.set_skill_rank(SkillNames.SWORD, 14)
+	test_skills_component.set_skill_rank(SkillNames.SHIELD, 16)
 	return test_entity
 
 def create_mockchar_8():
@@ -113,7 +114,7 @@ def create_mockchar_8():
 	test_equipment_component.off_hand = test_shield	
 	test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)
 	test_entity = Entity(1, 1, 'A', libtcod.white, "Player", skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component, defender=test_defender_component)	
-	test_skills_component.set_skill_rank("sword", 14)
+	test_skills_component.set_skill_rank(SkillNames.SWORD, 14)
 	return test_entity
 
 def create_mockchar_9():

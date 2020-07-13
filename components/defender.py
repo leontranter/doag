@@ -1,6 +1,7 @@
 from components.fighter import Fighter
 from systems.attack import weapon_skill_lookup
 from random_utils import dice_roll
+from systems.skill_manager import SkillNames
 
 class Defender:
 	def __init__(self):
@@ -31,7 +32,7 @@ class Defender:
 
 	def get_block(self):
 		if self.owner.equipment.off_hand and self.owner.equipment.off_hand.equippable.isShield:
-			shield_skill_num = self.owner.skills.get_skill_check("shield")
+			shield_skill_num = self.owner.skills.get_skill_check(SkillNames.SHIELD)
 			return int(shield_skill_num / 2)
 		else:
 			return 0

@@ -21,7 +21,7 @@ def cast(entity, spell, **kwargs):
 		else:
 			kwargs = {**spell.function_kwargs, **kwargs}
 			entity.caster.mana -= spell.mana_cost
-			spell_cast_results = spell.use_function(self.owner, **kwargs)
+			spell_cast_results = spell.use_function(entity, **kwargs)
 
 			results.extend(spell_cast_results)
 			results.append({'cast': spell.name})

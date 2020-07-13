@@ -3,7 +3,7 @@ from loader_functions.constants import WeaponTypes, WeaponCategories
 def get_hit_modifier_from_status_effects(entity):
 	modifier = 0
 	for effect in entity.effects.effect_list:
-		modifier += effect.get("hit_bonus") or 0
+		modifier += effect.get("hit_modifier") or 0
 	return modifier
 
 def get_hit_modifier_from_equipment(entity):
@@ -23,7 +23,6 @@ def get_weapon_skill_for_attack(attacker, weapon):
 	if attacker.skills:
 		weapon_skill = weapon_skill_lookup(weapon)
 		weapon_skill_num = attacker.skills.get_skill_check(weapon_skill)
-		print(f"weapon skill num is {weapon_skill_num}")
 		return weapon_skill_num
 	elif attacker.stats:
 		return attacker.stats.DX - 5

@@ -1,18 +1,20 @@
 def add_effect(effect, entity):
 		# If there is already the same effect on the target, don't add a new one, just increase the duration on the current one - makes life much easier
-	for current_effect in entity.effects.effect_list:
-		if current_effect.get("name") == effect.get("name"):
-			if current_effect.get("turns_left") and effect.get("turns_left"):
-				current_effect["turns_left"] += effect["turns_left"]
-				return "extended"
-	else:
-		entity.effects.effect_list.append(effect)
-		return "appended"
+	if entity.effects:
+		for current_effect in entity.effects.effect_list:
+			if current_effect.get("name") == effect.get("name"):
+				if current_effect.get("turns_left") and effect.get("turns_left"):
+					current_effect["turns_left"] += effect["turns_left"]
+					return "extended"
+		else:
+			entity.effects.effect_list.append(effect)
+			return "appended"
 
 def get_effects_names(entity):
 	list_of_effects = []
 	for effect in entity.effects.effect_list:
 		list_of_effects.append(effect.get("name"))
+	return list_of_effects
 
 def process_damage_over_time(entity):
 	results = []

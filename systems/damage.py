@@ -5,10 +5,10 @@ from game_messages import Message
 from loader_functions.constants import get_basic_damage
 
 def get_physical_damage_modifier_from_status_effects(entity):
-	modifier = 0
+	physical_damage_modifier = 0
 	for effect in entity.effects.effect_list:
-		modifier += effect.get("physical_damage_modifier")
-	return modifier	
+		physical_damage_modifier += effect.get("physical_damage_modifier") or 0
+	return physical_damage_modifier	
 
 def get_physical_damage_modifier_from_equipment(entity):
 	modifier = 0
@@ -56,3 +56,8 @@ def damage_messages(results, attacker, target, base_damage, final_damage, damage
 		results.append({'message': Message(f'{attacker.name.subject_name} {verb} do enough damage to penetrate {verb2} armour.', libtcod.white)})
 
 	return results
+
+def apply_physical_damage_modifiers(modifier, entity):
+	modifier += get_physical_damage_modifier_from_status_effects(entity)
+	modifier += get_physical_damage_modifier_from_equipment(entity)
+	return modifier

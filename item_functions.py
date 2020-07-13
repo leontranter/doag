@@ -50,11 +50,10 @@ def bless(*args, **kwargs):
 	target_x = kwargs.get('target_x')
 	target_y = kwargs.get('target_y')
 	target_self = kwargs.get('target_self')
-	bonus = kwargs.get('hit_modifier')
-	bonus = kwargs.get('physical_damage_modifier')
+	bonus = kwargs.get('bonus')
 	
 	results = []
-	bless_effect = {'name': "Bless", "turns_left": 7, "hit_modifier": bonus, "damage_modifier": bonus}
+	bless_effect = {'name': "Bless", "turns_left": 7, "hit_modifier": bonus, "physical_damage_modifier": bonus}
 	for entity in entities:
 		if entity.x == target_x and entity.y == target_y and entity.fighter:
 			add_effect(bless_effect, entity)

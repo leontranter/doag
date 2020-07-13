@@ -3,7 +3,7 @@ from game_messages import Message
 from loader_functions.constants import get_basic_damage
 from random_utils import dice_roll
 from damage_types import DamageTypes, damage_type_modifiers
-from systems.damage import calculate_damage, damage_messages
+from systems.damage import calculate_damage, damage_messages, apply_physical_damage_modifiers
 from systems.attack import get_weapon_skill_for_attack
 from systems.damage import get_basic_swing_damage, get_basic_thrust_damage
 
@@ -11,6 +11,7 @@ class Fighter:
 	def __init__(self, base_DR=0, xp=0):
 		self.base_DR = base_DR
 		self.xp = xp
+		self.effects_list = []
 
 	@property
 	def DR(self):
@@ -37,7 +38,7 @@ class Fighter:
 		else:
 			dice, modifier = get_basic_thrust_damage(self.owner)
 			damage_type = self.owner.equipment.main_hand.melee_weapon.melee_damage_type
-		modifier += self.owner.equipment.physical_damage_modifier
+		modifier += apply_physical_damage_modifiers(modifier, self.owner)
 		return (dice, modifier, damage_type)
 
 	def get_current_missile_damage(self):
@@ -108,7 +109,6 @@ class Fighter:
 			skill_target = get_weapon_skill_for_attack(self.owner, self.owner.equipment.main_hand.melee_weapon)
 		elif self.owner.equipment.main_hand and self.owner.equipment.main_hand.missile_weapon:
 			skill_target = get_weapon_skill_for_attack(self.owner, self.owner.equipment.main_hand.missile_weapon)
-		print(f"skill target is {skill_target}")
 		numberRolled = dice_roll(3, 0)
 		if numberRolled <= skill_target:
 			return True

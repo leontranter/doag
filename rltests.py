@@ -21,10 +21,10 @@ from damage_types import DamageTypes
 from loader_functions.constants import get_basic_damage, WeaponTypes, WeaponCategories, get_constants
 from loader_functions.initialize_new_game import get_game_variables, assign_potion_descriptions, assign_scroll_descriptions
 from loader_functions.data_loaders import save_game, load_game
-from systems.attack import weapon_skill_lookup, get_weapon_skill_for_attack
+from systems.attack import weapon_skill_lookup, get_weapon_skill_for_attack, get_hit_modifier_from_status_effects
 from systems.effects_manager import add_effect, tick_down_effects, process_damage_over_time
 from systems.name_system import get_display_name
-from systems.damage import get_basic_thrust_damage, get_basic_swing_damage, get_physical_damage_modifier_from_status_effects, get_physical_damage_modifier_from_equipment
+from systems.damage import get_basic_thrust_damage, get_basic_swing_damage, get_physical_damage_modifier_from_status_effects, get_physical_damage_modifier_from_equipment, apply_physical_damage_modifiers
 from systems.move_system import distance_to
 from systems.attack import get_hit_modifier_from_status_effects, get_hit_modifier_from_equipment
 from systems.spell_system import learn_spell, cast
@@ -91,12 +91,17 @@ class SpellTests(unittest.TestCase):
 	def test_can_cast_bless_spell(self):
 		test_effects = Effects()
 		test_caster = Caster(spells=[], max_mana=50)
-		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", caster=test_caster, effects=test_effects)
-		learn_spell(test_entity, 'bless')
+		test_fighter = Fighter(xp=100)
+		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", caster=test_caster, effects=test_effects, fighter=test_fighter)
+		entities = []
+		entities.append(test_entity)
 		spell = make_bless_spell()
-		results = cast(test_entity, spell)
+		results = cast(test_entity, spell, target_x=1, target_y=1, entities=entities)
 		self.assertTrue(len(results), 1)
-		self.assertTrue(len(test_effects.effect_list), 1)
+		self.assertEqual(len(test_effects.effect_list), 1)
+		self.assertEqual(test_effects.effect_list[0].get("name"), "Bless")
+		self.assertEqual(get_hit_modifier_from_status_effects(test_entity), 100)
+		self.assertEqual(get_physical_damage_modifier_from_status_effects(test_entity), 100)
 
 
 class EquipmentTests(unittest.TestCase):
@@ -196,6 +201,17 @@ class DamageTests(unittest.TestCase):
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", caster=test_caster)
 		learn_spell(test_entity, 'bless')
 
+	def test_can_apply_damage_modifiers(self):
+		test_equipment = Equipment()
+		padded_armor_equippable = Equippable(EquipmentSlots.BODY, DR_bonus=1, physical_damage_modifier=2)
+		padded_armor_name = Name("Padded Armor")
+		test_effects = Effects()
+		padded_armor_entity = entity.Entity(1, 1, ')', libtcod.purple, equippable=padded_armor_equippable, name=padded_armor_name)
+		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", equipment=test_equipment, effects=test_effects)
+		test_equipment.body = padded_armor_entity
+		modifier = 0
+		modifier += apply_physical_damage_modifiers(modifier, test_entity)
+		self.assertEqual(modifier, 2)
 
 class AttackTests(unittest.TestCase):
 	def test_can_lookup_weapon_skill(self):
@@ -593,7 +609,7 @@ class EffectsTests(unittest.TestCase):
 		test_effect = {'name': "Poison", 'turns_left': 5, 'damage_per_turn': 3}
 		add_effect(test_effect, test_entity)
 		self.assertEqual(get_hit_modifier_from_status_effects(test_entity), 0)
-		test_effect2 = {'name': "Bless", 'turns_left': 5, 'hit_bonus': 3}
+		test_effect2 = {'name': "Bless", 'turns_left': 5, 'hit_modifier': 3}
 		add_effect(test_effect2, test_entity)
 		self.assertEqual(get_hit_modifier_from_status_effects(test_entity), 3)
 

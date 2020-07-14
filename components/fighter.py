@@ -5,7 +5,7 @@ from random_utils import dice_roll
 from damage_types import DamageTypes, damage_type_modifiers
 from systems.damage import calculate_damage, damage_messages, apply_physical_damage_modifiers
 from systems.attack import get_weapon_skill_for_attack
-from systems.damage import get_basic_swing_damage, get_basic_thrust_damage
+from systems.damage import get_basic_swing_damage, get_basic_thrust_damage, get_current_melee_damage
 
 class Fighter:
 	def __init__(self, base_DR=0, xp=0):
@@ -20,26 +20,6 @@ class Fighter:
 		else:
 			bonus = 0
 		return self.base_DR + bonus	
-
-	def get_current_melee_damage(self):
-		# TODO: Fix this! Implement punching and kicking properly
-		# nothing in main hand
-		if not self.owner.equipment.main_hand:
-			dice, modifier = get_basic_thrust_damage(self.owner)
-			damage_type = DamageTypes.CRUSHING
-		# something in main hand but it's not a melee weapon, e.g. a bow
-		elif self.owner.equipment.main_hand and not self.owner.equipment.main_hand.melee_weapon:
-			dice, modifier = self.get_basic_thrust_damage(self.owner)
-			modifier += 1
-			damage_type = DamageTypes.CRUSHING
-		elif self.owner.equipment.main_hand.melee_weapon.melee_attack_type == "swing":
-			dice, modifier = get_basic_swing_damage(self.owner)
-			damage_type = self.owner.equipment.main_hand.melee_weapon.melee_damage_type
-		else:
-			dice, modifier = get_basic_thrust_damage(self.owner)
-			damage_type = self.owner.equipment.main_hand.melee_weapon.melee_damage_type
-		modifier += apply_physical_damage_modifiers(modifier, self.owner)
-		return (dice, modifier, damage_type)
 
 	def get_current_missile_damage(self):
 		if not self.owner.equipment.main_hand.missile_weapon:
@@ -72,7 +52,7 @@ class Fighter:
 			defense_result, defense_choice = target.defender.defend_melee_attack()
 			if not defense_result:
 				results.append(self.hit_message(target, defense_choice))
-				dice, modifier, damage_type = self.get_current_melee_damage()
+				dice, modifier, damage_type = get_current_melee_damage()
 				results = self.resolve_hit(results, dice, modifier, damage_type, target)
 			else:
 				verb = "hit" if self.owner.name.true_name == "Player" else "hits"

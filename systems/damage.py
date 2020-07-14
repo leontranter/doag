@@ -4,6 +4,26 @@ from damage_types import DamageTypes, damage_type_modifiers
 from game_messages import Message
 from loader_functions.constants import get_basic_damage
 
+def get_current_melee_damage(entity):
+	# TODO: Fix this! Implement punching and kicking properly
+	# nothing in main hand
+	if not entity.equipment.main_hand:
+		dice, modifier = get_basic_thrust_damage(entity)
+		damage_type = DamageTypes.CRUSHING
+	# something in main hand but it's not a melee weapon, e.g. a bow
+	elif entity.equipment.main_hand and not entity.equipment.main_hand.melee_weapon:
+		dice, modifier = get_basic_thrust_damage(entity)
+		modifier += 1
+		damage_type = DamageTypes.CRUSHING
+	elif entity.equipment.main_hand.melee_weapon.melee_attack_type == "swing":
+		dice, modifier = get_basic_swing_damage(entity)
+		damage_type = entity.equipment.main_hand.melee_weapon.melee_damage_type
+	else:
+		dice, modifier = get_basic_thrust_damage(entity)
+		damage_type = entity.equipment.main_hand.melee_weapon.melee_damage_type
+	modifier += apply_physical_damage_modifiers(modifier, entity)
+	return (dice, modifier, damage_type)
+
 def get_physical_damage_modifier_from_status_effects(entity):
 	physical_damage_modifier = 0
 	for effect in entity.fighter.effect_list:
@@ -61,3 +81,16 @@ def apply_physical_damage_modifiers(modifier, entity):
 	modifier += get_physical_damage_modifier_from_status_effects(entity)
 	modifier += get_physical_damage_modifier_from_equipment(entity)
 	return modifier
+
+def get_damage_string(entity):
+	if entity.fighter:
+		dice, modifier, damage_type = get_current_melee_damage(entity)
+		if modifier < 0:
+			damage_string = "{}d6 {} {}".format(dice, modifier, damage_type)
+		elif modifier == 0:
+			damage_string = "{}d6 {}".format(dice, damage_type)
+		else:
+			damage_string = "{}d6 +{} {}".format(dice, modifier, damage_type)
+	else:
+		damage_string = ""
+	return damage_string

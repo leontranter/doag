@@ -53,8 +53,6 @@ class Defender:
 			if value == max_defense:
 				defense_choice = key
 				# no point looking further, just grab the first one that has the highest score
-				# there may be reasons why you would want to prioritise one over another if they have the same score
-				# TODO: maybe a better way to break ties? i.e. favour evade over block or parry, if I implement parrying weapons or shields breaking?
 				break
 		return (defense_choice, max_defense)
 

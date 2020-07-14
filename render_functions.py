@@ -109,7 +109,7 @@ def clear_entity(con, entity):
 
 def append_effects(panel, player, starting_y):
 	current_y = starting_y
-	for effect in player.effects.effect_list:
+	for effect in player.fighter.effect_list:
 		libtcod.console_print_ex(panel, 1, current_y, libtcod.BKGND_NONE, libtcod.LEFT, effect.get("name"))
 		current_y += 1
 		if current_y - starting_y == 5:

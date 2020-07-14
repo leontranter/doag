@@ -24,11 +24,11 @@ from loader_functions.data_loaders import save_game, load_game
 from systems.attack import weapon_skill_lookup, get_weapon_skill_for_attack, get_hit_modifier_from_status_effects
 from systems.effects_manager import add_effect, tick_down_effects, process_damage_over_time
 from systems.name_system import get_display_name
-from systems.damage import get_basic_thrust_damage, get_basic_swing_damage, get_physical_damage_modifier_from_status_effects, get_physical_damage_modifier_from_equipment, apply_physical_damage_modifiers
-from systems.move_system import distance_to
+from systems.damage import get_basic_thrust_damage, get_basic_swing_damage, get_physical_damage_modifier_from_status_effects, get_physical_damage_modifier_from_equipment, apply_physical_damage_modifiers, get_damage_string
 from systems.attack import get_hit_modifier_from_status_effects, get_hit_modifier_from_equipment
 from systems.spell_system import learn_spell, cast
 from systems.skill_manager import SkillNames
+from systems.move_system import distance_to
 from components.inventory import Inventory
 from item_functions import heal, learn_spell_from_book, make_bless_spell
 from fov_functions import initialize_fov
@@ -213,6 +213,13 @@ class DamageTests(unittest.TestCase):
 		modifier = 0
 		modifier += apply_physical_damage_modifiers(modifier, test_entity)
 		self.assertEqual(modifier, 2)
+
+	def test_can_get_damage_string(self):
+		test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)
+		test_fighter_component = Fighter(xp=10)
+		test_equipment = Equipment()
+		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", stats=test_stats_component, fighter=test_fighter_component, equipment=test_equipment)
+		self.assertTrue("d6" in get_damage_string(test_entity))
 
 class AttackTests(unittest.TestCase):
 	def test_can_lookup_weapon_skill(self):

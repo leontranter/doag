@@ -98,13 +98,7 @@ def level_up_menu(con, header, player, menu_width, screen_width, screen_height):
 def character_screen(player, character_screen_width, character_screen_height, screen_width, screen_height):
 	window = libtcod.console_new(character_screen_width, character_screen_height)
 	libtcod.console_set_default_foreground(window, libtcod.white)
-	dice, modifier, damage_type = player.fighter.get_current_melee_damage()
-	if modifier < 0:
-		damage_string = "{}d6 {} {}".format(dice, modifier, damage_type)
-	elif modifier == 0:
-		damage_string = "{}d6 {}".format(dice, damage_type)
-	else:
-		damage_string = "{}d6 +{} {}".format(dice, modifier, damage_type)
+	damage_string = get_damage_string(player)
 
 	libtcod.console_print_rect_ex(window, 0, 1, character_screen_width, character_screen_height, libtcod.BKGND_NONE, libtcod.LEFT, 'Character Information')
 	libtcod.console_print_rect_ex(window, 0, 2, character_screen_width, character_screen_height, libtcod.BKGND_NONE, libtcod.LEFT, 'Level: {0}'.format(player.level.current_level))

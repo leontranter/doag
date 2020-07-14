@@ -241,6 +241,12 @@ class AttackTests(unittest.TestCase):
 		test_equipment.body = padded_armor_entity
 		self.assertEqual(get_hit_modifier_from_equipment(test_entity), 2)
 
+	def test_can_perform_melee_attack(self):
+		test_char = mocks.create_mockchar_3()
+		test_enemy = mocks.create_mockchar_3()
+		results = test_char.fighter.melee_attack(test_enemy)
+		self.assertNotEqual(len(results), 0)
+
 class DefenderTests(unittest.TestCase):
 	def test_can_create_defender(self):
 		test_defender_component = Defender()

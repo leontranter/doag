@@ -21,6 +21,7 @@ class Fighter:
 			bonus = 0
 		return self.base_DR + bonus	
 
+	# TODO: move this to systems.damage!
 	def get_current_missile_damage(self):
 		if not self.owner.equipment.main_hand.missile_weapon:
 			return 0, 0, "crushing"
@@ -45,7 +46,7 @@ class Fighter:
 			results.append({'dead': self.owner, 'xp': self.xp})
 		return results
 
-	# TODO: clean this up - most of these two functions can be merged
+	# TODO: clean this up - most of these two functions can be merged - and moved to attack system?
 	def melee_attack(self, target):
 		results = []
 		if self.check_hit(target):
@@ -84,7 +85,7 @@ class Fighter:
 		return results
 
 	def check_hit(self, target):
-		# TODO: Fix this!
+		# TODO: add hit modifiers
 		if self.owner.equipment.main_hand and self.owner.equipment.main_hand.melee_weapon:
 			skill_target = get_weapon_skill_for_attack(self.owner, self.owner.equipment.main_hand.melee_weapon)
 		elif self.owner.equipment.main_hand and self.owner.equipment.main_hand.missile_weapon:

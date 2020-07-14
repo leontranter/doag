@@ -3,6 +3,7 @@ import components.equipment
 from menu_options import MenuOption
 from systems.name_system import get_display_name
 from components.consumable import get_carried_potions
+from systems.damage import get_damage_string
 
 #TODO: clean up these parameters - inventory and player probably not needed
 

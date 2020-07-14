@@ -9,7 +9,6 @@ def get_hit_modifier_from_status_effects(entity):
 
 def get_hit_modifier_from_equipment(entity):
 	modifier = 0
-	# TODO: could refactor this into iterating through a list??
 	if entity.equipment.main_hand:
 		modifier += entity.equipment.main_hand.equippable.hit_modifier or 0	
 	if entity.equipment.off_hand:
@@ -31,7 +30,7 @@ def get_weapon_skill_for_attack(attacker, weapon):
 		return 5
 
 def weapon_skill_lookup(weapon):
-	return weapon_skill_matches.get(weapon.weapon_category)
+	return weapon_skill_matches.get(weapon.melee_weapon.weapon_category)
 
 weapon_skill_matches = {WeaponCategories.SWORD: SkillNames.SWORD, WeaponCategories.BOW: SkillNames.BOW, WeaponCategories.CROSSBOW: SkillNames.CROSSBOW, WeaponCategories.STAFF: SkillNames.STAFF,
 WeaponCategories.DAGGER: SkillNames.DAGGER, WeaponCategories.AXE: SkillNames.AXE}

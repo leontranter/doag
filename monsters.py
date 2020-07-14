@@ -12,7 +12,7 @@ from components.skills import Skills
 from components.defender import Defender
 from components.name import Name
 from components.effects import Effects
-
+from systems.skill_manager import SkillNames
 
 def getMonsterByDungeonLevel(level):
 	pass
@@ -26,8 +26,8 @@ def makeOrc(x, y):
 	defender_component = Defender()
 	effects_component = Effects()
 	skill_component = Skills()
-	skill_component.set_skill_rank("sword", 10)
-	skill_component.set_skill_rank("dagger", 12)
+	skill_component.set_skill_rank(SkillNames.SWORD, 1)
+	skill_component.set_skill_rank(SkillNames.DAGGER, 1)
 	orc_name = Name("Orc")
 	monster = Entity(x, y, 'o', libtcod.desaturated_green, blocks=True, render_order=RenderOrder.ACTOR, fighter = fighter_component, inventory=inventory_component, ai=ai_component,
 		equipment=equipment_component, stats=stats_component, skills=skill_component, defender=defender_component, name=orc_name)
@@ -41,15 +41,15 @@ def makeOrc(x, y):
 
 def makeTroll(x, y):
 	fighter_component = Fighter(xp=100)
-	stats_component = Stats(Strength=11, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)
+	stats_component = Stats(Strength=12, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)
 	ai_component = BasicMonster()
 	equipment_component = Equipment()
 	inventory_component = Inventory(26)
 	defender_component = Defender()
 	effects_component = Effects()
 	skill_component = Skills()
-	skill_component.set_skill_rank("sword", 13)
-	skill_component.set_skill_rank("dagger", 12)
+	skill_component.set_skill_rank(SkillNames.SWORD, 1)
+	skill_component.set_skill_rank(SkillNames.DAGGER, 1)
 	troll_name = Name("Troll")
 	monster = Entity(x, y, 't', libtcod.darker_green, "Troll", blocks=True, render_order=RenderOrder.ACTOR, fighter = fighter_component, inventory=inventory_component, ai=ai_component,
 		equipment=equipment_component, stats=stats_component, skills=skill_component, defender=defender_component, name=troll_name)
@@ -67,9 +67,9 @@ def makeKobold(x, y):
 	defender_component = Defender()
 	effects_component = Effects()
 	skill_component = Skills()
-	skill_component.set_skill_rank("sword", 10)
-	skill_component.set_skill_rank("dagger", 10)
-	skill_component.set_skill_rank("bow", 10)
+	skill_component.set_skill_rank(SkillNames.SWORD, 1)
+	skill_component.set_skill_rank(SkillNames.DAGGER, 1)
+	skill_component.set_skill_rank(SkillNames.BOW, 1)
 	kobold_name = Name("Kobold")
 	monster = Entity(x, y, 'k', libtcod.blue, blocks=True, render_order=RenderOrder.ACTOR, fighter=fighter_component, inventory=inventory_component, ai=ai_component,
 		equipment=equipment_component, stats=stats_component, skills=skill_component, defender=defender_component, name=kobold_name)

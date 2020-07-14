@@ -53,7 +53,7 @@ class Fighter:
 			defense_result, defense_choice = target.defender.defend_melee_attack()
 			if not defense_result:
 				results.append(self.hit_message(target, defense_choice))
-				dice, modifier, damage_type = get_current_melee_damage()
+				dice, modifier, damage_type = get_current_melee_damage(self.owner)
 				results = self.resolve_hit(results, dice, modifier, damage_type, target)
 			else:
 				verb = "hit" if self.owner.name.true_name == "Player" else "hits"
@@ -87,9 +87,9 @@ class Fighter:
 	def check_hit(self, target):
 		# TODO: add hit modifiers
 		if self.owner.equipment.main_hand and self.owner.equipment.main_hand.melee_weapon:
-			skill_target = get_weapon_skill_for_attack(self.owner, self.owner.equipment.main_hand.melee_weapon)
+			skill_target = get_weapon_skill_for_attack(self.owner, self.owner.equipment.main_hand)
 		elif self.owner.equipment.main_hand and self.owner.equipment.main_hand.missile_weapon:
-			skill_target = get_weapon_skill_for_attack(self.owner, self.owner.equipment.main_hand.missile_weapon)
+			skill_target = get_weapon_skill_for_attack(self.owner, self.owner.equipment.main_hand)
 		numberRolled = dice_roll(3, 0)
 		if numberRolled <= skill_target:
 			return True

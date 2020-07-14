@@ -23,7 +23,7 @@ class Defender:
 
 	def get_parry(self):
 		if self.owner.equipment.main_hand and self.owner.equipment.main_hand.melee_weapon:
-			weapon_skill = weapon_skill_lookup(self.owner.equipment.main_hand.melee_weapon)
+			weapon_skill = weapon_skill_lookup(self.owner.equipment.main_hand)
 			weapon_skill_num = self.owner.skills.get_skill_check(weapon_skill)
 			parry_num = int(weapon_skill_num /2)
 			return parry_num

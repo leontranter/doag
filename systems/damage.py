@@ -85,6 +85,7 @@ def apply_physical_damage_modifiers(modifier, entity):
 def get_damage_string(entity):
 	if entity.fighter:
 		dice, modifier, damage_type = get_current_melee_damage(entity)
+		damage_type = damage_type.name.capitalize()
 		if modifier < 0:
 			damage_string = "{}d6 {} {}".format(dice, modifier, damage_type)
 		elif modifier == 0:

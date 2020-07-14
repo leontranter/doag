@@ -4,6 +4,7 @@ from menu_options import MenuOption
 from systems.name_system import get_display_name
 from components.consumable import get_carried_potions
 from systems.damage import get_damage_string
+from systems.attack import weapon_skill_lookup, get_weapon_skill_for_attack
 
 #TODO: clean up these parameters - inventory and player probably not needed
 
@@ -100,6 +101,8 @@ def character_screen(player, character_screen_width, character_screen_height, sc
 	window = libtcod.console_new(character_screen_width, character_screen_height)
 	libtcod.console_set_default_foreground(window, libtcod.white)
 	damage_string = get_damage_string(player)
+	weapon_string = str(weapon_skill_lookup(player.equipment.main_hand).name.lower())
+	weapon_skill_string = str(get_weapon_skill_for_attack(player, player.equipment.main_hand))
 
 	libtcod.console_print_rect_ex(window, 0, 1, character_screen_width, character_screen_height, libtcod.BKGND_NONE, libtcod.LEFT, 'Character Information')
 	libtcod.console_print_rect_ex(window, 0, 2, character_screen_width, character_screen_height, libtcod.BKGND_NONE, libtcod.LEFT, 'Level: {0}'.format(player.level.current_level))
@@ -107,7 +110,9 @@ def character_screen(player, character_screen_width, character_screen_height, sc
 	libtcod.console_print_rect_ex(window, 0, 4, character_screen_width, character_screen_height, libtcod.BKGND_NONE, libtcod.LEFT, 'Experience to Level: {0}'.format(player.level.experience_to_next_level))
 	libtcod.console_print_rect_ex(window, 0, 6, character_screen_width, character_screen_height, libtcod.BKGND_NONE, libtcod.LEFT, 'Maximum HP: {0}'.format(player.stats.max_hp))
 	libtcod.console_print_rect_ex(window, 0, 7, character_screen_width, character_screen_height, libtcod.BKGND_NONE, libtcod.LEFT, 'Melee Damage: ' + damage_string)
-	libtcod.console_print_rect_ex(window, 0, 8, character_screen_width, character_screen_height, libtcod.BKGND_NONE, libtcod.LEFT, 'Damage Resistance: {0}'.format(player.fighter.DR))
+	libtcod.console_print_rect_ex(window, 0, 8, character_screen_width, character_screen_height, libtcod.BKGND_NONE, libtcod.LEFT, 'Current weapon skill used: ' + weapon_string)
+	libtcod.console_print_rect_ex(window, 0, 9, character_screen_width, character_screen_height, libtcod.BKGND_NONE, libtcod.LEFT, 'Current weapon skill check: ' + weapon_skill_string)
+	libtcod.console_print_rect_ex(window, 0, 10, character_screen_width, character_screen_height, libtcod.BKGND_NONE, libtcod.LEFT, 'Damage Resistance: {0}'.format(player.fighter.DR))
 
 	x = screen_width // 2 - character_screen_width // 2
 	y = screen_height // 2 - character_screen_height // 2

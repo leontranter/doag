@@ -20,6 +20,7 @@ from components.effects import Effects
 from components.identified import Identified
 from random import shuffle
 from item_factory import make_healing_potion, make_poison_potion, make_fireball_book, make_confusion_scroll, make_bless_book
+from systems.skill_manager import SkillNames
 
 def get_game_variables(constants, start_equipped=False):
 	# create the player character
@@ -30,9 +31,9 @@ def get_game_variables(constants, start_equipped=False):
 	defender_component = Defender()
 	stats_component = Stats(Strength=12, Precision=11, Agility=12, Intellect=11, Willpower=11, Stamina=12, Endurance=12)
 	skills_component = Skills()
-	skills_component.set_skill_rank("sword", 1)
-	skills_component.set_skill_rank("dagger", 1)
-	skills_component.set_skill_rank("bow", 1)
+	skills_component.set_skill_rank(SkillNames.SWORD, 1)
+	skills_component.set_skill_rank(SkillNames.DAGGER, 1)
+	skills_component.set_skill_rank(SkillNames.BOW, 1)
 	# TODO: fix this max mana!
 	caster_component = Caster(max_mana=20)
 	potion_description_links = assign_potion_descriptions(constants['potion_descriptions'], constants['potion_types'])

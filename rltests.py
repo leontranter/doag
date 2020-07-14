@@ -224,11 +224,13 @@ class DamageTests(unittest.TestCase):
 class AttackTests(unittest.TestCase):
 	def test_can_lookup_weapon_skill(self):
 		test_weapon = EquippableFactory.make_longsword()
-		self.assertEqual(weapon_skill_lookup(test_weapon.melee_weapon), SkillNames.SWORD)
+		self.assertEqual(weapon_skill_lookup(test_weapon), SkillNames.SWORD)
+		test_weapon2 = EquippableFactory.make_greatsword()
+		self.assertEqual(weapon_skill_lookup(test_weapon2), SkillNames.SWORD)
 
 	def test_can_lookup_correct_weapon_skill(self):
 		test_char = mocks.create_mockchar_3()
-		weapon = test_char.equipment.main_hand.melee_weapon
+		weapon = test_char.equipment.main_hand
 		skill_num = get_weapon_skill_for_attack(test_char, weapon)
 		self.assertEqual(skill_num, 10)
 

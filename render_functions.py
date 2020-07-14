@@ -86,7 +86,7 @@ def render_all(con, panel, entities, player, game_map, fov_map, fov_recompute, m
 		level_up_menu(con, 'Level up! Choose a stat to raise:', player, 40, screen_width, screen_height)
 
 	elif game_state == GameStates.CHARACTER_SCREEN:
-		character_screen(player, 30, 10, screen_width, screen_height)
+		character_screen(player, 50, 10, screen_width, screen_height)
 
 	elif game_state == GameStates.SPELLS_SCREEN:
 		spells_menu(con, "Choose a spell to cast...", 50, screen_width, screen_height, player)

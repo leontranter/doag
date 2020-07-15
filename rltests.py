@@ -27,7 +27,7 @@ from systems.name_system import get_display_name
 from systems.damage import get_basic_thrust_damage, get_basic_swing_damage, get_physical_damage_modifier_from_status_effects, get_physical_damage_modifier_from_equipment, apply_physical_damage_modifiers, get_damage_string
 from systems.attack import get_hit_modifier_from_status_effects, get_hit_modifier_from_equipment
 from systems.spell_system import learn_spell, cast
-from systems.skill_manager import SkillNames
+from systems.skill_manager import SkillNames, get_intellect, get_willpower
 from systems.move_system import distance_to
 from components.inventory import Inventory
 from item_functions import heal, learn_spell_from_book, make_bless_spell
@@ -89,10 +89,13 @@ class SpellTests(unittest.TestCase):
 		self.assertEqual(test_caster.spells[0].name, "Heal")
 		self.assertEqual(test_caster.spells[1].name, "Fireball")
 
-	def test_can_cast_bless_spell(self):
+	def test_can_cast_bless_spell_with_high_skill(self):
 		test_caster = Caster(spells=[], max_mana=50)
 		test_fighter = Fighter(xp=100)
-		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", caster=test_caster, fighter=test_fighter)
+		test_stats = Stats()
+		test_skills = Skills()
+		test_skills.set_skill_rank(SkillNames.HOLY, 8)
+		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", caster=test_caster, fighter=test_fighter, skills=test_skills, stats=test_stats)
 		entities = []
 		entities.append(test_entity)
 		spell = make_bless_spell()
@@ -103,6 +106,18 @@ class SpellTests(unittest.TestCase):
 		self.assertEqual(get_hit_modifier_from_status_effects(test_entity), 1)
 		self.assertEqual(get_physical_damage_modifier_from_status_effects(test_entity), 1)
 
+	def test_cannot_cast_bless_spell_with_no_skill(self):
+		test_caster = Caster(spells=[], max_mana=50)
+		test_fighter = Fighter(xp=100)
+		test_stats = Stats(Strength=1, Precision=1, Agility=1, Intellect=1, Willpower=1, Stamina=1, Endurance=1)
+		test_skills = Skills()
+		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", caster=test_caster, fighter=test_fighter, skills=test_skills, stats=test_stats)
+		entities = []
+		entities.append(test_entity)
+		spell = make_bless_spell()
+		results = cast(test_entity, spell, target_x=1, target_y=1, entities=entities)
+		self.assertTrue(len(results), 1)
+		self.assertEqual(len(test_entity.fighter.effect_list), 0)
 
 class EquipmentTests(unittest.TestCase):
 	def test_can_equip_main_hand(self):

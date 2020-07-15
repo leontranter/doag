@@ -3,18 +3,19 @@ from game_messages import Message
 from components.ai import ConfusedMonster
 from systems.effects_manager import add_effect
 from systems.move_system import distance
+from systems.skill_manager import SkillNames
 from spells import Spell
 
 def make_fireball_spell():
-	spell = Spell("Fireball", 10, cast_fireball, targeting=True, targeting_message=Message('Left-click a target tile for the fireball, or right-click to cancel.', libtcod.light_cyan), damage=30, radius=3)
+	spell = Spell("Fireball", 10, SkillNames.FIRE, cast_fireball, targeting=True, targeting_message=Message('Left-click a target tile for the fireball, or right-click to cancel.', libtcod.light_cyan), damage=30, radius=3)
 	return spell
 
 def make_heal_spell():
-	spell = Spell("Heal", 5, heal, amount=10)
+	spell = Spell("Heal", 5, SkillNames.HOLY, heal, targeting=None, targeting_message=None, amount=10)
 	return spell
 
 def make_bless_spell():
-	spell = Spell("Bless", 4, bless, targeting=True, targeting_message=Message('Left-click a target to cast Bless on, or right-click to cancel.', libtcod.light_cyan), bonus=1)
+	spell = Spell("Bless", 4, SkillNames.HOLY, bless, targeting=True, targeting_message=Message('Left-click a target to cast Bless on, or right-click to cancel.', libtcod.light_cyan), bonus=1)
 	return spell
 
 def heal(*args, **kwargs):

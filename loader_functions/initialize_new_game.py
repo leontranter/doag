@@ -34,6 +34,7 @@ def get_game_variables(constants, start_equipped=False):
 	skills_component.set_skill_rank(SkillNames.SWORD, 1)
 	skills_component.set_skill_rank(SkillNames.DAGGER, 1)
 	skills_component.set_skill_rank(SkillNames.BOW, 1)
+	skills_component.set_skill_rank(SkillNames.HOLY, 1)
 	# TODO: fix this max mana!
 	caster_component = Caster(max_mana=20)
 	potion_description_links = assign_potion_descriptions(constants['potion_descriptions'], constants['potion_types'])

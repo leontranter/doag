@@ -45,31 +45,7 @@ def get_game_variables(constants, start_equipped=False):
 	
 	# TODO: Refactor this to a function!!! No excuses!!!
 	if start_equipped:
-		x, y = 1, 1
-		item = EquippableFactory.make_shortbow()
-		player.inventory.items.append(item)
-		item = EquippableFactory.make_arrows(1, 1, 10)
-		player.inventory.items.append(item)
-		item2 = EquippableFactory.make_dagger()
-		player.inventory.items.append(item2)
-		player.equipment.main_hand = item2
-		item = EquippableFactory.make_leather_armor()
-		player.inventory.items.append(item)
-		player.equipment.body = item
-		item = EquippableFactory.make_greatsword()
-		player.inventory.items.append(item)
-		item = EquippableFactory.make_shield()
-		player.inventory.items.append(item)
-		potion1 = make_poison_potion()
-		player.inventory.items.append(potion1)
-		potion2 = make_poison_potion()
-		player.inventory.items.append(potion2)
-		book = make_bless_book()
-		player.inventory.items.append(book)
-		scroll = make_confusion_scroll()
-		player.inventory.items.append(scroll)
-		scroll2 = make_confusion_scroll()
-		player.inventory.items.append(scroll2)
+		player = equip_player(player)
 
 	
 	game_map = GameMap(constants['map_width'], constants['map_height'])
@@ -116,3 +92,31 @@ def assign_scroll_descriptions(scroll_descriptions, scroll_types):
 		scroll_description_links[scroll_types[i]] = scroll_descriptions[i]
 
 	return scroll_description_links
+
+def equip_player(player):
+	x, y = 1, 1
+	item = EquippableFactory.make_shortbow()
+	player.inventory.items.append(item)
+	item = EquippableFactory.make_arrows(x, y, 10)
+	player.inventory.items.append(item)
+	item2 = EquippableFactory.make_dagger()
+	player.inventory.items.append(item2)
+	player.equipment.main_hand = item2
+	item = EquippableFactory.make_leather_armor()
+	player.inventory.items.append(item)
+	player.equipment.body = item
+	item = EquippableFactory.make_greatsword()
+	player.inventory.items.append(item)
+	item = EquippableFactory.make_shield()
+	player.inventory.items.append(item)
+	potion1 = make_poison_potion()
+	player.inventory.items.append(potion1)
+	potion2 = make_poison_potion()
+	player.inventory.items.append(potion2)
+	book = make_bless_book()
+	player.inventory.items.append(book)
+	scroll = make_confusion_scroll()
+	player.inventory.items.append(scroll)
+	scroll2 = make_confusion_scroll()
+	player.inventory.items.append(scroll2)
+	return player

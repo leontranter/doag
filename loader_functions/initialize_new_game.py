@@ -35,8 +35,7 @@ def get_game_variables(constants, start_equipped=False):
 	skills_component.set_skill_rank(SkillNames.DAGGER, 1)
 	skills_component.set_skill_rank(SkillNames.BOW, 1)
 	skills_component.set_skill_rank(SkillNames.HOLY, 1)
-	# TODO: fix this max mana!
-	caster_component = Caster(max_mana=20)
+	caster_component = Caster(max_mana=stats_component.Willpower)
 	potion_description_links = assign_potion_descriptions(constants['potion_descriptions'], constants['potion_types'])
 	scroll_description_links = assign_scroll_descriptions(constants['scroll_descriptions'], constants['scroll_types'])
 	identified_component = Identified(potion_description_links, scroll_description_links)
@@ -49,7 +48,6 @@ def get_game_variables(constants, start_equipped=False):
 		x, y = 1, 1
 		item = EquippableFactory.make_shortbow()
 		player.inventory.items.append(item)
-		#player.equipment.main_hand = item
 		item = EquippableFactory.make_arrows(1, 1, 10)
 		player.inventory.items.append(item)
 		item2 = EquippableFactory.make_dagger()

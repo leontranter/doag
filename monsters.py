@@ -29,7 +29,7 @@ def makeOrc(x, y):
 	skill_component.set_skill_rank(SkillNames.SWORD, 1)
 	skill_component.set_skill_rank(SkillNames.DAGGER, 1)
 	orc_name = Name("Orc")
-	monster = Entity(x, y, 'o', libtcod.desaturated_green, blocks=True, render_order=RenderOrder.ACTOR, fighter = fighter_component, inventory=inventory_component, ai=ai_component,
+	monster = Entity(x, y, 'o', libtcod.red, blocks=True, render_order=RenderOrder.ACTOR, fighter = fighter_component, inventory=inventory_component, ai=ai_component,
 		equipment=equipment_component, stats=stats_component, skills=skill_component, defender=defender_component, name=orc_name)
 	item = EquippableFactory.make_longsword()
 	monster.inventory.items.append(item)

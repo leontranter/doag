@@ -2,6 +2,7 @@ import tcod as libtcod
 from game_states import GameStates
 from render_functions import RenderOrder
 from game_messages import Message
+from loader_functions.tile_codes import *
 
 def kill_player(player):
 	player.char = '%'
@@ -11,7 +12,7 @@ def kill_player(player):
 def kill_monster(monster):
 	death_message = Message('{0} is dead!'.format(monster.name.true_name), libtcod.orange)
 
-	monster.char = '%'
+	monster.char = CORPSE
 	monster.color = libtcod.dark_red
 	monster.blocks = False
 	monster.fighter = None

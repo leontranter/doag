@@ -8,4 +8,4 @@ class DamageTypes(Enum):
 	ACID = 5
 	ELECTRICAL = 6
 
-damage_type_modifiers = {DamageTypes.CRUSHING: 1.0, DamageTypes.SLASHING: 1.25, DamageTypes.PIERCING: 1.5, DamageTypes.BURNING: 1.5, DamageTypes.ACID: 1.5, DamageTypes.ELECTRICAL: 1.5}
+damage_type_modifiers = {DamageTypes.CRUSHING: 1.0, DamageTypes.SLASHING: 1.5, DamageTypes.PIERCING: 1.75, DamageTypes.BURNING: 1.5, DamageTypes.ACID: 1.5, DamageTypes.ELECTRICAL: 1.5}

@@ -85,7 +85,7 @@ def main_menu(con, backgrond_image, screen_width, screen_height):
 
 	libtcod.console_set_default_foreground(0, libtcod.light_yellow)
 	libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height / 2) -4, libtcod.BKGND_NONE, libtcod.CENTER, 'TOMBS OF THE ANCIENT KINGS')
-	libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height /2), libtcod.BKGND_NONE, libtcod.CENTER, 'By Leon Tranter')
+	libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height /2) -3, libtcod.BKGND_NONE, libtcod.CENTER, 'By Leon Tranter')
 	options = build_text_menu(['Play a new game', 'Continue a game', 'Quit'])	
 	menu(con, '', options, 24, screen_width, screen_height, text_menu=True)
 

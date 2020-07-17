@@ -39,8 +39,8 @@ def make_lightning_scroll(x=1, y=1):
 def make_fireball_scroll(x=1, y=1):
 	fireball_scroll_consumable = Consumable(ConsumableTypes.SCROLL, use_function=cast_fireball, targeting=True, targeting_message=Message('Left-click a target tile for the fireball, or right-click to cancel.', libtcod.light_cyan), damage=25, radius=3)
 	fireball_scroll_name = Name(true_name="Fireball Scroll")
-	fireball_item = Item(1, 1)
-	temp_entity = Entity(x, y, '?', libtcod.red, render_order=RenderOrder.ITEM, item=fireball_scroll_component, name=fireball_scroll_name, consumable=fireball_scroll_consumable)
+	fireball_scroll_item = Item(1, 1)
+	temp_entity = Entity(x, y, '?', libtcod.red, render_order=RenderOrder.ITEM, item=fireball_scroll_item, name=fireball_scroll_name, consumable=fireball_scroll_consumable)
 	return temp_entity
 
 def make_confusion_scroll(x=1, y=1):

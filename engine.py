@@ -21,15 +21,21 @@ from systems import spell_system
 
 def main():
 	constants = get_constants()
-	libtcod.console_set_custom_font('dejavu10x10_gs_tc.png', libtcod.FONT_TYPE_GREYSCALE | libtcod.FONT_LAYOUT_TCOD)
+	#libtcod.console_set_custom_font('dejavu10x10_gs_tc.png', libtcod.FONT_TYPE_GREYSCALE | libtcod.FONT_LAYOUT_TCOD)
+	libtcod.console_set_custom_font('res/tiles.png', libtcod.FONT_TYPE_GREYSCALE | libtcod.FONT_LAYOUT_CP437, 16, 24)
 	libtcod.console_init_root(constants['screen_width'], constants['screen_height'], constants['window_title'], False)
 
 	con = libtcod.console_new(constants['screen_width'], constants['screen_height'])
 	panel = libtcod.console_new(constants['screen_width'], constants['panel_height'])
 
+	#idx = 256
+	#for y in range(16, 24):
+#		libtcod.console_map_ascii_codes_to_font(idx, 16, 0, y)
+#		idx += 16
+
 	show_main_menu = True
 	show_load_error_message = False
-	main_menu_background_image = libtcod.image_load('menu_background.png')
+	main_menu_background_image = libtcod.image_load('menu_bg.png')
 
 	key = libtcod.Key()
 	mouse = libtcod.Mouse()

@@ -30,7 +30,10 @@ def get_weapon_skill_for_attack(attacker, weapon):
 		return 5
 
 def weapon_skill_lookup(weapon):
-	return weapon_skill_matches.get(weapon.melee_weapon.weapon_category)
+	if weapon.melee_weapon:
+		return weapon_skill_matches.get(weapon.melee_weapon.weapon_category)
+	elif weapon.missile_weapon:
+		return weapon_skill_matches.get(weapon.missile_weapon.weapon_category)
 
 weapon_skill_matches = {WeaponCategories.SWORD: SkillNames.SWORD, WeaponCategories.BOW: SkillNames.BOW, WeaponCategories.CROSSBOW: SkillNames.CROSSBOW, WeaponCategories.STAFF: SkillNames.STAFF,
 WeaponCategories.DAGGER: SkillNames.DAGGER, WeaponCategories.AXE: SkillNames.AXE}

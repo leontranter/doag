@@ -6,54 +6,16 @@ from components.consumable import get_carried_potions
 from systems.damage import get_damage_string
 from systems.attack import weapon_skill_lookup, get_weapon_skill_for_attack
 
-#TODO: clean up these parameters - inventory and player probably not needed
-
-def menu(con, header, options, width, screen_width, screen_height, inventory=None, player=None, text_menu=False):
-	if len(options) > 26:
-		raise ValueError('Cannot have a menu with more than 26 options!')
-
-	# calculate total height for the header and one line per option
-	header_height = libtcod.console_get_height_rect(con, 0, 0, width, screen_height, header)
-	height = len(options) + header_height
-
-	# create an off-screen console that represent's the menu's window
-	window = libtcod.console_new(width, height)
-
-	# print the header, with autowrap
-	libtcod.console_set_default_foreground(window, libtcod.white)
-	libtcod.console_print_rect_ex(window, 0, 0, width, height, libtcod.BKGND_NONE, libtcod.LEFT, header)
-
-	#print all the options
-	y = header_height
-	letter_index = ord('a')
-	
-	for option in options:
-		if text_menu:
-			display_string = option.name
-		else:
-			display_string = get_display_name(player, option)
-		text = '(' + chr(letter_index) + ')' + display_string
-		if inventory:
-			text = mark_equipped(text, option, inventory, player)
-		libtcod.console_print_ex(window, 0, y, libtcod.BKGND_NONE, libtcod.LEFT, text)
-		y += 1
-		letter_index += 1
-
-	# blit the contents of "window" to the console
-	x = int(screen_width / 2 - width / 2)
-	y = int(screen_height / 2 - height / 2)
-	libtcod.console_blit(window, 0, 0, width, height, 0, x, y, 1.0, 0.7)
-
-
 def inventory_menu(con, header, inventory_width, screen_width, screen_height, player=None):
 	# show a menu with each item of the inventory as an option
 	if len(player.inventory.items) == 0:
-		options = [MenuOption("Your inventory is empty.")]
-	else:
-		options = player.inventory.items
+		header = "Your inventory is empty."
 	
-	inventory = player.inventory
-	menu(con, header, options, inventory_width, screen_width, screen_height, inventory, player)
+	options = []
+	for item in player.inventory.items:
+		options.append(get_display_name(player, item))
+	
+	menu(con, header, options, inventory_width, screen_width, screen_height)
 
 def spells_menu(con, header, spells_width, screen_width, screen_height, player):
 	if len(player.caster.spells) == 0:
@@ -62,14 +24,14 @@ def spells_menu(con, header, spells_width, screen_width, screen_height, player):
 	for spell in player.caster.spells:
 		options.append(spell.name)
 
-	menu2(con, header, options, spells_width, screen_width, screen_height)
+	menu(con, header, options, spells_width, screen_width, screen_height)
 
 def potion_menu(con, header, menu_width, screen_width, screen_height, player):
 	potions = get_carried_potions(player)
 	options = []
 	for potion in potions:
 		options.append(get_display_name(player, potion))
-	menu2(con, header, options, menu_width, screen_width, screen_height)
+	menu(con, header, options, menu_width, screen_width, screen_height)
 
 def equipment_menu(con, header, inventory, inventory_width, screen_width, screen_height, equipment, player=None):
 	equipped_items = equipment.get_equipped_items()
@@ -78,7 +40,7 @@ def equipment_menu(con, header, inventory, inventory_width, screen_width, screen
 	# TODO: Fix this - should calculat display name
 	options = [equipment.name.true_name for equipment in equipped_items]
 
-	menu2(con, header, options, inventory_width, screen_width, screen_height, inventory, player)
+	menu(con, header, options, inventory_width, screen_width, screen_height, inventory, player)
 
 def main_menu(con, backgrond_image, screen_width, screen_height):
 	libtcod.image_blit_2x(backgrond_image, 0, 0, 0)
@@ -86,14 +48,14 @@ def main_menu(con, backgrond_image, screen_width, screen_height):
 	libtcod.console_set_default_foreground(0, libtcod.light_yellow)
 	libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height / 2) -4, libtcod.BKGND_NONE, libtcod.CENTER, 'TOMBS OF THE ANCIENT KINGS')
 	libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height /2) -3, libtcod.BKGND_NONE, libtcod.CENTER, 'By Leon Tranter')
-	options = build_text_menu(['Play a new game', 'Continue a game', 'Quit'])	
-	menu(con, '', options, 24, screen_width, screen_height, text_menu=True)
+	options = ['Play a new game', 'Continue a game', 'Quit']	
+	menu(con, '', options, 24, screen_width, screen_height)
 
 def message_box(con, header, width, screen_width, screen_height):
-	menu(con, header, [], width, screen_width, screen_height)
+	menu2(con, header, [], width, screen_width, screen_height)
 
 def level_up_menu(con, header, player, menu_width, screen_width, screen_height):
-	options = build_text_menu(['Constitution (+20HP)', 'Strength (+1 attack)', 'Agility (+1 defense)'])
+	options = ['Constitution (+20HP)', 'Strength (+1 attack)', 'Agility (+1 defense)']
 
 	menu(con, header, options, menu_width, screen_width, screen_height)
 
@@ -133,14 +95,7 @@ def mark_equipped(text, option, inventory, player):
 		text += " in quiver, {} {} left".format(player.equipment.ammunition.equippable.quantity, ammunition_name)
 	return text
 
-def build_text_menu(optionsList):
-	returnList = []
-	for optionText in optionsList:
-		tempOption = MenuOption(optionText)
-		returnList.append(tempOption)
-	return returnList
-
-def menu2(con, header, options, width, screen_width, screen_height, inventory=None, player=None, text_menu=False):
+def menu(con, header, options, width, screen_width, screen_height):
 	if len(options) > 26:
 		raise ValueError('Cannot have a menu with more than 26 options!')
 
@@ -155,7 +110,6 @@ def menu2(con, header, options, width, screen_width, screen_height, inventory=No
 	libtcod.console_set_default_foreground(window, libtcod.white)
 	libtcod.console_print_rect_ex(window, 0, 0, width, height, libtcod.BKGND_NONE, libtcod.LEFT, header)
 
-	#print all the options
 	y = header_height
 	letter_index = ord('a')
 	

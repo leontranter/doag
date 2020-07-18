@@ -36,7 +36,7 @@ from render_functions import get_names_under_mouse
 from item_factory import make_healing_potion, make_lightning_scroll, make_fireball_scroll, make_confusion_scroll, make_fireball_book, make_heal_book, make_bless_book, make_poison_potion
 import monsters
 import mocks
-from menus import menu, build_text_menu
+from menus import menu
 import menu_options
 
 class EntityTests(unittest.TestCase):

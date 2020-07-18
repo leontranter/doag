@@ -23,30 +23,11 @@ from item_factory import make_healing_potion, make_poison_potion, make_fireball_
 from systems.skill_manager import SkillNames
 
 def get_game_variables(constants, start_equipped=False):
-	# create the player character
-	fighter_component = Fighter()
-	inventory_component = Inventory(26)
-	level_component = Level()
-	equipment_component = Equipment()
-	defender_component = Defender()
-	stats_component = Stats(Strength=12, Precision=11, Agility=12, Intellect=11, Willpower=11, Stamina=12, Endurance=12)
-	skills_component = Skills()
-	skills_component.set_skill_rank(SkillNames.SWORD, 1)
-	skills_component.set_skill_rank(SkillNames.DAGGER, 1)
-	skills_component.set_skill_rank(SkillNames.BOW, 1)
-	skills_component.set_skill_rank(SkillNames.HOLY, 1)
-	caster_component = Caster(max_mana=stats_component.Willpower)
-	potion_description_links = assign_potion_descriptions(constants['potion_descriptions'], constants['potion_types'])
-	scroll_description_links = assign_scroll_descriptions(constants['scroll_descriptions'], constants['scroll_types'])
-	identified_component = Identified(potion_description_links, scroll_description_links)
-	player_name = Name("Player")
-	player = Entity(0, 0, '@', libtcod.white, blocks=True, render_order=RenderOrder.ACTOR, fighter=fighter_component, inventory=inventory_component, level=level_component, equipment=equipment_component, caster=caster_component, stats=stats_component, skills=skills_component, defender=defender_component, name=player_name, identified=identified_component)
-	entities = [player]
-	
-	# TODO: Refactor this to a function!!! No excuses!!!
+	player = create_player(constants)
 	if start_equipped:
 		player = equip_player(player)
-
+	
+	entities = [player]
 	
 	game_map = GameMap(constants['map_width'], constants['map_height'])
 	game_map.make_map(constants['max_rooms'], constants['room_min_size'], constants['room_max_size'], constants['map_width'], constants['map_height'], player, entities)
@@ -58,13 +39,8 @@ def get_game_variables(constants, start_equipped=False):
 	player.stats.hp = player.stats.base_max_hp
 
 	# create the entities and map, save them to a Dlevel object
-	dlevel_1 = Dlevel(entities, game_map.tiles, game_map.dungeon_level, True)
-	dlevel_2 = Dlevel([], [], 2)
-	dlevel_3 = Dlevel([], [], 3)
-	dlevel_4 = Dlevel([], [], 4)
-	dlevel_5 = Dlevel([], [], 5)
-	dlevel_6 = Dlevel([], [], 6)
-	dlevels = {1: dlevel_1, 2: dlevel_2, 3: dlevel_3, 4: dlevel_4, 5: dlevel_5, 6: dlevel_6}
+	# TODO: refactor this out to a function, improve and extend it
+	dlevels = populate_dlevels(entities, game_map)
 
 	message_log = MessageLog(constants['message_x'], constants['message_width'], constants['message_height'])
 
@@ -93,6 +69,28 @@ def assign_scroll_descriptions(scroll_descriptions, scroll_types):
 
 	return scroll_description_links
 
+def create_player(constants):
+	fighter_component = Fighter()
+	inventory_component = Inventory(26)
+	level_component = Level()
+	equipment_component = Equipment()
+	defender_component = Defender()
+	stats_component = Stats(Strength=12, Precision=11, Agility=12, Intellect=11, Willpower=11, Stamina=12, Endurance=12)
+	skills_component = Skills()
+	skills_component.set_skill_rank(SkillNames.SWORD, 1)
+	skills_component.set_skill_rank(SkillNames.DAGGER, 1)
+	skills_component.set_skill_rank(SkillNames.BOW, 1)
+	skills_component.set_skill_rank(SkillNames.HOLY, 1)
+	caster_component = Caster(max_mana=stats_component.Willpower)
+	potion_description_links = assign_potion_descriptions(constants['potion_descriptions'], constants['potion_types'])
+	scroll_description_links = assign_scroll_descriptions(constants['scroll_descriptions'], constants['scroll_types'])
+	identified_component = Identified(potion_description_links, scroll_description_links)
+	player_name = Name("Player")
+	player = Entity(0, 0, '@', libtcod.white, blocks=True, render_order=RenderOrder.ACTOR, fighter=fighter_component, inventory=inventory_component, level=level_component,
+		equipment=equipment_component, caster=caster_component, stats=stats_component, skills=skills_component, defender=defender_component, name=player_name,
+		identified=identified_component)
+	return player
+
 def equip_player(player):
 	x, y = 1, 1
 	item = EquippableFactory.make_shortbow()
@@ -120,3 +118,14 @@ def equip_player(player):
 	scroll2 = make_confusion_scroll()
 	player.inventory.items.append(scroll2)
 	return player
+
+def populate_dlevels(entities, game_map):
+	dlevel_1 = Dlevel(entities, game_map.tiles, game_map.dungeon_level, True)
+	dlevel_2 = Dlevel([], [], 2)
+	dlevel_3 = Dlevel([], [], 3)
+	dlevel_4 = Dlevel([], [], 4)
+	dlevel_5 = Dlevel([], [], 5)
+	dlevel_6 = Dlevel([], [], 6)
+	dlevels = {1: dlevel_1, 2: dlevel_2, 3: dlevel_3, 4: dlevel_4, 5: dlevel_5, 6: dlevel_6}
+	
+	return dlevels

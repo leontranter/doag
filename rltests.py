@@ -19,7 +19,7 @@ from components.effects import Effects
 from components.consumable import ConsumableTypes, get_carried_potions
 from damage_types import DamageTypes
 from loader_functions.constants import get_basic_damage, WeaponTypes, WeaponCategories, get_constants
-from loader_functions.initialize_new_game import get_game_variables, assign_potion_descriptions, assign_scroll_descriptions
+from loader_functions.initialize_new_game import get_game_variables, assign_potion_descriptions, assign_scroll_descriptions, populate_dlevels
 from loader_functions.data_loaders import save_game, load_game
 from systems.attack import weapon_skill_lookup, get_weapon_skill_for_attack, get_hit_modifier_from_status_effects
 from systems.effects_manager import add_effect, tick_down_effects, process_damage_over_time
@@ -439,6 +439,13 @@ class GetGameVariablesTests(unittest.TestCase):
 		constants = get_constants()
 		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants)
 		self.assertNotEqual(dlevels, None)
+
+	def test_can_populate_dlevels(self):
+		constants = get_constants()
+		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants)
+		dlevels = populate_dlevels(entities, game_map)
+		self.assertTrue(1 in dlevels.keys())
+		self.assertTrue(6 in dlevels.keys())
 
 #class MenuTests(unittest.TestCase):
 #	def can_create_main_menu(self):

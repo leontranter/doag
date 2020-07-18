@@ -39,8 +39,8 @@ def get_game_variables(constants, start_equipped=False):
 	player.stats.hp = player.stats.base_max_hp
 
 	# create the entities and map, save them to a Dlevel object
-	# TODO: refactor this out to a function, improve and extend it
-	dlevels = populate_dlevels(entities, game_map)
+	max_dlevels = constants['max_dlevels']
+	dlevels = populate_dlevels(entities, game_map, max_dlevels)
 
 	message_log = MessageLog(constants['message_x'], constants['message_width'], constants['message_height'])
 
@@ -119,13 +119,11 @@ def equip_player(player):
 	player.inventory.items.append(scroll2)
 	return player
 
-def populate_dlevels(entities, game_map):
+def populate_dlevels(entities, game_map, max_dlevel):
+	dlevels = {}
 	dlevel_1 = Dlevel(entities, game_map.tiles, game_map.dungeon_level, True)
-	dlevel_2 = Dlevel([], [], 2)
-	dlevel_3 = Dlevel([], [], 3)
-	dlevel_4 = Dlevel([], [], 4)
-	dlevel_5 = Dlevel([], [], 5)
-	dlevel_6 = Dlevel([], [], 6)
-	dlevels = {1: dlevel_1, 2: dlevel_2, 3: dlevel_3, 4: dlevel_4, 5: dlevel_5, 6: dlevel_6}
+	dlevels[1] = dlevel_1
+	for i in range(2, max_dlevel+1):
+		dlevels[i] = Dlevel([], [], i)
 	
 	return dlevels

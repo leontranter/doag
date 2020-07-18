@@ -58,7 +58,6 @@ def get_basic_thrust_damage(entity):
 def calculate_damage(dice, modifier, damage_type, target):
 	base_damage = dice_roll(dice, modifier)
 	penetrated_damage = max(base_damage - target.fighter.DR, 0)
-	print(f"multipler = {damage_type_modifiers[damage_type]}")
 	final_damage = int(penetrated_damage * damage_type_modifiers[damage_type])
 	return base_damage, penetrated_damage, final_damage
 

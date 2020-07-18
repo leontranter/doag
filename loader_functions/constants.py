@@ -15,6 +15,8 @@ def get_constants():
 	message_width = screen_width - bar_width - 2
 	message_height = panel_height - 1
 
+	max_dlevels = 6
+
 	map_width = 80
 	map_height = 43
 
@@ -65,7 +67,8 @@ def get_constants():
 		'potion_descriptions': potion_descriptions,
 		'potion_types': potion_types,
 		'scroll_descriptions': scroll_descriptions,
-		'scroll_types': scroll_types
+		'scroll_types': scroll_types,
+		'max_dlevels': max_dlevels
 	}
 
 	return constants

@@ -443,9 +443,10 @@ class GetGameVariablesTests(unittest.TestCase):
 	def test_can_populate_dlevels(self):
 		constants = get_constants()
 		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants)
-		dlevels = populate_dlevels(entities, game_map)
+		dlevels = populate_dlevels(entities, game_map, 6)
 		self.assertTrue(1 in dlevels.keys())
 		self.assertTrue(6 in dlevels.keys())
+		self.assertTrue(7 not in dlevels.keys())
 
 #class MenuTests(unittest.TestCase):
 #	def can_create_main_menu(self):

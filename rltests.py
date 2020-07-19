@@ -29,6 +29,7 @@ from systems.attack import get_hit_modifier_from_status_effects, get_hit_modifie
 from systems.spell_system import learn_spell, cast
 from systems.skill_manager import SkillNames, get_intellect, get_willpower
 from systems.move_system import distance_to
+from systems.pickup_system import pickup_item
 from components.inventory import Inventory
 from item_functions import heal, learn_spell_from_book, make_bless_spell
 from fov_functions import initialize_fov
@@ -681,6 +682,7 @@ class MoveTests(unittest.TestCase):
 
 class TimeTests(unittest.TestCase):
 	def test_can_get_time_results(self):
+		# TODO: What is this?!
 		pass		
 
 class BookTests(unittest.TestCase):
@@ -702,6 +704,22 @@ class PotionMenuTests(unittest.TestCase):
 		test_player = entity.Entity(1, 1, 'A', libtcod.white, inventory=test_inventory)
 		potions = get_carried_potions(test_player)
 		self.assertEqual(len(potions), 2)
+
+class PickupTests(unittest.TestCase):
+	def test_can_pickup_item(self):
+		test_bow = EquippableFactory.make_shortbow()
+		test_inventory = Inventory(10)
+		test_player = entity.Entity(1, 1, 'A', libtcod.white, inventory=test_inventory)
+		entities = []
+		entities.append(test_player)
+		entities.append(test_bow)
+		player_turn_results = []
+		player_turn_results.extend(pickup_item(test_player, entities))
+		self.assertTrue('item-added') in player_turn_results[0]
+
+	def test_pickup_on_empty_does_nothing(self):
+		pass
+
 
 if __name__ == "__main__":
 	unittest.main()

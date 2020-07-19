@@ -18,6 +18,7 @@ import components.inventory
 from systems import move_system
 from systems import time_system
 from systems import spell_system
+from systems.pickup_system import pickup_item
 
 def main():
 	constants = get_constants()
@@ -120,6 +121,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 
 		if move and game_state == GameStates.PLAYERS_TURN:
 			player_turn_results, fov_recompute, game_state = move_system.attempt_move_entity(move, game_map, player, entities, game_state, player_turn_results, fov_recompute)
+			# TODO - terrible bug - turn gets processed even if move attempt is unsuccessful!!!!!!
 			player_turn_results.extend(time_system.process_entity_turn(player))
 
 		elif wait:
@@ -127,14 +129,11 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 			game_state = GameStates.ENEMY_TURN
 
 		elif pickup and game_state == GameStates.PLAYERS_TURN:
-			for entity in entities:
-				if entity.item and entity.x == player.x and entity.y == player.y:
-					pickup_results = player.inventory.add_item(entity)
-					player_turn_results.extend(pickup_results)
+			player_turn_results.extend(pickup_item(player, entities))
+			# TODO: Fix this! Potentially a lot of work
+			for result in player_turn_results:
+				if 'item-added' in result.keys():
 					player_turn_results.extend(time_system.process_entity_turn(player))
-					break
-			else:
-				message_log.add_message(Message('There is nothing here to pick up.', libtcod.yellow))
 
 		if show_inventory:
 			previous_game_state = game_state
@@ -146,10 +145,6 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 		if equipment_screen:
 			previous_game_state = game_state
 			game_state = GameStates.EQUIPMENT_SCREEN
-
-		# TODO: Fix this up
-		#if equipment_index is not None:
-		#	pass
 
 		if quaff_potion:
 			previous_game_state = game_state

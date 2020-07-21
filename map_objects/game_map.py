@@ -42,6 +42,7 @@ class GameMap:
 		return False
 
 	def make_map(self, max_rooms, room_min_size, room_max_size, map_width, map_height, player, entities, floor_direction=1):
+		print("making a new map")
 		rooms = []
 		num_rooms = 0
 

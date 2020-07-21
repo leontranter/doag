@@ -29,7 +29,7 @@ def makeOrc(x, y):
 	skill_component.set_skill_rank(SkillNames.SWORD, 1)
 	skill_component.set_skill_rank(SkillNames.DAGGER, 1)
 	orc_name = Name("Orc")
-	monster = Entity(x, y, 'o', libtcod.red, blocks=True, render_order=RenderOrder.ACTOR, fighter = fighter_component, inventory=inventory_component, ai=ai_component,
+	monster = Entity(x, y, 'o', libtcod.red, blocks=True, render_order=RenderOrder.ACTOR, fighter=fighter_component, inventory=inventory_component, ai=ai_component,
 		equipment=equipment_component, stats=stats_component, skills=skill_component, defender=defender_component, name=orc_name)
 	item = EquippableFactory.make_longsword()
 	monster.inventory.items.append(item)
@@ -51,7 +51,7 @@ def makeTroll(x, y):
 	skill_component.set_skill_rank(SkillNames.SWORD, 1)
 	skill_component.set_skill_rank(SkillNames.DAGGER, 1)
 	troll_name = Name("Troll")
-	monster = Entity(x, y, 't', libtcod.darker_green, "Troll", blocks=True, render_order=RenderOrder.ACTOR, fighter = fighter_component, inventory=inventory_component, ai=ai_component,
+	monster = Entity(x, y, 't', libtcod.darker_green, blocks=True, render_order=RenderOrder.ACTOR, fighter=fighter_component, inventory=inventory_component, ai=ai_component,
 		equipment=equipment_component, stats=stats_component, skills=skill_component, defender=defender_component, name=troll_name)
 	item = EquippableFactory.make_longsword()
 	monster.inventory.items.append(item)
@@ -71,7 +71,7 @@ def makeKobold(x, y):
 	skill_component.set_skill_rank(SkillNames.DAGGER, 1)
 	skill_component.set_skill_rank(SkillNames.BOW, 1)
 	kobold_name = Name("Kobold")
-	monster = Entity(x, y, 'k', libtcod.blue, blocks=True, render_order=RenderOrder.ACTOR, fighter=fighter_component, inventory=inventory_component, ai=ai_component,
+	monster = Entity(x, y, 'k', libtcod.red, blocks=True, render_order=RenderOrder.ACTOR, fighter=fighter_component, inventory=inventory_component, ai=ai_component,
 		equipment=equipment_component, stats=stats_component, skills=skill_component, defender=defender_component, name=kobold_name)
 	item = EquippableFactory.make_dagger()
 	monster.inventory.items.append(item)

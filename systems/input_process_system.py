@@ -2,13 +2,14 @@ from systems import move_system
 from systems import time_system
 from systems.pickup_system import pickup_item
 from game_states import GameStates
+from game_messages import Message
 from components.consumable import get_carried_potions
 from fov_functions import initialize_fov, recompute_fov
 from loader_functions.data_loaders import load_game, save_game
 import tcod as libtcod
 
 
-def process_input(action, mouse_action, player, entities, game_state, previous_game_state, message_log, game_map, dlevels, fov_recompute, fov_map):
+def process_input(action, mouse_action, player, entities, game_state, previous_game_state, message_log, game_map, dlevels, fov_recompute, fov_map, constants, con):
 	move, wait = action.get('move'), action.get('wait')
 	pickup = action.get('pickup')
 	show_inventory, drop_inventory = action.get('show_inventory'), action.get('drop_inventory')
@@ -76,15 +77,7 @@ def process_input(action, mouse_action, player, entities, game_state, previous_g
 	if take_stairs and game_state == GameStates.PLAYERS_TURN:
 		for entity in entities:
 			if entity.stairs and entity.x == player.x and entity.y == player.y:
-				# go down the stairs
-				if dlevels[game_map.dungeon_level+1].explored:
-					entities, game_map.tiles, player = game_map.load_floor(entities, player, dlevels)
-				else:
-					entities, dlevels = game_map.new_floor(player, constants, 1, dlevels)
-				fov_map = initialize_fov(game_map)
-				fov_recompute = True
-				libtcod.console_clear(con)
-				break
+				player_turn_results.append({'down_stairs': True})
 		else:
 			message_log.add_message(Message("There are no stairs here.", libtcod.yellow))
 
@@ -93,6 +86,7 @@ def process_input(action, mouse_action, player, entities, game_state, previous_g
 			if entity.stairs and entity.x == player.x and entity.y == player.y:
 				# go up the stairs
 				if game_map.dungeon_level-1 in dlevels.keys():
+					print("load a level")
 					prev_level = dlevels[game_map.dungeon_level-1]
 					entities, game_map.tiles, game_map.dungeon_level = prev_level.entities, prev_level.tiles, prev_level.floor
 					for entity in entities:
@@ -160,4 +154,4 @@ def process_input(action, mouse_action, player, entities, game_state, previous_g
 	if fullscreen:
 		libtcod.console_set_fullscreen(not libtcod.console_is_fullscreen())
 
-	return player_turn_results, fov_recompute, game_state, previous_game_state
+	return player_turn_results, fov_recompute, game_state, previous_game_state, entities, dlevels, game_map, fov_map

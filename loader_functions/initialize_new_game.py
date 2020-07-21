@@ -75,7 +75,7 @@ def create_player(constants):
 	level_component = Level()
 	equipment_component = Equipment()
 	defender_component = Defender()
-	stats_component = Stats(Strength=12, Precision=11, Agility=12, Intellect=11, Willpower=11, Stamina=12, Endurance=12)
+	stats_component = Stats(Strength=14, Precision=14, Agility=14, Intellect=14, Willpower=14, Stamina=14, Endurance=14)
 	skills_component = Skills()
 	skills_component.set_skill_rank(SkillNames.SWORD, 1)
 	skills_component.set_skill_rank(SkillNames.DAGGER, 1)

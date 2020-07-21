@@ -1,3 +1,5 @@
+from game_messages import Message
+
 def pickup_item(player, entities):
 	player_turn_results = []
 	for entity in entities:

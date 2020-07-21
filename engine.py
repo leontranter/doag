@@ -102,7 +102,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 		mouse_action = handle_mouse(mouse)
 
 		# It all happens here
-		player_turn_results, fov_recompute, game_state, previous_game_state = input_process_system.process_input(action, mouse_action, player, entities, game_state, previous_game_state, message_log, game_map, dlevels, fov_recompute, fov_map)
+		player_turn_results, fov_recompute, game_state, previous_game_state, entities, dlevels, game_map, fov_map = input_process_system.process_input(action, mouse_action, player, entities, game_state, previous_game_state, message_log, game_map, dlevels, fov_recompute, fov_map, constants, con)
 
 		for player_turn_result in player_turn_results:
 			quit = player_turn_result.get('quit')
@@ -114,7 +114,6 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 			targeting = player_turn_result.get('targeting')
 			spell_targeting = player_turn_result.get('spell_targeting')
 			targeting_cancelled = player_turn_result.get('targeting_cancelled')
-			xp = player_turn_result.get('xp')
 			equip = player_turn_result.get('equip')
 			cast = player_turn_result.get('cast')
 			missile_targeting = player_turn_result.get('missile_targeting')
@@ -123,14 +122,25 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 			attack_defended = player_turn_result.get("attack_defended")
 			missile_dropped = player_turn_result.get("missile_dropped")
 			dropped_location = player_turn_result.get("dropped_location")
+			# TODO: can we get rid of missile_type? Should be the value of missile_dropped lookup?
 			missile_type = player_turn_result.get("missile_type")
 			monster_drops = player_turn_result.get("monster_drops")
 			loaded = player_turn_result.get("loaded")
+			down_stairs = player_turn_result.get("down_stairs")
 
 			if quit:
 				return True
 			if message:
 				message_log.add_message(message)
+			if down_stairs:
+				if dlevels[game_map.dungeon_level+1].explored:
+					entities, game_map.tiles, player = game_map.load_floor(entities, player, dlevels)
+				else:
+					entities, dlevels = game_map.new_floor(player, constants, 1, dlevels)
+				fov_map = initialize_fov(game_map)
+				fov_recompute = True
+				libtcod.console_clear(con)
+				break
 			if dead_entity:
 				message, game_state, entities = handle_death(entities, dead_entity, player, game_state)
 				message_log.add_message(message)
@@ -183,13 +193,6 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 				game_state = GameStates.ENEMY_TURN
 			if loaded:
 				game_state = GameStates.ENEMY_TURN
-			if xp:
-				leveled_up = player.level.add_xp(xp)
-				message_log.add_message(Message('You gain {0} xp.'.format(xp)))
-				if leveled_up:
-					message_log.add_message(Message('Your skills grow stronger! You reach level {0}'.format(player.level.current_level)+'!', libtcod.yellow))
-					previous_game_state = game_state
-					game_state = GameStates.LEVEL_UP
 
 		if game_state == GameStates.ENEMY_TURN:
 			for entity in entities:

@@ -7,9 +7,10 @@ from components.consumable import get_carried_potions
 from fov_functions import initialize_fov, recompute_fov
 from loader_functions.data_loaders import load_game, save_game
 import tcod as libtcod
+from systems import spell_system
 
 
-def process_input(action, mouse_action, player, entities, game_state, previous_game_state, message_log, game_map, dlevels, fov_recompute, fov_map, constants, con):
+def process_input(action, mouse_action, player, entities, game_state, previous_game_state, message_log, game_map, dlevels, fov_recompute, fov_map, constants, con, targeting_item, spell_targeting, missile_targeting):
 	move, wait = action.get('move'), action.get('wait')
 	pickup = action.get('pickup')
 	show_inventory, drop_inventory = action.get('show_inventory'), action.get('drop_inventory')
@@ -85,19 +86,7 @@ def process_input(action, mouse_action, player, entities, game_state, previous_g
 		for entity in entities:
 			if entity.stairs and entity.x == player.x and entity.y == player.y:
 				# go up the stairs
-				if game_map.dungeon_level-1 in dlevels.keys():
-					print("load a level")
-					prev_level = dlevels[game_map.dungeon_level-1]
-					entities, game_map.tiles, game_map.dungeon_level = prev_level.entities, prev_level.tiles, prev_level.floor
-					for entity in entities:
-						if entity.name.true_name == "Stairs":
-							player.x, player.y = entity.x, entity.y
-				else:
-					entities = game_map.next_floor(player, message_log, constants, -1)	
-				fov_map = initialize_fov(game_map)
-				fov_recompute = True
-				libtcod.console_clear(con)
-				break
+				player_turn_results.append({'up_stairs': True})
 		else:
 			message_log.add_message(Message("There are no up stairs here.", libtcod.yellow))
 
@@ -130,6 +119,7 @@ def process_input(action, mouse_action, player, entities, game_state, previous_g
 		if left_click:
 			target_x, target_y = left_click
 			if targeting_item:	
+				print("targeting item!")
 				item_use_results = player.inventory.use(targeting_item, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y)
 				player_turn_results.extend(item_use_results)
 			elif spell_targeting:
@@ -154,4 +144,4 @@ def process_input(action, mouse_action, player, entities, game_state, previous_g
 	if fullscreen:
 		libtcod.console_set_fullscreen(not libtcod.console_is_fullscreen())
 
-	return player_turn_results, fov_recompute, game_state, previous_game_state, entities, dlevels, game_map, fov_map
+	return player_turn_results, fov_recompute, game_state, previous_game_state, entities, game_map, fov_map

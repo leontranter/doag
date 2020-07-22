@@ -84,7 +84,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 
 	game_state = GameStates.PLAYERS_TURN
 	previous_game_state = game_state
-	targeting_item = None
+	targeting_item, spell_targeting, missile_targeting = None, None, None
 
 	while not libtcod.console_is_window_closed():
 		libtcod.sys_check_for_event(libtcod.EVENT_KEY_PRESS | libtcod.EVENT_MOUSE, key, mouse)
@@ -102,7 +102,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 		mouse_action = handle_mouse(mouse)
 
 		# It all happens here
-		player_turn_results, fov_recompute, game_state, previous_game_state, entities, dlevels, game_map, fov_map = input_process_system.process_input(action, mouse_action, player, entities, game_state, previous_game_state, message_log, game_map, dlevels, fov_recompute, fov_map, constants, con)
+		player_turn_results, fov_recompute, game_state, previous_game_state, entities, game_map, fov_map = input_process_system.process_input(action, mouse_action, player, entities, game_state, previous_game_state, message_log, game_map, dlevels, fov_recompute, fov_map, constants, con, targeting_item, spell_targeting, missile_targeting)
 
 		for player_turn_result in player_turn_results:
 			quit = player_turn_result.get('quit')
@@ -122,21 +122,28 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 			attack_defended = player_turn_result.get("attack_defended")
 			missile_dropped = player_turn_result.get("missile_dropped")
 			dropped_location = player_turn_result.get("dropped_location")
-			# TODO: can we get rid of missile_type? Should be the value of missile_dropped lookup?
-			missile_type = player_turn_result.get("missile_type")
 			monster_drops = player_turn_result.get("monster_drops")
 			loaded = player_turn_result.get("loaded")
+			# TODO: Merge these two? And split them out into game_map functions?
 			down_stairs = player_turn_result.get("down_stairs")
+			up_stairs = player_turn_result.get("up_stairs")
 
 			if quit:
 				return True
 			if message:
 				message_log.add_message(message)
 			if down_stairs:
-				if dlevels[game_map.dungeon_level+1].explored:
-					entities, game_map.tiles, player = game_map.load_floor(entities, player, dlevels)
+				entities, game_map.tiles, dlevels, game_map, player, fov_map, fov_recompute = game_map.down_stairs(entities, player, dlevels, game_map, fov_map, fov_recompute, constants)
+				libtcod.console_clear(con)
+			if up_stairs:
+				if game_map.dungeon_level-1 in dlevels.keys():
+					prev_level = dlevels[game_map.dungeon_level-1]
+					entities, game_map.tiles, game_map.dungeon_level = prev_level.entities, prev_level.tiles, prev_level.floor
+					for entity in entities:
+						if entity.name.true_name == "Stairs":
+							player.x, player.y = entity.x, entity.y
 				else:
-					entities, dlevels = game_map.new_floor(player, constants, 1, dlevels)
+					entities = game_map.next_floor(player, message_log, constants, -1)	
 				fov_map = initialize_fov(game_map)
 				fov_recompute = True
 				libtcod.console_clear(con)
@@ -168,7 +175,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 			if attack_miss or attack_defended:
 				game_state = GameStates.ENEMY_TURN
 			if missile_dropped:
-				missile_entity = make_dropped_missile(missile_type, dropped_location)
+				missile_entity = make_dropped_missile(missile_dropped, dropped_location)
 				entities.append(missile_entity)
 			if item_dropped:
 				entities.append(item_dropped)
@@ -202,15 +209,13 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 						message = enemy_turn_result.get('message')
 						dead_entity = enemy_turn_result.get('dead')
 						missile_dropped = enemy_turn_result.get('missile_dropped')
-						missile_type = enemy_turn_result.get('missile_type')
 						dropped_location = enemy_turn_result.get('dropped_location')
 						equips = enemy_turn_result.get("equips")
-						#dropped_items = enemy_turn_result.get('dropped_items')
 						
 						if message:
 							message_log.add_message(message)
 						if missile_dropped:
-							missile_entity = make_dropped_missile(missile_type, dropped_location)
+							missile_entity = make_dropped_missile(missile_dropped, dropped_location)
 							entities.append(missile_entity)
 						if equips:
 							entity.equipment.toggle_equip(equips)

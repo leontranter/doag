@@ -1,6 +1,7 @@
 from map_objects.tile import Tile
 from map_objects.rectangle import Rect
 from random import randint
+from fov_functions import initialize_fov, recompute_fov
 import tcod as libtcod
 import components.item
 from entity import Entity
@@ -203,3 +204,16 @@ class GameMap:
 			if entity.name.true_name == "Upward stairs":
 				player.x, player.y = entity.x, entity.y
 		return entities, tiles, player
+
+	def down_stairs(self, entities, player, dlevels, game_map, fov_map, fov_recompute, constants):
+		if dlevels[game_map.dungeon_level+1].explored:
+			entities, self.tiles, player = self.load_floor(entities, player, dlevels)
+		else:
+			entities, dlevels = self.new_floor(player, constants, 1, dlevels)
+		fov_map = initialize_fov(game_map)
+		fov_recompute = True
+		
+		return entities, self.tiles, dlevels, game_map, player, fov_map, fov_recompute
+
+	def up_stairs():
+		pass

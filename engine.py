@@ -86,7 +86,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 	game_state = GameStates.PLAYERS_TURN
 	previous_game_state = game_state
 	action_free = True
-	targeting_item, spell_targeting, missile_targeting = None, None, None
+	targeting_item, currently_targeting_spell, missile_targeting_weapon = None, None, None
 
 	while not libtcod.console_is_window_closed():
 		libtcod.sys_check_for_event(libtcod.EVENT_KEY_PRESS | libtcod.EVENT_MOUSE, key, mouse)
@@ -104,40 +104,17 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 		mouse_action = handle_mouse(mouse)
 
 		# It all happens here - start off by process the action / mouse action, to get player_turn_results list, plus update some game state, e.g. as a result of combat
-		player_turn_results, fov_recompute, game_state, previous_game_state, entities, game_map, fov_map, dlevles, action_free = input_process_system.process_input(action, mouse_action, player, entities, game_state, previous_game_state, message_log, game_map, dlevels, fov_recompute, fov_map, constants, con, targeting_item, spell_targeting, missile_targeting, action_free)
+		player_turn_results, fov_recompute, game_state, previous_game_state, entities, game_map, fov_map, dlevles, action_free = input_process_system.process_input(action, mouse_action, player, entities, game_state, previous_game_state, message_log, game_map, dlevels, fov_recompute, fov_map, constants, con, targeting_item, currently_targeting_spell, missile_targeting_weapon, action_free)
 
 		#now pass the player turn results along to be processed
-		game_state, previous_game_state, entities = results_process_system.process_results(player_turn_results, game_state, previous_game_state, entities, player, targeting_item, missile_targeting, spell_targeting, message_log)
+		game_state, previous_game_state, entities, currently_targeting_spell, targeting_item, missile_targeting_weapon = results_process_system.process_results(player_turn_results, game_state, previous_game_state, entities, player, targeting_item, missile_targeting_weapon, currently_targeting_spell, message_log)
 
 		#now enemy chooses an action, process the results
 		if game_state == GameStates.ENEMY_TURN:
 			for entity in entities:
 				if entity.ai:
 					enemy_turn_results = entity.ai.take_turn(player, fov_map, game_map, entities)
-					for enemy_turn_result in enemy_turn_results:
-						message = enemy_turn_result.get('message')
-						dead_entity = enemy_turn_result.get('dead')
-						missile_dropped = enemy_turn_result.get('missile_dropped')
-						dropped_location = enemy_turn_result.get('dropped_location')
-						equips = enemy_turn_result.get("equips")
-						
-						if message:
-							message_log.add_message(message)
-						if missile_dropped:
-							missile_entity = make_dropped_missile(missile_dropped, dropped_location)
-							entities.append(missile_entity)
-						if equips:
-							entity.equipment.toggle_equip(equips)
-						if dead_entity:
-							if dead_entity == player:
-								message, game_state = kill_player(dead_entity)
-							else:
-								message = kill_monster(dead_entity)
-							message_log.add_message(message)
-							if game_state == GameStates.PLAYER_DEAD:
-								break
-					if game_state == GameStates.PLAYER_DEAD:
-						break
+					entities, game_state, message_log = results_process_system.process_ai_results(enemy_turn_results, entities, player, message_log, game_state)
 			else:
 				game_state = GameStates.PLAYERS_TURN
 

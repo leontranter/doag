@@ -1,8 +1,9 @@
 from game_messages import Message
 from game_states import GameStates
 from death_functions import handle_death
+from components.equippable import make_dropped_missile
 
-def process_results(player_turn_results, game_state, previous_game_state, entities, player, targeting_item, missile_targeting, spell_targeting, message_log):
+def process_results(player_turn_results, game_state, previous_game_state, entities, player, targeting_item, missile_targeting_weapon, currently_targeting_spell, message_log):
 	for player_turn_result in player_turn_results:
 		quit = player_turn_result.get('quit')
 		message = player_turn_result.get('message')
@@ -11,7 +12,7 @@ def process_results(player_turn_results, game_state, previous_game_state, entiti
 		item_consumed = player_turn_result.get('consumed')
 		item_dropped = player_turn_result.get('item_dropped')
 		targeting = player_turn_result.get('targeting')
-		spell_targeting = player_turn_result.get('spell_targeting')
+		spell_targeting_result = player_turn_result.get('spell_targeting')
 		targeting_cancelled = player_turn_result.get('targeting_cancelled')
 		equip = player_turn_result.get('equip')
 		cast = player_turn_result.get('cast')
@@ -44,13 +45,15 @@ def process_results(player_turn_results, game_state, previous_game_state, entiti
 			game_state = GameStates.TARGETING
 			targeting_item = targeting
 			message_log.add_message(targeting_item.consumable.targeting_message)
-		if spell_targeting:
+		if spell_targeting_result:
 			previous_game_state = GameStates.PLAYERS_TURN
 			game_state = GameStates.TARGETING
-			message_log.add_message(spell_targeting.targeting_message)
+			currently_targeting_spell = spell_targeting_result
+			message_log.add_message(currently_targeting_spell.targeting_message)
 		if missile_targeting:
 			previous_game_state = GameStates.PLAYERS_TURN
 			game_state = GameStates.TARGETING
+			missile_targeting_weapon = True
 			message_log.add_message(Message("Choose a target for your missile attack..."))
 		if attack_miss or attack_defended:
 			game_state = GameStates.ENEMY_TURN
@@ -81,4 +84,30 @@ def process_results(player_turn_results, game_state, previous_game_state, entiti
 		if loaded:
 			game_state = GameStates.ENEMY_TURN
 
-	return game_state, previous_game_state, entities
+	return game_state, previous_game_state, entities, currently_targeting_spell, targeting_item, missile_targeting_weapon
+
+def process_ai_results(enemy_turn_results, entities, player, message_log, game_state):
+	for enemy_turn_result in enemy_turn_results:
+		message = enemy_turn_result.get('message')
+		dead_entity = enemy_turn_result.get('dead')
+		missile_dropped = enemy_turn_result.get('missile_dropped')
+		dropped_location = enemy_turn_result.get('dropped_location')
+		equips = enemy_turn_result.get("equips")
+		
+		if message:
+			message_log.add_message(message)
+		if missile_dropped:
+			missile_entity = make_dropped_missile(missile_dropped, dropped_location)
+			entities.append(missile_entity)
+		if equips:
+			entity.equipment.toggle_equip(equips)
+		if dead_entity:
+			if dead_entity == player:
+				message, game_state = kill_player(dead_entity)
+			else:
+				message = kill_monster(dead_entity)
+			message_log.add_message(message)
+			if game_state == GameStates.PLAYER_DEAD:
+				break
+
+	return entities, game_state, message_log

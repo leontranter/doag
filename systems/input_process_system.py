@@ -10,7 +10,7 @@ import tcod as libtcod
 from systems import spell_system
 
 
-def process_input(action, mouse_action, player, entities, game_state, previous_game_state, message_log, game_map, dlevels, fov_recompute, fov_map, constants, con, targeting_item, spell_targeting, missile_targeting, action_free):
+def process_input(action, mouse_action, player, entities, game_state, previous_game_state, message_log, game_map, dlevels, fov_recompute, fov_map, constants, con, targeting_item, spell_targeting, missile_targeting_weapon, action_free):
 	move, wait = action.get('move'), action.get('wait')
 	pickup = action.get('pickup')
 	show_inventory, drop_inventory = action.get('show_inventory'), action.get('drop_inventory')
@@ -130,13 +130,12 @@ def process_input(action, mouse_action, player, entities, game_state, previous_g
 		if left_click:
 			target_x, target_y = left_click
 			if targeting_item:	
-				print("targeting item!")
 				item_use_results = player.inventory.use(targeting_item, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y)
 				player_turn_results.extend(item_use_results)
 			elif spell_targeting:
 				spell_use_results = player.caster.cast(spell_targeting, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y)
 				player_turn_results.extend(spell_use_results)
-			elif missile_targeting:
+			elif missile_targeting_weapon:
 				missile_attack_results = player.fighter.fire_weapon(weapon=player.equipment.main_hand.equippable, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y)
 				player_turn_results.extend(missile_attack_results)	
 			player_turn_results.extend(time_system.process_entity_turn(player))

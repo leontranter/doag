@@ -90,6 +90,9 @@ class Fighter:
 			skill_target = get_weapon_skill_for_attack(self.owner, self.owner.equipment.main_hand)
 		elif self.owner.equipment.main_hand and self.owner.equipment.main_hand.missile_weapon:
 			skill_target = get_weapon_skill_for_attack(self.owner, self.owner.equipment.main_hand)
+		else:
+			print("no skill target!")
+			skill_target = 9
 		numberRolled = dice_roll(3, 0)
 		if numberRolled <= skill_target:
 			return True

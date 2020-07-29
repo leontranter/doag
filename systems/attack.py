@@ -30,6 +30,8 @@ def get_weapon_skill_for_attack(attacker, weapon):
 		return 5
 
 def weapon_skill_lookup(weapon):
+	if not weapon:
+		return SkillNames.UNARMED
 	if weapon.melee_weapon:
 		return weapon_skill_matches.get(weapon.melee_weapon.weapon_category)
 	elif weapon.missile_weapon:

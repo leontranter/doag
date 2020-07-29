@@ -9,6 +9,7 @@ class SkillNames(Enum):
 	STAFF = auto()
 	BOW = auto()
 	CROSSBOW = auto()
+	UNARMED = auto()
 	ALCHEMY = auto()
 	HOLY = auto()
 	FIRE = auto()
@@ -54,6 +55,7 @@ skill_check_lookups = {
 	SkillNames.AXE: (get_strength, get_agility, 4),
 	SkillNames.MACE: (get_agility, get_strength, 4),
 	SkillNames.STAFF: (get_agility, get_agility, 4),
+	SkillNames.UNARMED: (get_agility, get_precision, 3),
 	SkillNames.ALCHEMY: (get_intellect, get_intellect, 7),
 	SkillNames.HOLY: (get_willpower, get_intellect, 8),
 	SkillNames.FIRE: (get_intellect, get_willpower, 8)

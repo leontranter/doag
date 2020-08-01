@@ -18,14 +18,14 @@ from components.identified import Identified
 from components.effects import Effects
 from components.consumable import ConsumableTypes, get_carried_potions
 from damage_types import DamageTypes
-from loader_functions.constants import get_basic_damage, WeaponTypes, WeaponCategories, get_constants
+from loader_functions.constants import WeaponTypes, WeaponCategories, get_constants
 from loader_functions.initialize_new_game import get_game_variables, assign_potion_descriptions, assign_scroll_descriptions, populate_dlevels
 from loader_functions.data_loaders import save_game, load_game
 from systems.attack import weapon_skill_lookup, get_weapon_skill_for_attack, get_hit_modifier_from_status_effects
 from systems.effects_manager import add_effect, tick_down_effects, process_damage_over_time
 from systems.name_system import get_display_name
-from systems.damage import get_basic_thrust_damage, get_basic_swing_damage, get_physical_damage_modifier_from_status_effects, get_physical_damage_modifier_from_equipment, apply_physical_damage_modifiers, get_damage_string
-from systems.attack import get_hit_modifier_from_status_effects, get_hit_modifier_from_equipment
+from systems.damage import get_physical_damage_modifier_from_status_effects, get_physical_damage_modifier_from_equipment, apply_physical_damage_modifiers, get_damage_string, get_current_missile_damage, get_current_melee_damage
+from systems.attack import get_hit_modifier_from_status_effects, get_hit_modifier_from_equipment, attack
 from systems.spell_system import learn_spell, cast
 from systems.skill_manager import SkillNames, get_intellect, get_willpower
 from systems.move_system import distance_to
@@ -39,6 +39,7 @@ import monsters
 import mocks
 from menus import menu
 import menu_options
+from attack_types import AttackTypes
 
 class EntityTests(unittest.TestCase):
 	def test_can_make_entity(self):
@@ -180,28 +181,7 @@ class StatsTests(unittest.TestCase):
 		self.assertEqual(test_entity.stats.max_hp, 19)
 		self.assertEqual(test_entity.stats.hp, 19)
 
-
 class DamageTests(unittest.TestCase):
-	def test_can_load_damage_dictionaries(self):
-		swing_damage, thrust_damage = get_basic_damage()
-		self.assertNotEqual(len(swing_damage), 0)
-		self.assertNotEqual(len(thrust_damage), 0)
-
-	def test_can_calculate_swing_damage(self):
-		test_stats_component = Stats(Strength=10, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)
-		test_fighter_component = Fighter(xp=10)
-		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", stats=test_stats_component, fighter=test_fighter_component)
-		dice, modifier = get_basic_swing_damage(test_entity)
-		self.assertEqual(dice, 1)
-		self.assertEqual(modifier, 0)
-
-	def test_can_calculate_thrust_damage(self):
-		test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)
-		test_fighter_component = Fighter(xp=10)
-		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", stats=test_stats_component, fighter=test_fighter_component)
-		dice, modifier = get_basic_thrust_damage(test_entity)
-		self.assertEqual(dice, 1)
-		self.assertEqual(modifier, -2)
 
 	def test_can_calculate_physical_damage_modifier_from_equipment(self):
 		test_equipment = Equipment()
@@ -235,7 +215,7 @@ class DamageTests(unittest.TestCase):
 		test_fighter_component = Fighter(xp=10)
 		test_equipment = Equipment()
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", stats=test_stats_component, fighter=test_fighter_component, equipment=test_equipment)
-		self.assertTrue("d6" in get_damage_string(test_entity))
+		self.assertTrue("d" in get_damage_string(test_entity))
 
 class AttackTests(unittest.TestCase):
 	def test_can_lookup_weapon_skill(self):
@@ -247,8 +227,13 @@ class AttackTests(unittest.TestCase):
 	def test_can_lookup_correct_weapon_skill(self):
 		test_char = mocks.create_mockchar_3()
 		weapon = test_char.equipment.main_hand
-		skill_num = get_weapon_skill_for_attack(test_char, weapon)
+		skill_num = get_weapon_skill_for_attack(test_char)
 		self.assertEqual(skill_num, 10)
+
+	def test_can_lookup_unarmed_skill_if_no_weapon(self):
+		test_char = mocks.create_mockchar_12()
+		skill_num = get_weapon_skill_for_attack(test_char)
+		self.assertEqual(skill_num, 12)
 
 	def test_can_get_equipment_attack_bonus(self):
 		test_equipment = Equipment()
@@ -262,7 +247,7 @@ class AttackTests(unittest.TestCase):
 	def test_can_perform_melee_attack(self):
 		test_char = mocks.create_mockchar_3()
 		test_enemy = mocks.create_mockchar_3()
-		results = test_char.fighter.melee_attack(test_enemy)
+		results = attack(test_char, test_enemy, AttackTypes.MELEE)
 		self.assertNotEqual(len(results), 0)
 
 class DefenderTests(unittest.TestCase):
@@ -375,6 +360,12 @@ class MissileWeaponTests(unittest.TestCase):
 		results = test_char.fighter.load_missile_weapon()
 		self.assertEqual(results[0].get("loaded"), None)
 
+	def test_can_get_missile_weapon_damage(self):
+		test_char = mocks.create_mockchar_1()
+		test_bow = EquippableFactory.make_shortbow()
+		test_char.equipment.toggle_equip(test_bow)
+		self.assertEqual(get_current_missile_damage(test_char), (1,6,0, DamageTypes.PIERCING))
+
 class MeleeWeaponTests(unittest.TestCase):
 	def test_can_create_melee_weapon_component(self):
 		test_component = MeleeWeapon(WeaponTypes.AXE, WeaponCategories.AXE, "swing", 1, DamageTypes.CRUSHING)
@@ -383,7 +374,11 @@ class MeleeWeaponTests(unittest.TestCase):
 	def test_has_melee_weapon(self):
 		test_char = mocks.create_mockchar_5()
 		self.assertEqual(test_char.equipment.has_melee_weapon(), True)
-	# TODO: more of these tests
+	
+	def test_can_get_current_melee_damage(self):
+		test_char = mocks.create_mockchar_5()
+		self.assertEqual(get_current_melee_damage(test_char), (1,6,0, DamageTypes.SLASHING))	
+
 
 class NameTests(unittest.TestCase):
 	def test_can_make_name_with_display(self):

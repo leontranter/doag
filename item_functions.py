@@ -34,7 +34,6 @@ def heal(*args, **kwargs):
 		results.append({'message': Message('The potion does nothing...')})
 	return results
 
-#TODO: needs to be completely reworked
 def poison(*args, **kwargs):
 	entity = args[0]
 	amount = kwargs.get('amount')

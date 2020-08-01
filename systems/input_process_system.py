@@ -32,18 +32,17 @@ def process_input(action, mouse_action, player, entities, game_state, previous_g
 	if move and game_state == GameStates.PLAYERS_TURN:
 		player_turn_results, fov_recompute, game_state = move_system.attempt_move_entity(move, game_map, player, entities, game_state, player_turn_results, fov_recompute)
 		# TODO - terrible bug - turn gets processed even if move attempt is unsuccessful!!!!!!
-		player_turn_results.extend(time_system.process_entity_turn(player))
+		action_free = False
 
 	elif wait:
-		player_turn_results.extend(time_system.process_entity_turn(player))
+		action_free = False
 		game_state = GameStates.ENEMY_TURN
 
 	elif pickup and game_state == GameStates.PLAYERS_TURN:
 		player_turn_results.extend(pickup_item(player, entities))
-		# TODO: Fix this! Potentially a lot of work
 		for result in player_turn_results:
-			if 'item-added' in result.keys():
-				player_turn_results.extend(time_system.process_entity_turn(player))
+			if 'item_added' in result.keys():
+				action_free = False
 
 	if show_inventory:
 		previous_game_state = game_state
@@ -64,9 +63,10 @@ def process_input(action, mouse_action, player, entities, game_state, previous_g
 		item = player.inventory.items[inventory_index]
 		if game_state == GameStates.SHOW_INVENTORY:
 			player_turn_results.extend(player.inventory.use(item, entities=entities, fov_map=fov_map))
-			player_turn_results.extend(time_system.process_entity_turn(player))
+			action_free = False
 		elif game_state == GameStates.DROP_INVENTORY:
 			player_turn_results.extend(player.inventory.drop_item(item))
+			game_state = GameStates.PLAYERS_TURN
 
 	if potion_index is not None:
 		potions = get_carried_potions(player)
@@ -112,18 +112,18 @@ def process_input(action, mouse_action, player, entities, game_state, previous_g
 	if spells_index is not None and spells_index < len(player.caster.spells):
 		spell = player.caster.spells[spells_index]
 		player_turn_results.extend(spell_system.cast(player, spell, entities=entities, fov_map=fov_map))
-		player_turn_results.extend(time_system.process_entity_turn(player))
+		action_free = False
 
 	if fire_weapon:
 		if player.equipment.ammunition and player.equipment.ammunition.equippable.quantity > 0:
 			player_turn_results.extend(player.fighter.fire_weapon())
-			player_turn_results.extend(time_system.process_entity_turn(player))
+			action_free = False
 		else:
 			player_turn_results.append({"message": Message("You don't have any ammunition to fire!")})
 
 	if load_weapon:
 		player_turn_results = player.fighter.load_missile_weapon()
-		player_turn_results.extend(time_system.process_entity_turn(player))
+		action_free = False
 
 	if game_state == GameStates.TARGETING:
 		# TODO: fix this up, ugly as all hell
@@ -138,7 +138,7 @@ def process_input(action, mouse_action, player, entities, game_state, previous_g
 			elif missile_targeting_weapon:
 				missile_attack_results = player.fighter.fire_weapon(weapon=player.equipment.main_hand.equippable, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y)
 				player_turn_results.extend(missile_attack_results)	
-			player_turn_results.extend(time_system.process_entity_turn(player))
+			action_free = False
 		elif right_click:
 			player_turn_results.append({'targeting_cancelled': True})
 

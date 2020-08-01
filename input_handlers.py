@@ -73,6 +73,7 @@ def handle_player_turn_keys(key):
 	elif key.vk == libtcod.KEY_ESCAPE:
 		#exit the game
 		return {'exit': True}
+
 	return {}
 
 def handle_inventory_keys(key):

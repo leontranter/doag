@@ -1,6 +1,6 @@
 from components.fighter import Fighter
 from systems.attack import weapon_skill_lookup
-from random_utils import dice_roll
+from random_utils import d6_dice_roll
 from systems.skill_manager import SkillNames
 
 class Defender:
@@ -9,14 +9,14 @@ class Defender:
 
 	def defend_melee_attack(self):
 		defense_choice, defense_num = self.get_best_melee_defense()
-		if dice_roll(3, 0) <= defense_num:
+		if d6_dice_roll(3, 0) <= defense_num:
 			return True, defense_choice
 		else:
 			return False, defense_choice
 
 	def defend_missile_attack(self):
 		defense_choice, defense_num = self.get_best_missile_defense()
-		if dice_roll(3, 0) <= defense_num:
+		if d6_dice_roll(3, 0) <= defense_num:
 			return True, defense_choice
 		else:
 			return False, defense_choice

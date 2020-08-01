@@ -66,3 +66,9 @@ class Entity:
 			self.identified.owner = self
 		if self.consumable:
 			self.consumable.owner = self
+
+	def __str__(self):
+		rep = ""
+		for k, v in self.__dict__.items():
+			rep += str(k) + ": " + str(v) + "\n"
+		return rep

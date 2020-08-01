@@ -28,7 +28,6 @@ class Equipment:
 	@property
 	def physical_damage_modifier(self):
 		bonus = 0
-		# TODO: Fix this! Make melee damage bonus actually work properly
 		if self.main_hand and self.main_hand.melee_weapon:
 			bonus += self.main_hand.equippable.physical_damage_modifier
 		if self.off_hand and self.off_hand.equippable:

@@ -2,6 +2,8 @@ import tcod as libtcod
 from random import randint
 from game_messages import Message
 from systems import move_system
+from systems.attack import attack
+from attack_types import AttackTypes
 
 class BasicMonster():
 	def take_turn(self, target, fov_map, game_map, entities):
@@ -40,10 +42,9 @@ class BasicMonster():
 		if move_system.distance_to(self.owner, target) >= 2:
 			move_system.move_astar(self.owner, target, entities, game_map)
 		elif target.stats.hp > 0:
-			attack_results = monster.fighter.melee_attack(target)
+			attack_results = attack(self.owner, target, AttackTypes.MELEE)
 			results.extend(attack_results)
 		return results
-
 
 class ConfusedMonster:
 	def __init__(self, previous_ai, number_of_turns=10):

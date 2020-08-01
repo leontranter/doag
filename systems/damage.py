@@ -1,28 +1,37 @@
 import tcod as libtcod
-from random_utils import dice_roll
+from random_utils import d6_dice_roll, dn_dice_roll
 from damage_types import DamageTypes, damage_type_modifiers
 from game_messages import Message
-from loader_functions.constants import get_basic_damage
 
 def get_current_melee_damage(entity):
 	# TODO: Fix this! Implement punching and kicking properly
 	# nothing in main hand
 	if not entity.equipment.main_hand:
-		dice, modifier = get_basic_thrust_damage(entity)
+		dice_number, dice_type, modifier = (1,3,0)
 		damage_type = DamageTypes.CRUSHING
-	# something in main hand but it's not a melee weapon, e.g. a bow
+	# something in main hand but it's not a melee weapon, e.g. a bow - TODO: make this better
 	elif entity.equipment.main_hand and not entity.equipment.main_hand.melee_weapon:
-		dice, modifier = get_basic_thrust_damage(entity)
-		modifier += 1
+		dice_number, dice_type, modifier = (1,3,0)
 		damage_type = DamageTypes.CRUSHING
-	elif entity.equipment.main_hand.melee_weapon.melee_attack_type == "swing":
-		dice, modifier = get_basic_swing_damage(entity)
+	elif entity.equipment.main_hand.melee_weapon:
+		dice_number, dice_type, modifier = entity.equipment.main_hand.melee_weapon.melee_damage
 		damage_type = entity.equipment.main_hand.melee_weapon.melee_damage_type
 	else:
-		dice, modifier = get_basic_thrust_damage(entity)
-		damage_type = entity.equipment.main_hand.melee_weapon.melee_damage_type
+		# something very weird has happened
+		dice_number, dice_type, modifier = (1,2,0)
+		damage_type = DamageTypes.CRUSHING
 	modifier += apply_physical_damage_modifiers(modifier, entity)
-	return (dice, modifier, damage_type)
+	return (dice_number, dice_type, modifier, damage_type)
+
+def get_current_missile_damage(entity):
+	if not entity.equipment or not entity.equipment.main_hand or not entity.equipment.main_hand.missile_weapon:
+		return (0, 0, DamageTypes.CRUSHING)
+	else:
+		dice_number, dice_type, modifier = entity.equipment.main_hand.missile_weapon.missile_damage
+		# TODO: Sort this missile damage stuff out once and for all
+		#modifier += self.owner.equipment.missile_damage_bonus
+		damage_type = entity.equipment.main_hand.missile_weapon.missile_damage_type
+		return (dice_number, dice_type, modifier, damage_type)
 
 def get_physical_damage_modifier_from_status_effects(entity):
 	physical_damage_modifier = 0
@@ -43,20 +52,8 @@ def get_physical_damage_modifier_from_equipment(entity):
 		modifier += entity.equipment.ammunition.equippable.physical_damage_modifier or 0
 	return modifier	
 
-def get_basic_swing_damage(entity):
-	ST = entity.stats.get_strength_in_range()
-	swing_damage, thrust_damage = get_basic_damage()
-	dice, modifier = swing_damage[ST][0], swing_damage[ST][1]
-	return (dice, modifier)
-
-def get_basic_thrust_damage(entity):
-	ST = entity.stats.get_strength_in_range()
-	swing_damage, thrust_damage = get_basic_damage()
-	dice, modifier = thrust_damage[ST][0], thrust_damage[ST][1]	
-	return (dice, modifier)
-
-def calculate_damage(dice, modifier, damage_type, target):
-	base_damage = dice_roll(dice, modifier)
+def calculate_damage(dice_number, dice_type, modifier, damage_type, target):
+	base_damage = dn_dice_roll(dice_number, dice_type, modifier)
 	penetrated_damage = max(base_damage - target.fighter.DR, 0)
 	final_damage = int(penetrated_damage * damage_type_modifiers[damage_type])
 	return base_damage, penetrated_damage, final_damage
@@ -84,14 +81,14 @@ def apply_physical_damage_modifiers(modifier, entity):
 
 def get_damage_string(entity):
 	if entity.fighter:
-		dice, modifier, damage_type = get_current_melee_damage(entity)
+		dice_number, dice_type, modifier, damage_type = get_current_melee_damage(entity)
 		damage_type = damage_type.name.capitalize()
 		if modifier < 0:
-			damage_string = "{}d6 {} {}".format(dice, modifier, damage_type)
+			damage_string = "{}d{} {} {}".format(dice_number, dice_type, modifier, damage_type)
 		elif modifier == 0:
-			damage_string = "{}d6 {}".format(dice, damage_type)
+			damage_string = "{}d{} {}".format(dice_number, dice_type, damage_type)
 		else:
-			damage_string = "{}d6 +{} {}".format(dice, modifier, damage_type)
+			damage_string = "{}d{} +{} {}".format(dice_number, dice_type, modifier, damage_type)
 	else:
 		damage_string = ""
 	return damage_string

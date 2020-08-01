@@ -1,6 +1,6 @@
 from item_functions import make_fireball_spell, make_bless_spell, make_heal_spell
 from game_messages import Message
-from random_utils import dice_roll
+from random_utils import d6_dice_roll
 
 def learn_spell(entity, spell_name):
 	results = []
@@ -38,7 +38,7 @@ def attempt_cast(entity, spell):
 		skill_check = entity.skills.get_skill_check(spell.spell_skill)
 	else:
 		skill_check = 3
-	number_rolled = dice_roll(3, 0)
+	number_rolled = d6_dice_roll(3, 0)
 	return number_rolled <= skill_check
 
 spell_function_lookup = {

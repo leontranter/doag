@@ -25,11 +25,19 @@ def from_dungeon_level(table, dungeon_level):
 
 	return 0
 
-def dice_roll(numberOfDice, modifier=0):
+def d6_dice_roll(number_of_dice, modifier=0):
 	roll = 0
-	for _ in range(numberOfDice):
-		thisRoll = randint(1, 6)
-		roll += thisRoll
+	for _ in range(number_of_dice):
+		this_roll = randint(1, 6)
+		roll += this_roll
+	roll += modifier
+	return roll
+
+def dn_dice_roll(number_of_dice, dice_type, modifier=0):
+	roll = 0
+	for _ in range(number_of_dice):
+		this_roll = randint(1, dice_type)
+		roll += this_roll
 	roll += modifier
 	return roll
 

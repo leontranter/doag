@@ -1,6 +1,8 @@
 import math
 import tcod as libtcod
 from game_states import GameStates
+from systems.attack import attack
+from attack_types import AttackTypes
 
 def attempt_move_entity(move, game_map, moving_entity, entities, game_state, player_turn_results, fov_recompute):
 	dx, dy = move
@@ -9,7 +11,7 @@ def attempt_move_entity(move, game_map, moving_entity, entities, game_state, pla
 	if not game_map.is_blocked(destination_x, destination_y):
 		target = get_blocking_entities_at_location(entities, destination_x, destination_y)
 		if target:
-			attack_results = moving_entity.fighter.melee_attack(target)
+			attack_results = attack(moving_entity, target, AttackTypes.MELEE)
 			player_turn_results.extend(attack_results)
 		else:	
 			move_entity(moving_entity, dx, dy)

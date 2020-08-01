@@ -89,34 +89,41 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 	targeting_item, currently_targeting_spell, missile_targeting_weapon = None, None, None
 
 	while not libtcod.console_is_window_closed():
-		libtcod.sys_check_for_event(libtcod.EVENT_KEY_PRESS | libtcod.EVENT_MOUSE, key, mouse)
+		while action_free:
+			
+			libtcod.sys_check_for_event(libtcod.EVENT_KEY_PRESS | libtcod.EVENT_MOUSE, key, mouse)
 
-		if fov_recompute:
-			recompute_fov(fov_map, player.x, player.y, constants['fov_radius'], constants['fov_light_walls'], constants['fov_algorithm'])
-		
-		render_all(con, panel, entities, player, game_map, fov_map, fov_recompute, message_log, constants['screen_width'], constants['screen_height'], constants['bar_width'], constants['panel_height'], constants['panel_y'], mouse, constants['colors'], game_state)
-		fov_recompute = False
+			if fov_recompute:
+				recompute_fov(fov_map, player.x, player.y, constants['fov_radius'], constants['fov_light_walls'], constants['fov_algorithm'])
+			
+			render_all(con, panel, entities, player, game_map, fov_map, fov_recompute, message_log, constants['screen_width'], constants['screen_height'], constants['bar_width'], constants['panel_height'], constants['panel_y'], mouse, constants['colors'], game_state)
+			fov_recompute = False
 
-		libtcod.console_flush()
-		clear_all(con, entities)
+			libtcod.console_flush()
+			clear_all(con, entities)
+			
+			action = handle_keys(key, game_state)
+			mouse_action = handle_mouse(mouse)
 
-		action = handle_keys(key, game_state)
-		mouse_action = handle_mouse(mouse)
+			# It all happens here - start off by process the action / mouse action, to get player_turn_results list, plus update some game state, e.g. as a result of combat
+			player_turn_results, fov_recompute, game_state, previous_game_state, entities, game_map, fov_map, dlevels, action_free = input_process_system.process_input(action, mouse_action, player, entities, game_state, previous_game_state, message_log, game_map, dlevels, fov_recompute, fov_map, constants, con, targeting_item, currently_targeting_spell, missile_targeting_weapon, action_free)
 
-		# It all happens here - start off by process the action / mouse action, to get player_turn_results list, plus update some game state, e.g. as a result of combat
-		player_turn_results, fov_recompute, game_state, previous_game_state, entities, game_map, fov_map, dlevles, action_free = input_process_system.process_input(action, mouse_action, player, entities, game_state, previous_game_state, message_log, game_map, dlevels, fov_recompute, fov_map, constants, con, targeting_item, currently_targeting_spell, missile_targeting_weapon, action_free)
+			#now pass the player turn results along to be processed
+			game_state, previous_game_state, entities = results_process_system.process_results(player_turn_results, game_state, previous_game_state, entities, player, targeting_item, missile_targeting_weapon, currently_targeting_spell, message_log)
 
-		#now pass the player turn results along to be processed
-		game_state, previous_game_state, entities, currently_targeting_spell, targeting_item, missile_targeting_weapon = results_process_system.process_results(player_turn_results, game_state, previous_game_state, entities, player, targeting_item, missile_targeting_weapon, currently_targeting_spell, message_log)
+		player_turn_results = []
+		player_turn_results.extend(time_system.process_entity_turn(player))
+		game_state, previous_game_state, entities = results_process_system.process_results(player_turn_results, game_state, previous_game_state, entities, player, targeting_item, missile_targeting_weapon, currently_targeting_spell, message_log)
 
 		#now enemy chooses an action, process the results
-		if game_state == GameStates.ENEMY_TURN:
-			for entity in entities:
-				if entity.ai:
-					enemy_turn_results = entity.ai.take_turn(player, fov_map, game_map, entities)
-					entities, game_state, message_log = results_process_system.process_ai_results(enemy_turn_results, entities, player, message_log, game_state)
-			else:
-				game_state = GameStates.PLAYERS_TURN
+		for entity in entities:
+			if entity.ai:
+				enemy_turn_results = entity.ai.take_turn(player, fov_map, game_map, entities)
+				entities, game_state, message_log = results_process_system.process_ai_results(enemy_turn_results, entity, entities, player, message_log, game_state)
+		
+		# reset action_free to True to player gets a turn again
+		action_free = True
+		game_state = GameStates.PLAYERS_TURN
 
 if __name__ == "__main__":
 	main()

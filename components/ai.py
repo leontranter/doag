@@ -18,7 +18,6 @@ class BasicMonster():
 		# missile attack
 		results = []
 		target_x, target_y = target.x, target.y
-		# TODO: Monster should switch weapons - or maybe run away! - if it has run out of ammunition!
 		if self.owner.equipment.has_missile_weapon():
 			if self.owner.equipment.has_ammunition():
 				if monster.equipment.main_hand.missile_weapon.loaded:

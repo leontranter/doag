@@ -10,7 +10,7 @@ import tcod as libtcod
 from systems import spell_system
 
 
-def process_input(action, mouse_action, player, entities, game_state, previous_game_state, message_log, game_map, dlevels, fov_recompute, fov_map, constants, con, targeting_item, spell_targeting, missile_targeting_weapon, action_free):
+def process_input(action, mouse_action, player, entities, game_state, previous_game_state, message_log, game_map, dlevels, fov_recompute, fov_map, constants, con, action_free, targets):
 	move, wait = action.get('move'), action.get('wait')
 	pickup = action.get('pickup')
 	show_inventory, drop_inventory = action.get('show_inventory'), action.get('drop_inventory')
@@ -32,6 +32,7 @@ def process_input(action, mouse_action, player, entities, game_state, previous_g
 	if move and game_state == GameStates.PLAYERS_TURN:
 		player_turn_results, fov_recompute, game_state = move_system.attempt_move_entity(move, game_map, player, entities, game_state, player_turn_results, fov_recompute)
 		# TODO - terrible bug - turn gets processed even if move attempt is unsuccessful!!!!!!
+		print("35")
 		action_free = False
 
 	elif wait:
@@ -63,16 +64,17 @@ def process_input(action, mouse_action, player, entities, game_state, previous_g
 		item = player.inventory.items[inventory_index]
 		if game_state == GameStates.SHOW_INVENTORY:
 			player_turn_results.extend(player.inventory.use(item, entities=entities, fov_map=fov_map))
+			game_state = GameStates.PLAYERS_TURN
 			action_free = False
 		elif game_state == GameStates.DROP_INVENTORY:
 			player_turn_results.extend(player.inventory.drop_item(item))
 			game_state = GameStates.PLAYERS_TURN
 
-	if potion_index is not None:
+	if potion_index is not None and potion_index < len(get_carried_potions(player)):
 		potions = get_carried_potions(player)
-		# TODO: this blows up if someone chooses a leter outside of index!! not good!! other menus probably do too?
 		used_potion = potions[potion_index]
 		player_turn_results.extend(player.inventory.use(used_potion))
+		action_free = False
 
 	# TODO: still needs some work
 	if take_stairs and game_state == GameStates.PLAYERS_TURN:
@@ -112,30 +114,34 @@ def process_input(action, mouse_action, player, entities, game_state, previous_g
 	if spells_index is not None and spells_index < len(player.caster.spells):
 		spell = player.caster.spells[spells_index]
 		player_turn_results.extend(spell_system.cast(player, spell, entities=entities, fov_map=fov_map))
+		print("118")
 		action_free = False
 
 	if fire_weapon:
 		if player.equipment.ammunition and player.equipment.ammunition.equippable.quantity > 0:
 			player_turn_results.extend(player.fighter.fire_weapon())
+			print("124")
 			action_free = False
 		else:
 			player_turn_results.append({"message": Message("You don't have any ammunition to fire!")})
 
 	if load_weapon:
 		player_turn_results = player.fighter.load_missile_weapon()
+		print("131")
 		action_free = False
 
 	if game_state == GameStates.TARGETING:
 		# TODO: fix this up, ugly as all hell
 		if left_click:
 			target_x, target_y = left_click
-			if targeting_item:	
-				item_use_results = player.inventory.use(targeting_item, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y)
+			if targets.current_targeting_consumable:	
+				item_use_results = player.inventory.use(targets.current_targeting_consumable, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y)
 				player_turn_results.extend(item_use_results)
-			elif spell_targeting:
-				spell_use_results = player.caster.cast(spell_targeting, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y)
+			elif targets.current_targeting_spell:
+				spell_use_results = player.caster.cast(targets.currently_targeting_spell, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y)
 				player_turn_results.extend(spell_use_results)
-			elif missile_targeting_weapon:
+			# TODO: do we really need this current targeting weapon thing?
+			elif targets.current_targeting_weapon:
 				missile_attack_results = player.fighter.fire_weapon(weapon=player.equipment.main_hand.equippable, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y)
 				player_turn_results.extend(missile_attack_results)	
 			action_free = False
@@ -143,7 +149,7 @@ def process_input(action, mouse_action, player, entities, game_state, previous_g
 			player_turn_results.append({'targeting_cancelled': True})
 
 	if exit:
-		if game_state in (GameStates.SHOW_INVENTORY, GameStates.DROP_INVENTORY, GameStates.CHARACTER_SCREEN, GameStates.SPELLS_SCREEN):
+		if game_state in (GameStates.SHOW_INVENTORY, GameStates.DROP_INVENTORY, GameStates.CHARACTER_SCREEN, GameStates.SPELLS_SCREEN, GameStates.POTION_SCREEN):
 			game_state = previous_game_state
 		elif game_state == GameStates.TARGETING:
 			player_turn_results.append({'targeting_cancelled': True})
@@ -154,4 +160,4 @@ def process_input(action, mouse_action, player, entities, game_state, previous_g
 	if fullscreen:
 		libtcod.console_set_fullscreen(not libtcod.console_is_fullscreen())
 
-	return player_turn_results, fov_recompute, game_state, previous_game_state, entities, game_map, fov_map, dlevels, action_free
+	return player_turn_results, fov_recompute, game_state, previous_game_state, entities, game_map, fov_map, dlevels, targets, action_free

@@ -21,6 +21,7 @@ from systems import spell_system
 from systems.pickup_system import pickup_item
 from systems import input_process_system
 from systems import results_process_system
+from targeting import Targeting
 
 def main():
 	constants = get_constants()
@@ -86,7 +87,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 	game_state = GameStates.PLAYERS_TURN
 	previous_game_state = game_state
 	action_free = True
-	targeting_item, currently_targeting_spell, missile_targeting_weapon = None, None, None
+	targets = Targeting()
 
 	while not libtcod.console_is_window_closed():
 		while action_free:
@@ -106,14 +107,14 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 			mouse_action = handle_mouse(mouse)
 
 			# It all happens here - start off by process the action / mouse action, to get player_turn_results list, plus update some game state, e.g. as a result of combat
-			player_turn_results, fov_recompute, game_state, previous_game_state, entities, game_map, fov_map, dlevels, action_free = input_process_system.process_input(action, mouse_action, player, entities, game_state, previous_game_state, message_log, game_map, dlevels, fov_recompute, fov_map, constants, con, targeting_item, currently_targeting_spell, missile_targeting_weapon, action_free)
+			player_turn_results, fov_recompute, game_state, previous_game_state, entities, game_map, fov_map, dlevels, targets, action_free = input_process_system.process_input(action, mouse_action, player, entities, game_state, previous_game_state, message_log, game_map, dlevels, fov_recompute, fov_map, constants, con, action_free, targets)
 
 			#now pass the player turn results along to be processed
-			game_state, previous_game_state, entities = results_process_system.process_results(player_turn_results, game_state, previous_game_state, entities, player, targeting_item, missile_targeting_weapon, currently_targeting_spell, message_log)
+			game_state, previous_game_state, entities, player, targets = results_process_system.process_results(player_turn_results, game_state, previous_game_state, entities, player, message_log, targets)
 
 		player_turn_results = []
 		player_turn_results.extend(time_system.process_entity_turn(player))
-		game_state, previous_game_state, entities = results_process_system.process_results(player_turn_results, game_state, previous_game_state, entities, player, targeting_item, missile_targeting_weapon, currently_targeting_spell, message_log)
+		game_state, previous_game_state, entities, player, targets = results_process_system.process_results(player_turn_results, game_state, previous_game_state, entities, player, message_log, targets)
 
 		#now enemy chooses an action, process the results
 		for entity in entities:
@@ -123,6 +124,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 		
 		# reset action_free to True to player gets a turn again
 		action_free = True
+		print("resetting game state")
 		game_state = GameStates.PLAYERS_TURN
 
 if __name__ == "__main__":

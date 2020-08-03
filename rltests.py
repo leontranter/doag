@@ -700,6 +700,19 @@ class PotionMenuTests(unittest.TestCase):
 		potions = get_carried_potions(test_player)
 		self.assertEqual(len(potions), 2)
 
+	def test_can_quaff_potion(self):
+		test_potion = make_healing_potion()
+		test_potion2 = make_poison_potion()
+		test_inventory = Inventory(10)
+		test_inventory.items.append(test_potion)
+		test_inventory.items.append(test_potion2)
+		test_player = entity.Entity(1, 1, 'A', libtcod.white, inventory=test_inventory)
+		potions = get_carried_potions(test_player)
+		used_potion = potions[0]
+		player_turn_results = []
+		player_turn_results.extend(test_player.inventory.use(used_potion))
+		self.assertNotEqual(player_turn_results, 0)
+
 class PickupTests(unittest.TestCase):
 	def test_can_pickup_item(self):
 		test_bow = EquippableFactory.make_shortbow()

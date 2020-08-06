@@ -124,7 +124,6 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 		
 		# reset action_free to True to player gets a turn again
 		action_free = True
-		print("resetting game state")
 		game_state = GameStates.PLAYERS_TURN
 
 if __name__ == "__main__":

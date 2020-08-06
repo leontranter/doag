@@ -35,19 +35,11 @@ def process_results(player_turn_results, game_state, previous_game_state, entiti
 			message_log.add_message(message)
 		if item_added:
 			entities.remove(item_added)
-		# TODO: delete these two?
-		#if item_consumed:
-		#	pass
-		
-		if fired_weapon:
-			pass
 		# TODO: roll these three results into one?
 		if targeting:
-			print("changing to targeting game state")
 			previous_game_state = GameStates.PLAYERS_TURN
 			game_state = GameStates.TARGETING
 			targets.current_targeting_consumable = targeting
-			print(f"targets item is {targets.current_targeting_consumable}")
 			message_log.add_message(targets.current_targeting_consumable.consumable.targeting_message)
 		if spell_targeting_result:
 			previous_game_state = GameStates.PLAYERS_TURN
@@ -83,11 +75,6 @@ def process_results(player_turn_results, game_state, previous_game_state, entiti
 		if targeting_cancelled:
 			game_state = previous_game_state
 			message_log.add_message(Message('Targeting cancelled'))
-		# TODO: remove these?
-		if cast:
-			pass
-		if loaded:
-			pass
 
 	return game_state, previous_game_state, entities, player, targets
 

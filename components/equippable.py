@@ -1,28 +1,27 @@
 from equipment_slots import EquipmentSlots
 from damage_types import DamageTypes
-from loader_functions.constants import WeaponTypes, WeaponCategories
+from loader_functions.constants import WeaponTypes, WeaponCategories, AmmunitionTypes
 from entity import Entity
 from components.meleeweapon import MeleeWeapon
 from components.missileweapon import MissileWeapon
 from components.name import Name
 from components.item import Item
+from components.ammunition import Ammunition
 import tcod as libtcod
 
 class Equippable:
-	def __init__(self, slot, DR_bonus=0, max_hp_bonus=0, two_handed=False, quantity=0, isShield=False, missile_damage_bonus=0, hit_modifier=0, physical_damage_modifier=0):
+	def __init__(self, slot, DR_bonus=0, max_hp_bonus=0, two_handed=False, isShield=False, hit_modifier=0, physical_damage_modifier=0):
 		self.slot = slot
 		self.DR_bonus = DR_bonus
 		self.max_hp_bonus = max_hp_bonus
 		self.two_handed = two_handed
-		self.quantity = quantity
 		self.isShield = isShield
-		self.missile_damage_bonus = missile_damage_bonus
 		self.hit_modifier = hit_modifier
 		self.physical_damage_modifier = physical_damage_modifier
 
 def make_dropped_missile(missile_type, location):
 	missiles = {"Arrows": EquippableFactory.make_arrows, "Bolts": EquippableFactory.make_bolts}
-	dropped_missile = missiles[missile_type](x=location[0], y=location[1], number=1)
+	dropped_missile = missiles[missile_type](x=location[0], y=location[1], quantity=1)
 	return dropped_missile
 
 class EquippableFactory:
@@ -91,18 +90,20 @@ class EquippableFactory:
 		crossbow_entity = Entity(x, y, ')', libtcod.red, equippable=crossbow_equippable, missile_weapon=crossbow_missile_weapon, name=crossbow_name, item=crossbow_item)
 		return crossbow_entity
 
-	def make_arrows(x=1, y=1, number=1):
-		arrows_equippable = Equippable(EquipmentSlots.AMMUNITION, missile_damage_bonus=1, quantity=number)
-		arrows_name = Name("Arrows")
-		arrows_item = Item(1, number)
-		arrows_entity = Entity(x, y, ')', libtcod.flame, equippable=arrows_equippable, name=arrows_name, item=arrows_item)
+	def make_arrows(x=1, y=1, quantity=1):
+		arrows_equippable = Equippable(EquipmentSlots.AMMUNITION)
+		arrows_name = Name("Arrow")
+		arrows_item = Item(1, quantity)
+		arrows_ammunition = Ammunition(AmmunitionTypes.ARROWS, WeaponCategories.BOW)
+		arrows_entity = Entity(x, y, ')', libtcod.flame, equippable=arrows_equippable, name=arrows_name, item=arrows_item, ammunition=arrows_ammunition)
 		return arrows_entity
 
 	def make_bolts(x=1, y=1, quantity=1):
-		arrows_equippable = Equippable(EquipmentSlots.AMMUNITION, missile_damage_bonus=1, quantity=quantity)
+		arrows_equippable = Equippable(EquipmentSlots.AMMUNITION)
 		bolts_name = Name("Bolts")
-		bolts_item = Item(1, number)
-		bolts_entity = Entity(x, y, ')', libtcod.flame, equippable=crossbow_equippable, name=bolts_name, item=bolts_item)
+		bolts_item = Item(1, quantity)
+		bolts_ammunition = Ammunition(AmmunitionTypes.BOLTS, WeaponCategories.CROSSBOW)
+		bolts_entity = Entity(x, y, ')', libtcod.flame, equippable=crossbow_equippable, name=bolts_name, item=bolts_item, ammunition=bolts_ammunition)
 		return bolts_entity
 
 	def make_small_shield(x=1, y=1):

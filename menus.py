@@ -13,7 +13,7 @@ def inventory_menu(con, header, inventory_width, screen_width, screen_height, pl
 	
 	options = []
 	for item in player.inventory.items:
-		options.append(get_display_name(player, item))
+		options.append(" " + get_display_name(player, item))
 	
 	menu(con, header, options, inventory_width, screen_width, screen_height)
 
@@ -64,7 +64,7 @@ def character_screen(player, character_screen_width, character_screen_height, sc
 	libtcod.console_set_default_foreground(window, libtcod.white)
 	damage_string = get_damage_string(player)
 	weapon_string = str(weapon_skill_lookup(player.equipment.main_hand).name.lower())
-	weapon_skill_string = str(get_weapon_skill_for_attack(player, player.equipment.main_hand))
+	weapon_skill_string = str(get_weapon_skill_for_attack(player))
 
 	libtcod.console_print_rect_ex(window, 0, 1, character_screen_width, character_screen_height, libtcod.BKGND_NONE, libtcod.LEFT, 'Character Information')
 	libtcod.console_print_rect_ex(window, 0, 2, character_screen_width, character_screen_height, libtcod.BKGND_NONE, libtcod.LEFT, 'Level: {0}'.format(player.level.current_level))

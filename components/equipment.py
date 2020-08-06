@@ -143,8 +143,9 @@ class Equipment:
 
 	def has_ammunition(self):
 		if self.ammunition:
-			if self.ammunition.equippable.quantity:
-				if self.ammunition.equippable.quantity > 0:
+			if self.ammunition.item.quantity:
+				# TODO: finish fixing this up, write tests - maybe return different error messages?
+				if self.ammunition.item.quantity > 0 and self.ammunition.ammunition.missile_type == self.owner.equipment.main_hand.missile_weapon.weapon_category:
 					return True
 				else:
 					return False

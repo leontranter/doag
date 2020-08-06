@@ -340,9 +340,13 @@ class DroppedMissileTests(unittest.TestCase):
 		entities.append(make_dropped_missile("Arrows", (1,1)))
 		self.assertEqual(entities[0].x, 1)
 		self.assertEqual(entities[0].y, 1)
-		self.assertEqual(entities[0].name.true_name, "Arrows")
+		self.assertEqual(entities[0].name.true_name, "Arrow")
 
 class MissileWeaponTests(unittest.TestCase):
+	def test_can_create_arrows(self):
+		test_arrows = EquippableFactory.make_arrows(1, 1, 10)
+		self.assertEqual(test_arrows.item.quantity, 10)
+
 	def test_can_equip_missile_weapon(self):
 		test_char = mocks.create_mockchar_1()
 		test_bow = EquippableFactory.make_shortbow()

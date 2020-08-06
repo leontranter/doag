@@ -55,7 +55,6 @@ class Fighter:
 			results.append({'missile_targeting': True})
 			return results
 		else:
-			print("acquiring target")
 			entities = kwargs.get('entities')
 			fov_map = kwargs.get('fov_map')
 			target_x = kwargs.get('target_x')

@@ -140,7 +140,7 @@ def create_mockchar_10():
 	test_equipment_component = Equipment()
 	test_fighter = Fighter()
 	test_bow = EquippableFactory.make_shortbow()
-	test_arrows = EquippableFactory.make_arrows()
+	test_arrows = EquippableFactory.make_arrows(1, 1, 10)
 	test_equipment_component.main_hand = test_bow
 	test_equipment_component.ammunition = test_arrows
 	test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)

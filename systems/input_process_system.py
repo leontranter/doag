@@ -32,7 +32,6 @@ def process_input(action, mouse_action, player, entities, game_state, previous_g
 	if move and game_state == GameStates.PLAYERS_TURN:
 		player_turn_results, fov_recompute, game_state = move_system.attempt_move_entity(move, game_map, player, entities, game_state, player_turn_results, fov_recompute)
 		# TODO - terrible bug - turn gets processed even if move attempt is unsuccessful!!!!!!
-		print("35")
 		action_free = False
 
 	elif wait:
@@ -114,20 +113,17 @@ def process_input(action, mouse_action, player, entities, game_state, previous_g
 	if spells_index is not None and spells_index < len(player.caster.spells):
 		spell = player.caster.spells[spells_index]
 		player_turn_results.extend(spell_system.cast(player, spell, entities=entities, fov_map=fov_map))
-		print("118")
 		action_free = False
 
 	if fire_weapon:
-		if player.equipment.ammunition and player.equipment.ammunition.equippable.quantity > 0:
+		if player.equipment.ammunition and player.equipment.ammunition.item.quantity > 0:
 			player_turn_results.extend(player.fighter.fire_weapon())
-			print("124")
 			action_free = False
 		else:
 			player_turn_results.append({"message": Message("You don't have any ammunition to fire!")})
 
 	if load_weapon:
 		player_turn_results = player.fighter.load_missile_weapon()
-		print("131")
 		action_free = False
 
 	if game_state == GameStates.TARGETING:

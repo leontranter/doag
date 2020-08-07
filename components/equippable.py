@@ -20,7 +20,7 @@ class Equippable:
 		self.physical_damage_modifier = physical_damage_modifier
 
 def make_dropped_missile(missile_type, location):
-	missiles = {"Arrows": EquippableFactory.make_arrows, "Bolts": EquippableFactory.make_bolts}
+	missiles = {AmmunitionTypes.ARROWS: EquippableFactory.make_arrows, AmmunitionTypes.BOLTS: EquippableFactory.make_bolts}
 	dropped_missile = missiles[missile_type](x=location[0], y=location[1], quantity=1)
 	return dropped_missile
 

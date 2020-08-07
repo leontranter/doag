@@ -5,6 +5,7 @@ from systems.name_system import get_display_name
 from components.consumable import get_carried_potions
 from systems.damage import get_damage_string
 from systems.attack import weapon_skill_lookup, get_weapon_skill_for_attack
+from equipment_slots import EquipmentSlots
 
 def inventory_menu(con, header, inventory_width, screen_width, screen_height, player=None):
 	# show a menu with each item of the inventory as an option
@@ -33,14 +34,17 @@ def potion_menu(con, header, menu_width, screen_width, screen_height, player):
 		options.append(get_display_name(player, potion))
 	menu(con, header, options, menu_width, screen_width, screen_height)
 
-def equipment_menu(con, header, inventory, inventory_width, screen_width, screen_height, equipment, player=None):
-	equipped_items = equipment.get_equipped_items()
-	if len(equipped_items) == 0:
-		header = "Nothing equipped."
-	# TODO: Fix this - should calculat display name
-	options = [equipment.name.true_name for equipment in equipped_items]
+def get_equipped_items(entity):
+	equipped_items = []
+	equipped_items.append("Main hand: " + (entity.equipment.main_hand.name.true_name if entity.equipment.main_hand else ""))
+	equipped_items.append("Off hand: " + (entity.equipment.off_hand.name.true_name if entity.equipment.off_hand else ""))
+	equipped_items.append("Body: " + (entity.equipment.body.name.true_name if entity.equipment.body else ""))
+	equipped_items.append("Ammunition: " + (get_display_name(entity, entity.equipment.ammunition) if entity.equipment.ammunition else ""))
+	return equipped_items
 
-	menu(con, header, options, inventory_width, screen_width, screen_height, inventory, player)
+def equipment_menu(con, header, menu_width, screen_width, screen_height, player):
+	options = get_equipped_items(player)
+	menu(con, header, options, menu_width, screen_width, screen_height)
 
 def main_menu(con, backgrond_image, screen_width, screen_height):
 	libtcod.image_blit_2x(backgrond_image, 0, 0, 0)

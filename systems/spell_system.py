@@ -23,6 +23,7 @@ def cast(entity, spell, **kwargs):
 		return results
 
 	if spell.targeting and not (kwargs.get('target_x') or kwargs.get('target_y')):
+		print("spell system is returning spell_targeting")
 		results.append({'spell_targeting': spell})
 	else:
 		kwargs = {**spell.function_kwargs, **kwargs}

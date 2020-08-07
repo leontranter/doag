@@ -24,6 +24,8 @@ def get_display_name(player, named_entity):
 	else:
 		display_name = named_entity.name.true_name
 	
-	if named_entity.item.quantity > 1:
-		display_name = str(named_entity.item.quantity) + " " + display_name + "s"
+	if named_entity.item:
+		if named_entity.item.quantity > 1:
+			display_name = str(named_entity.item.quantity) + " " + display_name + "s"
+	
 	return display_name

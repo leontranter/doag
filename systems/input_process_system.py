@@ -30,9 +30,8 @@ def process_input(action, mouse_action, player, entities, game_state, previous_g
 	player_turn_results = []
 
 	if move and game_state == GameStates.PLAYERS_TURN:
-		player_turn_results, fov_recompute, game_state = move_system.attempt_move_entity(move, game_map, player, entities, game_state, player_turn_results, fov_recompute)
+		player_turn_results, fov_recompute, game_state, action_free = move_system.attempt_move_entity(move, game_map, player, entities, game_state, player_turn_results, fov_recompute, action_free)
 		# TODO - terrible bug - turn gets processed even if move attempt is unsuccessful!!!!!!
-		action_free = False
 
 	elif wait:
 		action_free = False
@@ -113,7 +112,10 @@ def process_input(action, mouse_action, player, entities, game_state, previous_g
 	if spells_index is not None and spells_index < len(player.caster.spells):
 		spell = player.caster.spells[spells_index]
 		player_turn_results.extend(spell_system.cast(player, spell, entities=entities, fov_map=fov_map))
-		action_free = False
+		# TODO: This is not at all great - analysing player turn results should happen in result process system!
+		for result in player_turn_results:
+			if result.get('cast'):
+				action_free = False
 
 	if fire_weapon:
 		if player.equipment.ammunition and player.equipment.ammunition.item.quantity > 0:
@@ -134,18 +136,19 @@ def process_input(action, mouse_action, player, entities, game_state, previous_g
 				item_use_results = player.inventory.use(targets.current_targeting_consumable, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y)
 				player_turn_results.extend(item_use_results)
 			elif targets.current_targeting_spell:
-				spell_use_results = player.caster.cast(targets.currently_targeting_spell, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y)
+				spell_use_results = player.caster.cast(targets.current_targeting_spell, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y)
 				player_turn_results.extend(spell_use_results)
 			# TODO: do we really need this current targeting weapon thing?
 			elif targets.current_targeting_weapon:
 				missile_attack_results = player.fighter.fire_weapon(weapon=player.equipment.main_hand.equippable, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y)
 				player_turn_results.extend(missile_attack_results)	
+			print("142")
 			action_free = False
 		elif right_click:
 			player_turn_results.append({'targeting_cancelled': True})
 
 	if exit:
-		if game_state in (GameStates.SHOW_INVENTORY, GameStates.DROP_INVENTORY, GameStates.CHARACTER_SCREEN, GameStates.SPELLS_SCREEN, GameStates.POTION_SCREEN):
+		if game_state in (GameStates.SHOW_INVENTORY, GameStates.DROP_INVENTORY, GameStates.CHARACTER_SCREEN, GameStates.SPELLS_SCREEN, GameStates.POTION_SCREEN, GameStates.EQUIPMENT_SCREEN):
 			game_state = previous_game_state
 		elif game_state == GameStates.TARGETING:
 			player_turn_results.append({'targeting_cancelled': True})

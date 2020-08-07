@@ -18,7 +18,7 @@ from components.identified import Identified
 from components.effects import Effects
 from components.consumable import ConsumableTypes, get_carried_potions
 from damage_types import DamageTypes
-from loader_functions.constants import WeaponTypes, WeaponCategories, get_constants
+from loader_functions.constants import WeaponTypes, WeaponCategories, get_constants, AmmunitionTypes
 from loader_functions.initialize_new_game import get_game_variables, assign_potion_descriptions, assign_scroll_descriptions, populate_dlevels
 from loader_functions.data_loaders import save_game, load_game
 from systems.attack import weapon_skill_lookup, get_weapon_skill_for_attack, get_hit_modifier_from_status_effects
@@ -40,6 +40,7 @@ import mocks
 from menus import menu
 import menu_options
 from attack_types import AttackTypes
+from menus import get_equipped_items
 
 class EntityTests(unittest.TestCase):
 	def test_can_make_entity(self):
@@ -136,6 +137,11 @@ class EquipmentTests(unittest.TestCase):
 		self.assertEqual(test_entity.equipment.off_hand, None)
 		self.assertEqual(test_entity.equipment.body, None)
 		self.assertEqual(test_entity.equipment.ammunition, None)
+
+	def test_can_get_equipped_items(self):
+		test_equipment = Equipment()
+		test_char = entity.Entity(1, 1, 'A', libtcod.white, "Player", equipment=test_equipment)
+		self.assertEqual(len(get_equipped_items(test_char)), 4)
 
 class SkillsTests(unittest.TestCase):
 	def test_can_create_and_link_skills_component(self):
@@ -331,13 +337,13 @@ class DroppedMissileTests(unittest.TestCase):
 	def test_can_drop_missile(self):
 		test_monster = monsters.makeKobold(1, 1)
 		entities = []
-		entities.append(make_dropped_missile("Arrows", (1,1)))
+		entities.append(make_dropped_missile(AmmunitionTypes.ARROWS, (1,1)))
 		self.assertEqual(len(entities), 1)
 
 	def test_can_drop_missile_at_correct_location(self):
 		test_monster = monsters.makeKobold(1, 1)
 		entities = []
-		entities.append(make_dropped_missile("Arrows", (1,1)))
+		entities.append(make_dropped_missile(AmmunitionTypes.ARROWS, (1,1)))
 		self.assertEqual(entities[0].x, 1)
 		self.assertEqual(entities[0].y, 1)
 		self.assertEqual(entities[0].name.true_name, "Arrow")
@@ -369,6 +375,14 @@ class MissileWeaponTests(unittest.TestCase):
 		test_bow = EquippableFactory.make_shortbow()
 		test_char.equipment.toggle_equip(test_bow)
 		self.assertEqual(get_current_missile_damage(test_char), (1,6,0, DamageTypes.PIERCING))
+
+	def test_can_check_if_has_ammunition(self):
+		test_char = mocks.create_mockchar_10()
+		self.assertEqual(test_char.equipment.has_ammunition(), True)
+
+	def test_has_ammunition_returns_false_if_no_arrows(self):
+		test_char = mocks.create_mockchar_9()
+		self.assertEqual(test_char.equipment.has_ammunition(), False)		
 
 class MeleeWeaponTests(unittest.TestCase):
 	def test_can_create_melee_weapon_component(self):

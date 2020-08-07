@@ -4,7 +4,7 @@ from game_states import GameStates
 from systems.attack import attack
 from attack_types import AttackTypes
 
-def attempt_move_entity(move, game_map, moving_entity, entities, game_state, player_turn_results, fov_recompute):
+def attempt_move_entity(move, game_map, moving_entity, entities, game_state, player_turn_results, fov_recompute, action_free):
 	dx, dy = move
 	destination_x = moving_entity.x + dx
 	destination_y = moving_entity.y + dy
@@ -16,8 +16,9 @@ def attempt_move_entity(move, game_map, moving_entity, entities, game_state, pla
 		else:	
 			move_entity(moving_entity, dx, dy)
 			fov_recompute = True
+		action_free = False
 		game_state = GameStates.ENEMY_TURN
-	return player_turn_results, fov_recompute, game_state
+	return player_turn_results, fov_recompute, game_state, action_free
 
 def move_entity(moving_entity, dx, dy):
 	moving_entity.x += dx

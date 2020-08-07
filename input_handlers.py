@@ -59,7 +59,6 @@ def handle_player_turn_keys(key):
 		return {'take_stairs_up': True}
 	elif key_char == 'c':
 		return {'show_character_screen': True}
-	#TODO: do I want this equipment screen?
 	elif key_char == 'e':
 		return {'show_equipment_screen': True}
 	elif key_char == 'k':

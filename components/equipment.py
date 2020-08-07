@@ -68,14 +68,6 @@ class Equipment:
 			equippable_entity, results = self.toggle_ammunition(equippable_entity, results)
 		return results
 
-	def get_equipped_items(self):
-		equipped_items = []
-		equipped_items.append(self.main_hand)
-		equipped_items.append(self.off_hand)
-		equipped_items.append(self.body)
-		equipped_items.append(self.ammunition)
-		return equipped_items
-
 	def toggle_main_hand(self, equippable_entity, results):
 		if self.main_hand == equippable_entity:
 			self.main_hand = None
@@ -144,7 +136,6 @@ class Equipment:
 	def has_ammunition(self):
 		if self.ammunition:
 			if self.ammunition.item.quantity:
-				# TODO: finish fixing this up, write tests - maybe return different error messages?
 				if self.ammunition.item.quantity > 0 and self.ammunition.ammunition.missile_type == self.owner.equipment.main_hand.missile_weapon.weapon_category:
 					return True
 				else:

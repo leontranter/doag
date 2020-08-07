@@ -26,7 +26,7 @@ class Inventory:
 				'message': Message('You pick up the {0}!'.format(temp_display_name), libtcod.yellow)
 			})
 			for current_item in self.items:
-				if current_item.name.true_name == item.name.true_name and current_item.equippable and current_item.equippable.quantity and current_item.equippable.quantity > 0:
+				if current_item.name.true_name == item.name.true_name and current_item.equippable and current_item.item.quantity and current_item.item.quantity > 0:
 					# Checking if we can stack this item with one already carried
 					# TODO: This will need a LOT more work at some point... not a very clever check
 					current_item.equippable.quantity += item.equippable.quantity
@@ -49,10 +49,8 @@ class Inventory:
 			elif item_entity.consumable.consumable_type == ConsumableTypes.SCROLL:
 				if item_entity.name.true_name in game_constants["scroll_types"] and item_entity.name.true_name not in self.owner.identified.identified_scrolls:
 					self.owner.identified.identified_scrolls.append(item_entity.name.true_name)
-		# TODO: Fix this, the logic sucks
 		if not item_entity.consumable:
-			equippable_component = item_entity.equippable
-			if equippable_component:
+			if item_entity.equippable:
 				results.append({'equip': item_entity})
 			else:
 				results.append({'message': Message('The {0} cannot be used'.format(item_entity.name.true_name), libtcod.yellow)})

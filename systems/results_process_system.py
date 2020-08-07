@@ -19,8 +19,6 @@ def process_results(player_turn_results, game_state, previous_game_state, entiti
 		cast = player_turn_result.get('cast')
 		missile_targeting = player_turn_result.get('missile_targeting')
 		fired_weapon = player_turn_result.get("fired_weapon")
-		attack_miss = player_turn_result.get("attack_miss")
-		attack_defended = player_turn_result.get("attack_defended")
 		missile_dropped = player_turn_result.get("missile_dropped")
 		dropped_location = player_turn_result.get("dropped_location") 
 		monster_drops = player_turn_result.get("monster_drops")
@@ -42,23 +40,21 @@ def process_results(player_turn_results, game_state, previous_game_state, entiti
 			targets.current_targeting_consumable = targeting
 			message_log.add_message(targets.current_targeting_consumable.consumable.targeting_message)
 		if spell_targeting_result:
+			print("result process system picked up the spell targeting result")
 			previous_game_state = GameStates.PLAYERS_TURN
 			game_state = GameStates.TARGETING
 			targets.current_targeting_spell = spell_targeting_result
-			message_log.add_message(player.fighter.currently_targeting_spell.targeting_message)
+			message_log.add_message(targets.current_targeting_spell.targeting_message)
 		if missile_targeting:
 			previous_game_state = GameStates.PLAYERS_TURN
 			game_state = GameStates.TARGETING
 			targets.current_targeting_weapon = True
 			message_log.add_message(Message("Choose a target for your missile attack..."))
-		if attack_miss or attack_defended:
-			pass
 		if missile_dropped:
 			missile_entity = make_dropped_missile(missile_dropped, dropped_location)
 			entities.append(missile_entity)
 		if item_dropped:
 			entities.append(item_dropped)
-			pass
 		if equip:
 			equip_results = player.equipment.toggle_equip(equip)
 			for equip_result in equip_results:

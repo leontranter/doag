@@ -23,7 +23,6 @@ class BasicMonster():
 				if monster.equipment.main_hand.missile_weapon.loaded:
 					results.extend(monster.fighter.fire_weapon(weapon=monster.equipment.main_hand.equippable, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y))
 				else:
-					# TODO: This doesn't belong here - should move it to Fighter, but the load weapon function needs to be reworked to work for monsters!!
 					self.owner.equipment.main_hand.missile_weapon.loaded = True
 					results.append({"message": Message(f"The {self.owner.name.true_name} loads its {self.owner.equipment.main_hand.name.true_name}.")})
 			else:

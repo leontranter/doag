@@ -16,12 +16,12 @@ def attack(attacker, target, attack_type):
 			results = resolve_hit(attacker, results, dice_number, dice_type, modifier, damage_type, target)
 		else:
 			verb = "hit" if attacker.name.true_name == "Player" else "hits"
-			results.append({'attack_defended': True, 'message': Message(f'{attacker.name.subject_name} {verb}, but {target.name.object_name} {defense_choice}s the attack.')})
+			results.append({'message': Message(f'{attacker.name.subject_name} {verb}, but {target.name.object_name} {defense_choice}s the attack.')})
 	else:
 		results.append(miss_message(attacker, target, attack_type))
 		if attack_type == AttackTypes.MISSILE:
 			if d6_dice_roll(1, 0) > 2:
-				results.append({'missile_dropped': attacker.equipment.ammunition.name.true_name, 'dropped_location': (target.x, target.y)})
+				results.append({'missile_dropped': attacker.equipment.ammunition.ammunition.ammunition_type, 'dropped_location': (target.x, target.y)})
 	return results
 
 def resolve_hit(attacker, results, dice_number, dice_type, modifier, damage_type, target):
@@ -37,12 +37,12 @@ def hit_message(attacker, target, defense_choice):
 def miss_message(attacker, target, attack_type):
 	if attack_type == AttackTypes.MELEE:
 		verb = "miss" if attacker.name.true_name == "Player" else "misses"
-		return {'attack_miss': True, 'message': Message(f'{attacker.name.subject_name} {verb} {target.name.object_name}.')}
+		return {'message': Message(f'{attacker.name.subject_name} {verb} {target.name.object_name}.')}
 	elif attack_type == AttackTypes.MISSILE:
 		verb1 = "fire" if attacker.name.true_name == "Player" else "fires"
 		pronoun = "your" if attacker.name.true_name == "Player" else "their"
 		verb2 = "miss" if attacker.name.true_name == "Player" else "misses"
-		return {'attack_miss': True, 'message': Message(f'{attacker.name.subject_name} {verb1} {pronoun} {attacker.equipment.main_hand.name.true_name} but {verb2} {target.name.object_name}.')}
+		return {'message': Message(f'{attacker.name.subject_name} {verb1} {pronoun} {attacker.equipment.main_hand.name.true_name} but {verb2} {target.name.object_name}.')}
 	# TODO: implement miss message for thrown attacks
 
 def get_hit_modifier_from_status_effects(entity):

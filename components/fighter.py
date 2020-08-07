@@ -33,7 +33,6 @@ class Fighter:
 
 	def load_missile_weapon(self):
 		results = []
-		# TODO : needs to check you have the right type of ammunition!!
 		if self.owner.equipment.has_missile_weapon():
 			if self.owner.equipment.has_ammunition():
 				self.owner.equipment.main_hand.missile_weapon.loaded = True
@@ -65,7 +64,7 @@ class Fighter:
 			else:
 				for entity in entities:
 					if entity.x == target_x and entity.y == target_y and entity.fighter:
-						self.owner.equipment.ammunition.equippable.quantity -= 1
+						self.owner.equipment.ammunition.item.quantity -= 1
 						self.owner.equipment.main_hand.missile_weapon.loaded = False
 						results.extend(attack(self.owner, entity, AttackTypes.MISSILE))					
 		return results

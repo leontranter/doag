@@ -1,3 +1,5 @@
+from enum import Enum, auto
+
 def add_effect(effect, entity):
 		# If there is already the same effect on the target, don't add a new one, just increase the duration on the current one - makes life much easier
 	if entity.fighter:
@@ -29,3 +31,8 @@ def tick_down_effects(entity):
 		if entity.fighter.effect_list[i].get("turns_left") < 1:
 			del(entity.fighter.effect_list[i])
 
+
+class EffectNames(Enum):
+	POISON = auto()
+	BLESS = auto()
+	CONFUSION = auto()

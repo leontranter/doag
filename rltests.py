@@ -741,10 +741,23 @@ class PickupTests(unittest.TestCase):
 		entities.append(test_bow)
 		player_turn_results = []
 		player_turn_results.extend(pickup_item(test_player, entities))
-		self.assertTrue('item-added') in player_turn_results[0]
+		self.assertTrue('item_added' in player_turn_results[0])
 
-	def test_pickup_on_empty_does_nothing(self):
-		pass
+	def test_picking_up_can_stack_quantity(self):
+		test_inventory = Inventory(10)
+		test_player = entity.Entity(1, 1, 'A', libtcod.white, inventory=test_inventory)
+		self.assertEqual(len(test_player.inventory.items), 0)
+		test_arrows = EquippableFactory.make_arrows(1, 1, 5)
+		test_player.inventory.items.append(test_arrows)
+		self.assertEqual(test_player.inventory.items[0].item.quantity, 5)
+		self.assertEqual(len(test_player.inventory.items), 1)
+		test_arrows_2 = EquippableFactory.make_arrows(1,1, 2)
+		test_player.inventory.add_item(test_arrows_2)
+		self.assertEqual(len(test_player.inventory.items), 1)
+		self.assertEqual(test_player.inventory.items[0].item.quantity, 7)
+
+
+
 
 
 if __name__ == "__main__":

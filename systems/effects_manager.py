@@ -28,3 +28,4 @@ def tick_down_effects(entity):
 		entity.fighter.effect_list[i]["turns_left"] -= 1
 		if entity.fighter.effect_list[i].get("turns_left") < 1:
 			del(entity.fighter.effect_list[i])
+

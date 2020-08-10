@@ -26,10 +26,9 @@ class Inventory:
 				'message': Message('You pick up the {0}!'.format(temp_display_name), libtcod.yellow)
 			})
 			for current_item in self.items:
-				if current_item.name.true_name == item.name.true_name and current_item.equippable and current_item.item.quantity and current_item.item.quantity > 0:
-					# Checking if we can stack this item with one already carried
-					# TODO: This will need a LOT more work at some point... not a very clever check
-					current_item.equippable.quantity += item.equippable.quantity
+				if current_item.name.true_name == item.name.true_name and current_item.item.quantity and current_item.item.quantity > 0:
+					# Checking if we can stack this item with one already carried = if so, just increase quantity rather than append to the items list
+					current_item.item.quantity += item.item.quantity
 					break	
 			else:
 				self.items.append(item)
@@ -86,7 +85,6 @@ class Inventory:
 
 	def drop_on_death(self, entities, monster):
 		for item in self.items:
-			# TODO - does the monster need to de-equip these items?? should this be part of the class or module??
 			item.x, item.y = self.owner.x, self.owner.y
 			entities.append(item)
 		self.items = []

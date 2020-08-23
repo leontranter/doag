@@ -22,7 +22,7 @@ from loader_functions.constants import WeaponTypes, WeaponCategories, get_consta
 from loader_functions.initialize_new_game import get_game_variables, assign_potion_descriptions, assign_scroll_descriptions, populate_dlevels
 from loader_functions.data_loaders import save_game, load_game
 from systems.attack import weapon_skill_lookup, get_weapon_skill_for_attack, get_hit_modifier_from_status_effects
-from systems.effects_manager import add_effect, tick_down_effects, process_damage_over_time
+from systems.effects_manager import add_effect, tick_down_effects, process_damage_over_time, EffectNames
 from systems.name_system import get_display_name
 from systems.damage import get_physical_damage_modifier_from_status_effects, get_physical_damage_modifier_from_equipment, apply_physical_damage_modifiers, get_damage_string, get_current_missile_damage, get_current_melee_damage
 from systems.attack import get_hit_modifier_from_status_effects, get_hit_modifier_from_equipment, attack
@@ -671,6 +671,13 @@ class EffectsTests(unittest.TestCase):
 		test_effect = {'name': "Bless", 'turns_left': 5, 'physical_damage_modifier': 3}
 		add_effect(test_effect, test_entity)
 		self.assertEqual(get_physical_damage_modifier_from_status_effects(test_entity), 3)
+
+	def test_can_apply_a_confuse_effect(self):
+		test_player = mocks.create_mockchar_3()
+		test_effect = {'name': EffectNames.CONFUSION, 'turns_left': 5}
+		add_effect(test_effect, test_player)
+		self.assertEqual(test_player.fighter.effect_list[0].get('name'), EffectNames.CONFUSION)
+
 
 class UseTests(unittest.TestCase):
 	def test_can_use_healing_potion(self):

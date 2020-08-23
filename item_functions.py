@@ -132,18 +132,20 @@ def cast_confuse(*args, **kwargs):
 		return results
 
 	for entity in entities:
-		if entity.x == target_x and entity.y == target_y and entity.ai:
-			confused_ai = ConfusedMonster(entity.ai, 10)
-			confused_ai.owner = entity
-			entity.ai = confused_ai
-
+		if entity.x == target_x and entity.y == target_y and entity.fighter:
+			entity = apply_confuse(entity)
 			results.append({'consumed': True, 'message': Message('The {} becomes confused!'.format(entity.name.true_name), libtcod.light_green)})
-
 			break
 	else:
 		results.append({'consumed': False, 'message': Message('There is no targetable enemy at that location.', libtcod.yellow)})
 
 	return results
+
+# TODO: fix this up, test this properly
+def apply_confuse(entity):
+	effect = {'name': EffectNames.CONFUSION, 'turns_left': 5}
+	effects_manager.add_effect(effect, entity)
+	return entity
 
 def learn_spell_from_book(*args, **kwargs):
 	results = []

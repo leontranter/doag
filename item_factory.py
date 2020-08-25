@@ -1,6 +1,6 @@
 from components.item import Item
 from entity import Entity
-from item_functions import heal, cast_lightning, cast_fireball, cast_confuse, poison, learn_spell_from_book
+from item_functions import heal, cast_lightning, cast_fireball, cast_confuse, poison, learn_spell_from_book, apply_confuse
 import tcod as libtcod
 from render_functions import RenderOrder
 from game_messages import Message
@@ -23,10 +23,10 @@ def make_poison_potion(x=1, y=1):
 	return temp_entity
 
 def make_confusion_potion(x=1, y=1):
-	confusion_consumable = Consumable(ConsumableTypes.POTION, use_function=confusion, target_self=True)
+	confusion_consumable = Consumable(ConsumableTypes.POTION, use_function=apply_confuse, target_self=True)
 	confusion_name = Name(true_name="Confusion Potion")
 	confusion_item = Item(1, 1)
-	temp_entity = Entity(x, y, '!', libtcod.violet, render_order=RenderOrder.ITEM, item=confusion_item, name=poison_name, consumable=confusion_consumable)
+	temp_entity = Entity(x, y, '!', libtcod.violet, render_order=RenderOrder.ITEM, item=confusion_item, name=confusion_name, consumable=confusion_consumable)
 	return temp_entity
 
 def make_lightning_scroll(x=1, y=1):

@@ -36,7 +36,7 @@ def get_current_missile_damage(entity):
 def get_physical_damage_modifier_from_status_effects(entity):
 	physical_damage_modifier = 0
 	for effect in entity.fighter.effect_list:
-		physical_damage_modifier += effect.get("physical_damage_modifier") or 0
+		physical_damage_modifier += effect.physical_damage_modifier or 0
 	return physical_damage_modifier	
 
 def get_physical_damage_modifier_from_equipment(entity):

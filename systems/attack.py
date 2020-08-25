@@ -48,7 +48,7 @@ def miss_message(attacker, target, attack_type):
 def get_hit_modifier_from_status_effects(entity):
 	modifier = 0
 	for effect in entity.fighter.effect_list:
-		modifier += effect.get("hit_modifier") or 0
+		modifier += effect.hit_modifier or 0
 	return modifier
 
 def check_hit(attacker, target):

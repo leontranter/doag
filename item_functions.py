@@ -1,10 +1,11 @@
 import tcod as libtcod
 from game_messages import Message
 from components.ai import ConfusedMonster
-from systems.effects_manager import add_effect
+from systems.effects_manager import add_effect, EffectNames
 from systems.move_system import distance
 from systems.skill_manager import SkillNames
 from spells import Spell
+from components.effects import Effect
 
 def make_fireball_spell():
 	spell = Spell("Fireball", 10, SkillNames.FIRE, cast_fireball, targeting=True, targeting_message=Message('Left-click a target tile for the fireball, or right-click to cancel.', libtcod.light_cyan), damage=30, radius=3)
@@ -53,7 +54,7 @@ def bless(*args, **kwargs):
 	bonus = kwargs.get('bonus')
 	
 	results = []
-	bless_effect = {'name': "Bless", "turns_left": 7, "hit_modifier": bonus, "physical_damage_modifier": bonus}
+	bless_effect = Effect(name=EffectNames.BLESS, turns_left=7, hit_modifier=1, physical_damage_modifier=1)
 	for entity in entities:
 		if entity.x == target_x and entity.y == target_y and entity.fighter:
 			add_effect(bless_effect, entity)
@@ -141,8 +142,8 @@ def cast_confuse(*args, **kwargs):
 
 	return results
 
-# TODO: fix this up, test this properly
-def apply_confuse(entity):
+# TODO: fix this up, test this properly - do we need separate apply functions or can be merged into one? or just use add_effect??
+def apply_confuse(*args, **kwargs):
 	effect = {'name': EffectNames.CONFUSION, 'turns_left': 5}
 	effects_manager.add_effect(effect, entity)
 	return entity

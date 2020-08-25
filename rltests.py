@@ -15,7 +15,7 @@ from components.meleeweapon import MeleeWeapon
 from components.item import Item
 from components.name import Name
 from components.identified import Identified
-from components.effects import Effects
+from components.effects import Effect
 from components.consumable import ConsumableTypes, get_carried_potions
 from damage_types import DamageTypes
 from loader_functions.constants import WeaponTypes, WeaponCategories, get_constants, AmmunitionTypes
@@ -105,7 +105,7 @@ class SpellTests(unittest.TestCase):
 		results = cast(test_entity, spell, target_x=1, target_y=1, entities=entities)
 		self.assertTrue(len(results), 1)
 		self.assertEqual(len(test_entity.fighter.effect_list), 1)
-		self.assertEqual(test_entity.fighter.effect_list[0].get("name"), "Bless")
+		self.assertEqual(test_entity.fighter.effect_list[0].name, EffectNames.BLESS)
 		self.assertEqual(get_hit_modifier_from_status_effects(test_entity), 1)
 		self.assertEqual(get_physical_damage_modifier_from_status_effects(test_entity), 1)
 
@@ -208,7 +208,6 @@ class DamageTests(unittest.TestCase):
 		test_fighter = Fighter(xp=100)
 		padded_armor_equippable = Equippable(EquipmentSlots.BODY, DR_bonus=1, physical_damage_modifier=2)
 		padded_armor_name = Name("Padded Armor")
-		test_effects = Effects()
 		padded_armor_entity = entity.Entity(1, 1, ')', libtcod.purple, equippable=padded_armor_equippable, name=padded_armor_name)
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", equipment=test_equipment, fighter=test_fighter)
 		test_equipment.body = padded_armor_entity
@@ -602,30 +601,22 @@ class BasicGameTests(unittest.TestCase):
 		self.assertEqual(isinstance(entities, list), True)		
 
 class EffectsTests(unittest.TestCase):
-	def test_can_create_effects_component(self):
-		effects_component = Effects()
-		self.assertEqual(isinstance(effects_component.effect_list, list), True)
-
-	def test_can_add_effects_component_to_entity(self):
-		test_fighter = Fighter(xp=100)
-		test_entity = entity.Entity(1, 1, 'A', libtcod.white, fighter=test_fighter)
-		self.assertEqual(isinstance(test_entity.fighter.effect_list, list), True)
 
 	def test_effects_manager_can_add_effect(self):
 		test_fighter = Fighter(xp=100)
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, fighter=test_fighter)
-		test_effect = {'name': "Poison", 'turns_left': 5, 'damage_per_turn': 3}
+		test_effect = Effect(name=EffectNames.POISON, turns_left=5, damage_per_turn=3)
 		self.assertEqual(add_effect(test_effect, test_entity), "appended")
 		self.assertEqual(len(test_fighter.effect_list), 1)
 
 	def test_effects_stack_properly(self):
 		test_fighter = Fighter(xp=100)
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, fighter=test_fighter)
-		test_effect = {'name': "Poison", 'turns_left': 5, 'damage_per_turn': 3}
+		test_effect = Effect(name=EffectNames.POISON, turns_left=5, damage_per_turn=3)
 		add_effect(test_effect, test_entity)
-		test_effect_2 = {'name': "Poison", 'turns_left': 3, 'damage_per_turn': 3}
+		test_effect_2 = Effect(name=EffectNames.POISON, turns_left=3, damage_per_turn=3)
 		self.assertEqual(add_effect(test_effect_2, test_entity), "extended")
-		self.assertEqual(test_fighter.effect_list[0].get("turns_left"), 8)
+		self.assertEqual(test_fighter.effect_list[0].turns_left, 8)
 
 	def test_effects_tick_down(self):
 		test_fighter = Fighter(xp=100)
@@ -649,7 +640,7 @@ class EffectsTests(unittest.TestCase):
 		fighter_component = Fighter(xp=100)
 		stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, stats=stats_component, fighter=fighter_component)
-		test_effect = {'name': "Poison", 'turns_left': 5, 'damage_per_turn': 3}
+		test_effect = Effect(name=EffectNames.POISON, turns_left=5, damage_per_turn=3)
 		add_effect(test_effect, test_entity)
 		process_damage_over_time(test_entity)
 		self.assertEqual(test_entity.stats.hp, 16)
@@ -657,18 +648,18 @@ class EffectsTests(unittest.TestCase):
 	def test_can_calculate_hit_bonus_from_effects(self):
 		test_fighter = Fighter(xp=100)
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, fighter=test_fighter)
-		test_effect = {'name': "Poison", 'turns_left': 5, 'damage_per_turn': 3}
+		test_effect = Effect(name=EffectNames.POISON, turns_left=5, damage_per_turn=3)
 		add_effect(test_effect, test_entity)
 		self.assertEqual(get_hit_modifier_from_status_effects(test_entity), 0)
-		test_effect2 = {'name': "Bless", 'turns_left': 5, 'hit_modifier': 3}
-		add_effect(test_effect2, test_entity)
+		test_effect_2 = Effect(name=EffectNames.BLESS, turns_left=5, hit_modifier=3)
+		add_effect(test_effect_2, test_entity)
 		self.assertEqual(get_hit_modifier_from_status_effects(test_entity), 3)
 
 	def test_can_calculate_damage_bonus_from_effects(self):
 		test_fighter = Fighter(xp=100)
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, fighter=test_fighter)
 		self.assertEqual(get_physical_damage_modifier_from_status_effects(test_entity), 0)
-		test_effect = {'name': "Bless", 'turns_left': 5, 'physical_damage_modifier': 3}
+		test_effect = Effect(name=EffectNames.BLESS, turns_left=5, physical_damage_modifier=3)
 		add_effect(test_effect, test_entity)
 		self.assertEqual(get_physical_damage_modifier_from_status_effects(test_entity), 3)
 

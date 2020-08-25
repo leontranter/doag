@@ -11,7 +11,6 @@ from components.stats import Stats
 from components.skills import Skills
 from components.defender import Defender
 from components.name import Name
-from components.effects import Effects
 from systems.skill_manager import SkillNames
 
 def getMonsterByDungeonLevel(level):
@@ -24,7 +23,6 @@ def makeOrc(x, y):
 	equipment_component = Equipment()
 	inventory_component = Inventory(26)
 	defender_component = Defender()
-	effects_component = Effects()
 	skill_component = Skills()
 	skill_component.set_skill_rank(SkillNames.SWORD, 1)
 	skill_component.set_skill_rank(SkillNames.DAGGER, 1)
@@ -46,7 +44,6 @@ def makeTroll(x, y):
 	equipment_component = Equipment()
 	inventory_component = Inventory(26)
 	defender_component = Defender()
-	effects_component = Effects()
 	skill_component = Skills()
 	skill_component.set_skill_rank(SkillNames.SWORD, 1)
 	skill_component.set_skill_rank(SkillNames.DAGGER, 1)
@@ -65,7 +62,6 @@ def makeKobold(x, y):
 	equipment_component = Equipment()
 	inventory_component = Inventory(26)
 	defender_component = Defender()
-	effects_component = Effects()
 	skill_component = Skills()
 	skill_component.set_skill_rank(SkillNames.SWORD, 1)
 	skill_component.set_skill_rank(SkillNames.DAGGER, 1)

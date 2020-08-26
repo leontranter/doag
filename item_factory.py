@@ -16,7 +16,7 @@ def make_healing_potion(x=1, y=1):
 	return temp_entity
 
 def make_poison_potion(x=1, y=1):
-	poison_consumable = Consumable(ConsumableTypes.POTION, use_function=poison, amount=10)
+	poison_consumable = Consumable(ConsumableTypes.POTION, use_function=poison, amount=3)
 	poison_name = Name(true_name="Poison Potion")
 	poison_item = Item(1, 1)
 	temp_entity = Entity(x, y, '!', libtcod.violet, render_order=RenderOrder.ITEM, item=poison_item, name=poison_name, consumable=poison_consumable)

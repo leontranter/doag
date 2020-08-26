@@ -34,7 +34,7 @@ from components.inventory import Inventory
 from item_functions import heal, learn_spell_from_book, make_bless_spell
 from fov_functions import initialize_fov
 from render_functions import get_names_under_mouse
-from item_factory import make_healing_potion, make_lightning_scroll, make_fireball_scroll, make_confusion_scroll, make_fireball_book, make_heal_book, make_bless_book, make_poison_potion
+from item_factory import make_healing_potion, make_lightning_scroll, make_fireball_scroll, make_confusion_scroll, make_fireball_book, make_heal_book, make_bless_book, make_poison_potion, make_confusion_potion
 import monsters
 import mocks
 from menus import menu
@@ -605,31 +605,31 @@ class EffectsTests(unittest.TestCase):
 	def test_effects_manager_can_add_effect(self):
 		test_fighter = Fighter(xp=100)
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, fighter=test_fighter)
-		test_effect = Effect(name=EffectNames.POISON, turns_left=5, damage_per_turn=3)
+		test_effect = Effect(name=EffectNames.POISON, description="Poisoned", turns_left=5, damage_per_turn=3)
 		self.assertEqual(add_effect(test_effect, test_entity), "appended")
 		self.assertEqual(len(test_fighter.effect_list), 1)
 
 	def test_effects_stack_properly(self):
 		test_fighter = Fighter(xp=100)
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, fighter=test_fighter)
-		test_effect = Effect(name=EffectNames.POISON, turns_left=5, damage_per_turn=3)
+		test_effect = Effect(name=EffectNames.POISON, description="Poisoned", turns_left=5, damage_per_turn=3)
 		add_effect(test_effect, test_entity)
-		test_effect_2 = Effect(name=EffectNames.POISON, turns_left=3, damage_per_turn=3)
+		test_effect_2 = Effect(name=EffectNames.POISON, description="Poisoned", turns_left=3, damage_per_turn=3)
 		self.assertEqual(add_effect(test_effect_2, test_entity), "extended")
 		self.assertEqual(test_fighter.effect_list[0].turns_left, 8)
 
 	def test_effects_tick_down(self):
 		test_fighter = Fighter(xp=100)
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, fighter=test_fighter)
-		test_effect = {'name': "Poison", 'turns_left': 5, 'damage_per_turn': 3}
+		test_effect = Effect(name=EffectNames.POISON, description="Poisoned", turns_left=5, damage_per_turn=3)
 		add_effect(test_effect, test_entity)
 		tick_down_effects(test_entity)
-		self.assertEqual(test_effect.get("turns_left"), 4)
+		self.assertEqual(test_effect.turns_left, 4)
 
 	def test_effects_disappear_when_done(self):
 		test_fighter = Fighter(xp=100)
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, fighter=test_fighter)
-		test_effect = {'name': "Poison", 'turns_left': 5, 'damage_per_turn': 3}
+		test_effect = Effect(name=EffectNames.POISON, description="Poisoned", turns_left=5, damage_per_turn=3)
 		add_effect(test_effect, test_entity)
 		self.assertEqual(len(test_entity.fighter.effect_list), 1)
 		for _ in range(5):
@@ -640,7 +640,7 @@ class EffectsTests(unittest.TestCase):
 		fighter_component = Fighter(xp=100)
 		stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, stats=stats_component, fighter=fighter_component)
-		test_effect = Effect(name=EffectNames.POISON, turns_left=5, damage_per_turn=3)
+		test_effect = Effect(name=EffectNames.POISON, description="Poisoned", turns_left=5, damage_per_turn=3)
 		add_effect(test_effect, test_entity)
 		process_damage_over_time(test_entity)
 		self.assertEqual(test_entity.stats.hp, 16)
@@ -648,10 +648,10 @@ class EffectsTests(unittest.TestCase):
 	def test_can_calculate_hit_bonus_from_effects(self):
 		test_fighter = Fighter(xp=100)
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, fighter=test_fighter)
-		test_effect = Effect(name=EffectNames.POISON, turns_left=5, damage_per_turn=3)
+		test_effect = Effect(name=EffectNames.POISON, description="Poisoned", turns_left=5, damage_per_turn=3)
 		add_effect(test_effect, test_entity)
 		self.assertEqual(get_hit_modifier_from_status_effects(test_entity), 0)
-		test_effect_2 = Effect(name=EffectNames.BLESS, turns_left=5, hit_modifier=3)
+		test_effect_2 = Effect(name=EffectNames.BLESS, description="Blessed", turns_left=5, hit_modifier=3)
 		add_effect(test_effect_2, test_entity)
 		self.assertEqual(get_hit_modifier_from_status_effects(test_entity), 3)
 
@@ -659,15 +659,15 @@ class EffectsTests(unittest.TestCase):
 		test_fighter = Fighter(xp=100)
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, fighter=test_fighter)
 		self.assertEqual(get_physical_damage_modifier_from_status_effects(test_entity), 0)
-		test_effect = Effect(name=EffectNames.BLESS, turns_left=5, physical_damage_modifier=3)
+		test_effect = Effect(name=EffectNames.BLESS, description="Blessed", turns_left=5, physical_damage_modifier=3)
 		add_effect(test_effect, test_entity)
 		self.assertEqual(get_physical_damage_modifier_from_status_effects(test_entity), 3)
 
 	def test_can_apply_a_confuse_effect(self):
 		test_player = mocks.create_mockchar_3()
-		test_effect = {'name': EffectNames.CONFUSION, 'turns_left': 5}
+		test_effect = Effect(name=EffectNames.CONFUSION, description="Confused", turns_left=5)
 		add_effect(test_effect, test_player)
-		self.assertEqual(test_player.fighter.effect_list[0].get('name'), EffectNames.CONFUSION)
+		self.assertEqual(test_player.fighter.effect_list[0].name, EffectNames.CONFUSION)
 
 
 class UseTests(unittest.TestCase):
@@ -684,6 +684,14 @@ class UseTests(unittest.TestCase):
 		test_potion = make_healing_potion()
 		results = test_char.inventory.use(test_potion)
 		self.assertEqual(len(test_char.identified.identified_potions), 1)
+
+	def test_can_use_confusion_potion(self):
+		test_potion = make_confusion_potion()
+		test_inventory = Inventory(10)
+		test_inventory.items.append(test_potion)
+		test_player_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", inventory=test_inventory)
+		test_inventory.use(test_potion)
+		#self.assertEqual(results[0].get('consumed'), True)
 
 class MoveTests(unittest.TestCase):
 	def test_can_calculate_distance_to(self):

@@ -27,10 +27,16 @@ def process_damage_over_time(entity):
 
 def tick_down_effects(entity):
 	for i in range(len(entity.fighter.effect_list)-1, -1, -1):
-		entity.fighter.effect_list[i]["turns_left"] -= 1
-		if entity.fighter.effect_list[i].get("turns_left") < 1:
+		entity.fighter.effect_list[i].turns_left -= 1
+		if entity.fighter.effect_list[i].turns_left < 1:
 			del(entity.fighter.effect_list[i])
 
+def is_confused(entity):
+	for effect in entity.fighter.effect_list:
+		if effect.name == EffectNames.CONFUSION:
+			return True
+	else:
+		return False
 
 class EffectNames(Enum):
 	POISON = auto()

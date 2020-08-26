@@ -3,9 +3,17 @@ import tcod as libtcod
 from game_states import GameStates
 from systems.attack import attack
 from attack_types import AttackTypes
+from systems.effects_manager import is_confused
+from random import randint
 
 def attempt_move_entity(move, game_map, moving_entity, entities, game_state, player_turn_results, fov_recompute, action_free):
-	dx, dy = move
+	if is_confused(moving_entity):
+		dx, dy = (randint(0,1), randint(0,1))
+		if (dx, dy) == (0, 0):
+			action_free = False
+			return player_turn_results, fov_recompute, game_state, action_free
+	else:
+		dx, dy = move
 	destination_x = moving_entity.x + dx
 	destination_y = moving_entity.y + dy
 	if not game_map.is_blocked(destination_x, destination_y):
@@ -17,7 +25,6 @@ def attempt_move_entity(move, game_map, moving_entity, entities, game_state, pla
 			move_entity(moving_entity, dx, dy)
 			fov_recompute = True
 		action_free = False
-		game_state = GameStates.ENEMY_TURN
 	return player_turn_results, fov_recompute, game_state, action_free
 
 def move_entity(moving_entity, dx, dy):

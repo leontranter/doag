@@ -40,7 +40,7 @@ def poison(*args, **kwargs):
 	amount = kwargs.get('amount')
 
 	results = []
-	poison_effect = {'name': "Poison", "turns_left": 5, "damage_per_turn": 3}
+	poison_effect = Effect(name=EffectNames.POISON, description="Poisoned", turns_left=5, damage_per_turn=amount)
 	add_effect(poison_effect, entity)
 	results.append({'consumed': True, 'message': Message('You drink a potion of poison! You feel terrible!', libtcod.green)})
 	return results
@@ -54,7 +54,8 @@ def bless(*args, **kwargs):
 	bonus = kwargs.get('bonus')
 	
 	results = []
-	bless_effect = Effect(name=EffectNames.BLESS, turns_left=7, hit_modifier=1, physical_damage_modifier=1)
+	# TODO: Make duraction based on skill rank?
+	bless_effect = Effect(name=EffectNames.BLESS, description="Blessed", turns_left=7, hit_modifier=1, physical_damage_modifier=1)
 	for entity in entities:
 		if entity.x == target_x and entity.y == target_y and entity.fighter:
 			add_effect(bless_effect, entity)
@@ -113,20 +114,13 @@ def cast_fireball(*args, **kwargs):
 			results.append({'message': Message(f'{entity.name.subject_name} {verb} burned for {damage} {quantity}.', libtcod.orange)})
 			results.extend(entity.fighter.take_damage(damage))
 	return results
-
-# TODO: needs to be completely reworked
+	
 def cast_confuse(*args, **kwargs):
 	entities = kwargs.get('entities')
 	fov_map = kwargs.get('fov_map')
 	target_x = kwargs.get('target_x')
 	target_y = kwargs.get('target_y')
-	target_self = kwargs.get('target_self')
 	results = []
-
-	# TODO: Fix this! probably need to split out into cast confuse and resolve confuse functions
-	if target_self:
-		results.append({'consumed': True, 'message': Message("You are confused!", libtcod.yellow)})
-		return results
 
 	if not libtcod.map_is_in_fov(fov_map, target_x, target_y):
 		results.append({'consumed': False, 'message': Message('You cannot target a tile outside your field of view.', libtcod.yellow)})
@@ -134,7 +128,8 @@ def cast_confuse(*args, **kwargs):
 
 	for entity in entities:
 		if entity.x == target_x and entity.y == target_y and entity.fighter:
-			entity = apply_confuse(entity)
+			effect = Effect(name=EffectNames.CONFUSION, description="Confused", turns_left=5)
+			add_effect(effect, entity)
 			results.append({'consumed': True, 'message': Message('The {} becomes confused!'.format(entity.name.true_name), libtcod.light_green)})
 			break
 	else:
@@ -144,9 +139,16 @@ def cast_confuse(*args, **kwargs):
 
 # TODO: fix this up, test this properly - do we need separate apply functions or can be merged into one? or just use add_effect??
 def apply_confuse(*args, **kwargs):
-	effect = {'name': EffectNames.CONFUSION, 'turns_left': 5}
-	effects_manager.add_effect(effect, entity)
-	return entity
+	results = []
+	entity=args[0]
+	effect = Effect(name=EffectNames.CONFUSION, description="Confused", turns_left=5)
+	add_effect(effect, entity)
+	results.append({'consumed': True, 'message': Message('You drink a potion of confusion! You feel confused!', libtcod.green)})
+	return results
+
+# TODO: can a generic function like this work?
+def apply_effect(*args, **kwargs):
+	effect=kwargs.get('effect')
 
 def learn_spell_from_book(*args, **kwargs):
 	results = []

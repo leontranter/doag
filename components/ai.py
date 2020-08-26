@@ -44,6 +44,7 @@ class BasicMonster():
 			results.extend(attack_results)
 		return results
 
+# TODO: clean this up, it should work similar to confused players - I think?
 class ConfusedMonster:
 	def __init__(self, previous_ai, number_of_turns=10):
 		self.previous_ai = previous_ai

@@ -31,12 +31,6 @@ def get_game_variables(constants, start_equipped=False):
 	game_map = GameMap(constants['map_width'], constants['map_height'])
 	game_map.make_map(constants['max_rooms'], constants['room_min_size'], constants['room_max_size'], constants['map_width'], constants['map_height'], player, entities)
 	
-	#set the game difficulty - TODO: bring in this from a menu etc
-	game_difficulty = 1
-	difficulty_modifiers = {1: 2.0, 2: 1.75, 3: 1.5, 4: 1, 5: 1}
-	player.stats.base_max_hp = int(player.stats.base_max_hp * difficulty_modifiers[game_difficulty])
-	player.stats.hp = player.stats.base_max_hp
-
 	# create the entities and map, save them to a Dlevel object
 	max_dlevels = constants['max_dlevels']
 	dlevels = populate_dlevels(entities, game_map, max_dlevels)

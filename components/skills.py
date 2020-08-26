@@ -1,8 +1,6 @@
 from systems.skill_manager import skill_check_lookups, SkillNames
 
-
 class Skills:
-
 	def __init__(self):
 		self.skills = {}
 

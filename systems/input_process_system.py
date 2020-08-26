@@ -31,11 +31,9 @@ def process_input(action, mouse_action, player, entities, game_state, previous_g
 
 	if move and game_state == GameStates.PLAYERS_TURN:
 		player_turn_results, fov_recompute, game_state, action_free = move_system.attempt_move_entity(move, game_map, player, entities, game_state, player_turn_results, fov_recompute, action_free)
-		# TODO - terrible bug - turn gets processed even if move attempt is unsuccessful!!!!!!
 
 	elif wait:
 		action_free = False
-		game_state = GameStates.ENEMY_TURN
 
 	elif pickup and game_state == GameStates.PLAYERS_TURN:
 		player_turn_results.extend(pickup_item(player, entities))
@@ -129,20 +127,18 @@ def process_input(action, mouse_action, player, entities, game_state, previous_g
 		action_free = False
 
 	if game_state == GameStates.TARGETING:
-		# TODO: fix this up, ugly as all hell
 		if left_click:
 			target_x, target_y = left_click
 			if targets.current_targeting_consumable:	
 				item_use_results = player.inventory.use(targets.current_targeting_consumable, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y)
 				player_turn_results.extend(item_use_results)
 			elif targets.current_targeting_spell:
-				spell_use_results = player.caster.cast(targets.current_targeting_spell, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y)
+				spell_use_results = spell_system.cast(player, targets.current_targeting_spell, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y)
 				player_turn_results.extend(spell_use_results)
 			# TODO: do we really need this current targeting weapon thing?
 			elif targets.current_targeting_weapon:
 				missile_attack_results = player.fighter.fire_weapon(weapon=player.equipment.main_hand.equippable, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y)
 				player_turn_results.extend(missile_attack_results)	
-			print("142")
 			action_free = False
 		elif right_click:
 			player_turn_results.append({'targeting_cancelled': True})

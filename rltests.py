@@ -106,6 +106,7 @@ class SpellTests(unittest.TestCase):
 		self.assertTrue(len(results), 1)
 		self.assertEqual(len(test_entity.fighter.effect_list), 1)
 		self.assertEqual(test_entity.fighter.effect_list[0].name, EffectNames.BLESS)
+		self.assertEqual(test_entity.fighter.effect_list[0].turns_left, 25)
 		self.assertEqual(get_hit_modifier_from_status_effects(test_entity), 1)
 		self.assertEqual(get_physical_damage_modifier_from_status_effects(test_entity), 1)
 
@@ -698,11 +699,6 @@ class MoveTests(unittest.TestCase):
 		test_entity_1 = entity.Entity(1, 1, 'A', libtcod.white)
 		test_entity_2 = entity.Entity(4, 5, 'A', libtcod.white)
 		self.assertEqual(distance_to(test_entity_1, test_entity_2), 5)
-
-class TimeTests(unittest.TestCase):
-	def test_can_get_time_results(self):
-		# TODO: What is this?!
-		pass		
 
 class BookTests(unittest.TestCase):
 	def test_can_make_and_hold_bless_book(self):

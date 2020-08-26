@@ -4,7 +4,6 @@ from damage_types import DamageTypes, damage_type_modifiers
 from game_messages import Message
 
 def get_current_melee_damage(entity):
-	# TODO: Fix this! Implement punching and kicking properly
 	# nothing in main hand
 	if not entity.equipment.main_hand:
 		dice_number, dice_type, modifier = (1,3,0)
@@ -28,8 +27,8 @@ def get_current_missile_damage(entity):
 		return (0, 0, DamageTypes.CRUSHING)
 	else:
 		dice_number, dice_type, modifier = entity.equipment.main_hand.missile_weapon.missile_damage
-		# TODO: Sort this missile damage stuff out once and for all
-		#modifier += self.owner.equipment.missile_damage_bonus
+		if entity.equipment.ammunition:
+			modifier += entity.equipment.ammunition.ammunition.missile_damage_bonus
 		damage_type = entity.equipment.main_hand.missile_weapon.missile_damage_type
 		return (dice_number, dice_type, modifier, damage_type)
 
@@ -41,7 +40,6 @@ def get_physical_damage_modifier_from_status_effects(entity):
 
 def get_physical_damage_modifier_from_equipment(entity):
 	modifier = 0
-	# TODO: could refactor this into iterating through a list??
 	if entity.equipment.main_hand:
 		modifier += entity.equipment.main_hand.equippable.physical_damage_modifier or 0	
 	if entity.equipment.off_hand:

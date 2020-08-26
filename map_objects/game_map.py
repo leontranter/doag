@@ -79,7 +79,6 @@ class GameMap:
 					# this is the first room, where the player starts
 					player.x = new_x
 					player.y = new_y
-					# TODO: This is only for debugging!!!!
 				else:
 					# for all other rooms, connect it to the previous room with a tunnel
 					(prev_x, prev_y) = rooms[num_rooms -1].center()
@@ -172,7 +171,6 @@ class GameMap:
 
 			if not any([entity for entity in entities if entity.x == x and entity.y == y]):
 				item_choice = random_choice_from_dict(item_chances)
-				# TODO: This whole lookup could be just changed to one dict lookup I think? item = itemMaker[itemchoice] or something?
 				item = item_generator(item_choice, x, y)
 				entities.append(item)
 

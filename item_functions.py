@@ -46,16 +46,15 @@ def poison(*args, **kwargs):
 	return results
 
 def bless(*args, **kwargs):
+	caster = args[0]
 	entities = kwargs.get('entities')
 	fov_map = kwargs.get('fov_map')
 	target_x = kwargs.get('target_x')
 	target_y = kwargs.get('target_y')
-	target_self = kwargs.get('target_self')
 	bonus = kwargs.get('bonus')
-	
+	duration = (caster.skills.get_skill_rank(SkillNames.HOLY) * 3) + 1
 	results = []
-	# TODO: Make duraction based on skill rank?
-	bless_effect = Effect(name=EffectNames.BLESS, description="Blessed", turns_left=7, hit_modifier=1, physical_damage_modifier=1)
+	bless_effect = Effect(name=EffectNames.BLESS, description="Blessed", turns_left=duration, hit_modifier=bonus, physical_damage_modifier=bonus)
 	for entity in entities:
 		if entity.x == target_x and entity.y == target_y and entity.fighter:
 			add_effect(bless_effect, entity)
@@ -137,7 +136,6 @@ def cast_confuse(*args, **kwargs):
 
 	return results
 
-# TODO: fix this up, test this properly - do we need separate apply functions or can be merged into one? or just use add_effect??
 def apply_confuse(*args, **kwargs):
 	results = []
 	entity=args[0]
@@ -145,10 +143,6 @@ def apply_confuse(*args, **kwargs):
 	add_effect(effect, entity)
 	results.append({'consumed': True, 'message': Message('You drink a potion of confusion! You feel confused!', libtcod.green)})
 	return results
-
-# TODO: can a generic function like this work?
-def apply_effect(*args, **kwargs):
-	effect=kwargs.get('effect')
 
 def learn_spell_from_book(*args, **kwargs):
 	results = []
@@ -165,4 +159,3 @@ spell_function_lookup = {
 	'bless': make_bless_spell,
 	'heal': make_heal_spell
 }
-

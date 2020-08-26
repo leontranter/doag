@@ -43,7 +43,6 @@ def miss_message(attacker, target, attack_type):
 		pronoun = "your" if attacker.name.true_name == "Player" else "their"
 		verb2 = "miss" if attacker.name.true_name == "Player" else "misses"
 		return {'message': Message(f'{attacker.name.subject_name} {verb1} {pronoun} {attacker.equipment.main_hand.name.true_name} but {verb2} {target.name.object_name}.')}
-	# TODO: implement miss message for thrown attacks
 
 def get_hit_modifier_from_status_effects(entity):
 	modifier = 0

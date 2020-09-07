@@ -10,6 +10,8 @@ class Stats:
 		self.base_max_hp = self.Stamina + self.Endurance
 		self.hp = self.base_max_hp
 		self.evade = int((self.Agility + self.Precision) / 4)
+		self.base_sp = Stamina * 2
+		self.sp = self.base_sp
 
 	@property
 	def max_hp(self):

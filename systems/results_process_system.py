@@ -13,7 +13,8 @@ def process_results(player_turn_results, game_state, previous_game_state, entiti
 		item_consumed = player_turn_result.get('consumed')
 		item_dropped = player_turn_result.get('item_dropped')
 		targeting = player_turn_result.get('targeting')
-		spell_targeting_result = player_turn_result.get('spell_targeting')
+		spell_targeting = player_turn_result.get('spell_targeting')
+		feat_targeting = player_turn_result.get('feat_targeting')
 		targeting_cancelled = player_turn_result.get('targeting_cancelled')
 		equip = player_turn_result.get('equip')
 		cast = player_turn_result.get('cast')
@@ -39,12 +40,18 @@ def process_results(player_turn_results, game_state, previous_game_state, entiti
 			game_state = GameStates.TARGETING
 			targets.current_targeting_consumable = targeting
 			message_log.add_message(targets.current_targeting_consumable.consumable.targeting_message)
-		if spell_targeting_result:
+		if spell_targeting:
 			print("result process system picked up the spell targeting result")
 			previous_game_state = GameStates.PLAYERS_TURN
 			game_state = GameStates.TARGETING
 			targets.current_targeting_spell = spell_targeting_result
 			message_log.add_message(targets.current_targeting_spell.targeting_message)
+		if feat_targeting:
+			print("result process system picked up the feat targeting result")
+			previous_game_state = GameStates.PLAYERS_TURN
+			game_state = GameStates.TARGETING
+			targets.current_targeting_feat = feat_targeting
+			message_log.add_message(targets.current_targeting_feat.targeting_message)
 		if missile_targeting:
 			previous_game_state = GameStates.PLAYERS_TURN
 			game_state = GameStates.TARGETING

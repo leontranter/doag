@@ -3,6 +3,7 @@ class Targeting:
 		self.current_targeting_consumable = None
 		self.current_targeting_spell = None
 		self.current_targeting_missile = False
+		self.current_targeting_feat = None
 
 	def __str__(self):
 		rep = ""

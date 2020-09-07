@@ -1,5 +1,6 @@
 from systems import move_system
 from systems import time_system
+from systems.feat_system import perform
 from systems.pickup_system import pickup_item
 from game_states import GameStates
 from game_messages import Message
@@ -24,6 +25,8 @@ def process_input(action, mouse_action, player, entities, game_state, previous_g
 	fire_weapon, load_weapon = action.get('fire_weapon'), action.get('load_weapon')
 	potion_index = action.get('potion_index')
 	quaff_potion = action.get('quaff_potion')
+	feat_index = action.get('feat_index')
+	perform_feat = action.get('perform_feat')
 
 	left_click, right_click = mouse_action.get('left_click'), mouse_action.get('right_click')
 
@@ -55,6 +58,10 @@ def process_input(action, mouse_action, player, entities, game_state, previous_g
 	if quaff_potion:
 		previous_game_state = game_state
 		game_state = GameStates.POTION_SCREEN
+
+	if perform_feat:
+		previous_game_state = game_state
+		game_state = GameStates.FEATS_SCREEN
 
 	if inventory_index is not None and previous_game_state != GameStates.PLAYER_DEAD and inventory_index < len(player.inventory.items):
 		item = player.inventory.items[inventory_index]
@@ -115,6 +122,15 @@ def process_input(action, mouse_action, player, entities, game_state, previous_g
 			if result.get('cast'):
 				action_free = False
 
+	if feat_index is not None and feat_index < len(player.performer.feat_list):
+		feat = player.performer.feat_list[feat_index]
+		print(feat_index)
+		player_turn_results.extend(perform(player, feat, entities=entities, fov_map=fov_map))
+		# TODO: This is not at all great - analysing player turn results should happen in result process system!
+		for result in player_turn_results:
+			if result.get('performed'):
+				action_free = False		
+
 	if fire_weapon:
 		if player.equipment.ammunition and player.equipment.ammunition.item.quantity > 0:
 			player_turn_results.extend(player.fighter.fire_weapon())
@@ -136,9 +152,12 @@ def process_input(action, mouse_action, player, entities, game_state, previous_g
 				spell_use_results = spell_system.cast(player, targets.current_targeting_spell, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y)
 				player_turn_results.extend(spell_use_results)
 			# TODO: do we really need this current targeting weapon thing?
-			elif targets.current_targeting_weapon:
+			elif targets.current_targeting_missile:
 				missile_attack_results = player.fighter.fire_weapon(weapon=player.equipment.main_hand.equippable, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y)
 				player_turn_results.extend(missile_attack_results)	
+			elif targets.current_targeting_feat:
+				feat_perform_results = perform(player, targets.current_targeting_feat, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y)
+				player_turn_results.extend(feat_perform_results)	
 			action_free = False
 		elif right_click:
 			player_turn_results.append({'targeting_cancelled': True})

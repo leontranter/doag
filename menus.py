@@ -27,6 +27,17 @@ def spells_menu(con, header, spells_width, screen_width, screen_height, player):
 
 	menu(con, header, options, spells_width, screen_width, screen_height)
 
+def feats_menu(con, header, spells_width, screen_width, screen_height, player):
+	if not player.performer:
+		return None
+	if len(player.performer.feat_list) == 0:
+		header = "You don't know any feats yet."
+	options = []
+	for feat in player.performer.feat_list:
+		options.append(feat.display_name)
+
+	menu(con, header, options, spells_width, screen_width, screen_height)
+
 def potion_menu(con, header, menu_width, screen_width, screen_height, player):
 	potions = get_carried_potions(player)
 	options = []

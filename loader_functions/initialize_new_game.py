@@ -10,6 +10,7 @@ from components.stats import Stats
 from components.skills import Skills
 from components.defender import Defender
 from components.performer import Performer
+from systems.feat_system import make_savage_strike
 from entity import Entity
 from game_messages import MessageLog
 from game_states import GameStates
@@ -76,6 +77,7 @@ def create_player(constants):
 	skills_component.set_skill_rank(SkillNames.DAGGER, 1)
 	skills_component.set_skill_rank(SkillNames.BOW, 1)
 	skills_component.set_skill_rank(SkillNames.HOLY, 1)
+	feat = make_savage_strike()
 	caster_component = Caster(max_mana=stats_component.Willpower)
 	potion_description_links = assign_potion_descriptions(constants['potion_descriptions'], constants['potion_types'])
 	scroll_description_links = assign_scroll_descriptions(constants['scroll_descriptions'], constants['scroll_types'])
@@ -83,7 +85,8 @@ def create_player(constants):
 	player_name = Name("Player")
 	player = Entity(0, 0, '@', libtcod.white, blocks=True, render_order=RenderOrder.ACTOR, fighter=fighter_component, inventory=inventory_component, level=level_component,
 		equipment=equipment_component, caster=caster_component, stats=stats_component, skills=skills_component, defender=defender_component, name=player_name,
-		identified=identified_component)
+		identified=identified_component, performer=performer_component)
+	player.performer.feat_list.append(feat)
 	return player
 
 def equip_player(player):

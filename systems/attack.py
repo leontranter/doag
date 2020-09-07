@@ -6,13 +6,14 @@ from random_utils import d6_dice_roll
 from game_messages import Message
 from attack_types import AttackTypes
 
-def attack(attacker, target, attack_type):
+def attack(attacker, target, attack_type, feat_attack_modifier=0, feat_damage_modifier=0):
 	results = []
-	if check_hit(attacker, target):
+	if check_hit(attacker, target, feat_attack_modifier):
 		defense_result, defense_choice = target.defender.defend_melee_attack() if attack_type == AttackTypes.MELEE else target.defender.defend_missile_attack()
 		if not defense_result:
 			results.append(hit_message(attacker, target, defense_choice))
 			dice_number, dice_type, modifier, damage_type = get_current_melee_damage(attacker)
+			modifier += feat_damage_modifier
 			results = resolve_hit(attacker, results, dice_number, dice_type, modifier, damage_type, target)
 		else:
 			verb = "hit" if attacker.name.true_name == "Player" else "hits"
@@ -50,9 +51,9 @@ def get_hit_modifier_from_status_effects(entity):
 		modifier += effect.hit_modifier or 0
 	return modifier
 
-def check_hit(attacker, target):
+def check_hit(attacker, target, feat_attack_modifier):
 	base_skill_target = get_weapon_skill_for_attack(attacker)
-	base_skill_target += apply_hit_modifiers(attacker)
+	base_skill_target += (apply_hit_modifiers(attacker) + feat_attack_modifier)
 	if d6_dice_roll(3, 0) <= base_skill_target:
 		return True
 	else:

@@ -16,6 +16,7 @@ from components.item import Item
 from components.name import Name
 from components.identified import Identified
 from components.effects import Effect
+from components.performer import Performer
 from components.consumable import ConsumableTypes, get_carried_potions
 from damage_types import DamageTypes
 from loader_functions.constants import WeaponTypes, WeaponCategories, get_constants, AmmunitionTypes
@@ -255,6 +256,10 @@ class AttackTests(unittest.TestCase):
 		test_enemy = mocks.create_mockchar_3()
 		results = attack(test_char, test_enemy, AttackTypes.MELEE)
 		self.assertNotEqual(len(results), 0)
+
+	def test_can_perform_attack_with_feat_bonuses(self):
+		#TODO: Make this testable somehow!
+		pass
 
 class DefenderTests(unittest.TestCase):
 	def test_can_create_defender(self):
@@ -758,7 +763,20 @@ class PickupTests(unittest.TestCase):
 		self.assertEqual(len(test_player.inventory.items), 1)
 		self.assertEqual(test_player.inventory.items[0].item.quantity, 7)
 
+class FeatTests(unittest.TestCase):
+	def test_can_get_current_feats(self):
+		test_performer = Performer()
+		test_player = entity.Entity(1, 1, 'A', libtcod.white, performer=test_performer)
+		self.assertEqual(len(test_player.performer.feat_list), 0)		
 
+	def test_can_get_available_feats(self):
+		pass
+
+	def test_can_learn_unlocked_feat(self):
+		pass
+
+	def test_cannot_learn_locked_feat(self):
+		pass
 
 
 

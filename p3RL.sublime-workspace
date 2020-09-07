@@ -1,0 +1,2293 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"ta",
+				"targeting_message"
+			],
+			[
+				"Effe",
+				"EffectNames"
+			],
+			[
+				"create",
+				"create_mockchar_5"
+			],
+			[
+				"assert",
+				"assertTrue"
+			],
+			[
+				"test_ar",
+				"test_arrows_2"
+			],
+			[
+				"Eq",
+				"EquippableFactory"
+			],
+			[
+				"equip",
+				"equipped_items"
+			],
+			[
+				"Euip",
+				"Equipment"
+			],
+			[
+				"Equ",
+				"EquippableFactory"
+			],
+			[
+				"Ammu",
+				"AmmunitionTypes"
+			],
+			[
+				"missile",
+				"missile_weapon_ammunition_lookup"
+			],
+			[
+				"curren",
+				"current_targeting_consumable"
+			],
+			[
+				"current",
+				"current_targeting_consumable"
+			],
+			[
+				"curre",
+				"current_targeting_consumable"
+			],
+			[
+				"defend",
+				"defend_missile_attack"
+			],
+			[
+				"defe",
+				"defender"
+			],
+			[
+				"get_cu",
+				"get_current_missile_damage"
+			],
+			[
+				"melee_",
+				"melee_weapon"
+			],
+			[
+				"get_hit",
+				"get_hit_modifier_from_equipment"
+			],
+			[
+				"get",
+				"get_basic_swing_damage"
+			],
+			[
+				"missile_",
+				"missile_targeting_weapon"
+			],
+			[
+				"missile_t",
+				"missile_targeting"
+			],
+			[
+				"missile_tar",
+				"missile_targeting_weapon"
+			],
+			[
+				"spell_",
+				"spell_targeting_result"
+			],
+			[
+				"make_fi",
+				"make_fireball_scroll"
+			],
+			[
+				"player",
+				"player_turn_result"
+			],
+			[
+				"weapon",
+				"weapon_category"
+			],
+			[
+				"test",
+				"test_entity"
+			],
+			[
+				"skill_check_",
+				"skill_check_function_2"
+			],
+			[
+				"get_p",
+				"get_physical_damage_modifier_from_equipment"
+			],
+			[
+				"get_hit_",
+				"get_hit_modifier_from_status_effects"
+			],
+			[
+				"get_phy",
+				"get_physical_damage_modifier_from_status_effects"
+			],
+			[
+				"make_bless",
+				"make_bless_spell"
+			],
+			[
+				"kwargs",
+				"kwargs"
+			],
+			[
+				"weapon_s",
+				"weapon_skill_num"
+			],
+			[
+				"equipp",
+				"equippable_entity"
+			],
+			[
+				"prev",
+				"previous_game_state"
+			],
+			[
+				"player_turn",
+				"player_turn_results"
+			],
+			[
+				"KEY_E",
+				"KEY_ENTER"
+			],
+			[
+				"test_pot",
+				"test_potion2"
+			],
+			[
+				"ident",
+				"identified_scrolls"
+			],
+			[
+				"scroll_desc",
+				"scroll_description_links"
+			],
+			[
+				"scr",
+				"scroll_descriptions"
+			],
+			[
+				"scroll",
+				"scroll_descriptions"
+			],
+			[
+				"consu",
+				"consumable_type"
+			],
+			[
+				"test_",
+				"test_identified_component"
+			],
+			[
+				"get_",
+				"get_display_name"
+			],
+			[
+				"plate_",
+				"plate_armor_item"
+			],
+			[
+				"sca",
+				"scale_armor_item"
+			],
+			[
+				"chain",
+				"chain_armor_item"
+			],
+			[
+				"leat",
+				"leather_armor_item"
+			],
+			[
+				"padd",
+				"padded_armor_item"
+			],
+			[
+				"tower_s",
+				"tower_shield_item"
+			],
+			[
+				"small_",
+				"small_shield_item"
+			],
+			[
+				"bol",
+				"bolts_item"
+			],
+			[
+				"obs",
+				"obsidian_arrows_item"
+			],
+			[
+				"greats",
+				"greatsword_item"
+			],
+			[
+				"heal",
+				"heal_book_consumable"
+			],
+			[
+				"fireb",
+				"fireball_book_consumable"
+			],
+			[
+				"confu",
+				"confusion_scroll_consumable"
+			],
+			[
+				"fire",
+				"fireball_scroll_consumable"
+			],
+			[
+				"lig",
+				"lightning_scroll_consumable"
+			],
+			[
+				"learn",
+				"learn_heal"
+			],
+			[
+				"attack_modifier",
+				"attack_modifier"
+			],
+			[
+				"heal_bo",
+				"heal_book_name"
+			],
+			[
+				"fir",
+				"fireball_book_name"
+			],
+			[
+				"padded",
+				"padded_armor_entity"
+			],
+			[
+				"player_",
+				"player_turn_results"
+			],
+			[
+				"time_",
+				"time_results"
+			],
+			[
+				"ligh",
+				"lightning_scroll_name"
+			],
+			[
+				"test_ent",
+				"test_entity_2"
+			],
+			[
+				"get_basic",
+				"get_basic_swing_damage"
+			],
+			[
+				"get_b",
+				"get_basic_thrust_damage"
+			],
+			[
+				"effect",
+				"effect_list"
+			],
+			[
+				"ef",
+				"effect_list"
+			],
+			[
+				"test_effe",
+				"test_effect_2"
+			],
+			[
+				"ammu",
+				"ammunition_name"
+			],
+			[
+				"id",
+				"identified"
+			],
+			[
+				"identi",
+				"identified_potions"
+			],
+			[
+				"potion",
+				"potion_links"
+			],
+			[
+				"potion_descr",
+				"potion_description_links"
+			],
+			[
+				"Item",
+				"ItemFactory"
+			],
+			[
+				"effec",
+				"effects_component"
+			],
+			[
+				"pot",
+				"potion_description_links"
+			],
+			[
+				"potion_",
+				"potion_description_links"
+			],
+			[
+				"potion_des",
+				"potion_description_links"
+			],
+			[
+				"text",
+				"text_menu"
+			],
+			[
+				"shiel",
+				"shield_name"
+			],
+			[
+				"miss",
+				"missile_weapon"
+			],
+			[
+				"get_skill",
+				"get_skill_check"
+			],
+			[
+				"equi",
+				"equipment"
+			],
+			[
+				"makeSw",
+				"makeGreatSword"
+			],
+			[
+				"equippab",
+				"EquippableFactory"
+			],
+			[
+				"makeFire",
+				"makeFireballScroll"
+			],
+			[
+				"mis",
+				"missile_weapon"
+			],
+			[
+				"player_tur",
+				"player_turn_results"
+			],
+			[
+				"target",
+				"target_y"
+			],
+			[
+				"missile_d",
+				"missile_damage_bonus"
+			],
+			[
+				"cross",
+				"crossbow_equippable"
+			],
+			[
+				"rapier",
+				"rapier_melee_weapon"
+			],
+			[
+				"melee",
+				"melee_weapon"
+			],
+			[
+				"great",
+				"greatsword_equippable"
+			],
+			[
+				"mele",
+				"melee_attack_type"
+			],
+			[
+				"melee_d",
+				"melee_damage_bonus"
+			],
+			[
+				"melee_dam",
+				"melee_damage_type"
+			],
+			[
+				"temp_",
+				"temp_equippable_missile"
+			],
+			[
+				"Equipp",
+				"EquippableFactory"
+			],
+			[
+				"defense",
+				"defense_choice"
+			],
+			[
+				"weapon_",
+				"weapon_skill_num"
+			],
+			[
+				"test_char",
+				"test_char_pd"
+			],
+			[
+				"Euipp",
+				"EquippableFactory"
+			],
+			[
+				"test_equip",
+				"test_equipment_component"
+			],
+			[
+				"test_equp",
+				"test_equipment_component"
+			],
+			[
+				"Equip",
+				"EquipmentSlots"
+			],
+			[
+				"skill",
+				"skill_target"
+			],
+			[
+				"payer",
+				"player_turn_result"
+			],
+			[
+				"test_figh",
+				"test_fighter_component"
+			],
+			[
+				"diffi",
+				"difficulty_modifiers"
+			],
+			[
+				"fighter",
+				"fighter_component"
+			],
+			[
+				"eq",
+				"equipment"
+			],
+			[
+				"get_curr",
+				"get_current_melee_damage"
+			],
+			[
+				"equippe",
+				"equipped_items"
+			],
+			[
+				"ammunition",
+				"ammunition"
+			],
+			[
+				"togl",
+				"toggle_main_hand"
+			],
+			[
+				"equippable",
+				"equippable_entity"
+			],
+			[
+				"equip_fa",
+				"equip_fail_message"
+			],
+			[
+				"player_t",
+				"player_turn_result"
+			],
+			[
+				"targetin",
+				"targeting_message"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "entity.py",
+			"settings":
+			{
+				"buffer_size": 2145,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "engine.py",
+			"settings":
+			{
+				"buffer_size": 5759,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "loader_functions/constants.py",
+			"settings":
+			{
+				"buffer_size": 2585,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "loader_functions/initialize_new_game.py",
+			"settings":
+			{
+				"buffer_size": 5155,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "map_objects/game_map.py",
+			"settings":
+			{
+				"buffer_size": 7701,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "input_handlers.py",
+			"settings":
+			{
+				"buffer_size": 4588,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "render_functions.py",
+			"settings":
+			{
+				"buffer_size": 5983,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "menus.py",
+			"settings":
+			{
+				"buffer_size": 6960,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "systems/move_system.py",
+			"settings":
+			{
+				"buffer_size": 3938,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "components/ai.py",
+			"settings":
+			{
+				"buffer_size": 2653,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "systems/damage.py",
+			"settings":
+			{
+				"buffer_size": 4404,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "systems/attack.py",
+			"settings":
+			{
+				"buffer_size": 4691,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "components/fighter.py",
+			"settings":
+			{
+				"buffer_size": 2715,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "components/defender.py",
+			"settings":
+			{
+				"buffer_size": 2180,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "mocks.py",
+			"settings":
+			{
+				"buffer_size": 9667,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "components/effects.py",
+			"settings":
+			{
+				"buffer_size": 347,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "systems/effects_manager.py",
+			"settings":
+			{
+				"buffer_size": 1379,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "spells.py",
+			"settings":
+			{
+				"buffer_size": 349,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "components/caster.py",
+			"settings":
+			{
+				"buffer_size": 153,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "systems/spell_system.py",
+			"settings":
+			{
+				"buffer_size": 1546,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "systems/skill_manager.py",
+			"settings":
+			{
+				"buffer_size": 1694,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "components/skills.py",
+			"settings":
+			{
+				"buffer_size": 736,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "rltests.py",
+			"settings":
+			{
+				"buffer_size": 37094,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "systems/feat_system.py",
+			"settings":
+			{
+				"buffer_size": 1035,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "feats.py",
+			"settings":
+			{
+				"buffer_size": 498,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "components/performer.py",
+			"settings":
+			{
+				"buffer_size": 90,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "targeting.py",
+			"settings":
+			{
+				"buffer_size": 284,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "systems/results_process_system.py",
+			"settings":
+			{
+				"buffer_size": 4276,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "systems/input_process_system.py",
+			"settings":
+			{
+				"buffer_size": 7121,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "systems/pickup_system.py",
+			"settings":
+			{
+				"buffer_size": 386,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "components/inventory.py",
+			"settings":
+			{
+				"buffer_size": 3500,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "generators.py",
+			"settings":
+			{
+				"buffer_size": 1008,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "item_factory.py",
+			"settings":
+			{
+				"buffer_size": 4312,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "item_functions.py",
+			"settings":
+			{
+				"buffer_size": 6250,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "monsters.py",
+			"settings":
+			{
+				"buffer_size": 3629,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": ".gitignore",
+			"settings":
+			{
+				"buffer_size": 26,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "components/item.py",
+			"settings":
+			{
+				"buffer_size": 104,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "P5Jw8CykYmrcXN8FSRYAp7LCWC2b22KDePfcpxhC9rGHSSpDk5ji",
+			"file": "/C/Users/Leon/Documents/steem",
+			"file_size": 52,
+			"file_write_time": 131955983293219548,
+			"settings":
+			{
+				"buffer_size": 52,
+				"line_ending": "Windows",
+				"name": "P5Jw8CykYmrcXN8FSRYAp7LCWC2b22KDePfcpxhC9rGHSSpDk5"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 392.0,
+		"selected_items":
+		[
+		],
+		"width": 392.0
+	},
+	"console":
+	{
+		"height": 0.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/C/dev/p3roguelike/components/meleeweapon.py",
+		"/C/dev/p3roguelike/components/missileweapon.py",
+		"/C/dev/p3roguelike/components/equipment.py",
+		"/C/dev/p3roguelike/components/equippable.py",
+		"/C/dev/p3roguelike/attack_types.py",
+		"/C/dev/p3roguelike/components/identified.py",
+		"/C/dev/p3roguelike/death_functions.py",
+		"/C/dev/p3roguelike/components/ammunition.py",
+		"/C/dev/p3roguelike/equipment_slots.py",
+		"/C/dev/p3roguelike/systems/name_system.py",
+		"/C/dev/p3roguelike/random_utils.py",
+		"/C/dev/p3roguelike/components/feats.py",
+		"/C/dev/p3rl-copy/engine.py",
+		"/C/dev/microblog/microblog.py",
+		"/C/dev/microblog/app/templates/index.html",
+		"/C/dev/microblog/app/templates/base.html",
+		"/C/dev/microblog/app/routes.py",
+		"/C/dev/microblog/.flaskenv",
+		"/C/dev/microblog/app/__init__.py",
+		"/C/dev/microblog/config.py",
+		"/C/dev/microblog/app/forms.py",
+		"/C/dev/p3roguelike/.git/COMMIT_EDITMSG",
+		"/C/dev/p3roguelike/components/effects.py",
+		"/C/dev/p3roguelike/map_objects/game_map.py",
+		"/C/dev/p3roguelike/components/stats.py",
+		"/C/dev/p3roguelike/systems/skill_manager.py",
+		"/C/dev/str.py",
+		"/C/dev/p3roguelike - Copy/systems/move_system.py",
+		"/C/dev/ClonedRL/atrl-master/main.py",
+		"/C/dev/p3roguelike/damage_types.py",
+		"/C/dev/p3roguelike/spells.py",
+		"/C/dev/p3roguelike/game_states.py",
+		"/C/dev/p3roguelike/components/name.py",
+		"/C/dev/p3roguelike/systems/effects_manager.py",
+		"/C/dev/p3rl-copy/components/fighter.py",
+		"/C/dev/p3roguelike - Copy/systems/input_process_system.py",
+		"/C/dev/p3rl-copy/systems/results_process_system.py",
+		"/C/dev/p3roguelike-base/engine.py",
+		"/C/dev/ClonedRL/atrl-master/game/loader_functions/tiles.py",
+		"/C/dev/p3roguelike/components/ai.py",
+		"/C/dev/ClonedRL/atrl-master/game/render_functions.py",
+		"/C/dev/ClonedRL/atrl-master/game/death_functions.py",
+		"/C/dev/ClonedRL/atrl-master/game/entity.py",
+		"/C/dev/ClonedRL/atrl-master/game/map_objects/game_map.py",
+		"/C/dev/ClonedRL/atrl-master/game/loader_functions/initialize_new_game.py",
+		"/C/dev/p3roguelike/systems/pickup_system.py",
+		"/C/dev/p3roguelike/input_process_system.py",
+		"/C/dev/p3roguelike/systems/pickup_system",
+		"/C/dev/p3roguelike/systems/move_system.py",
+		"/C/dev/p3roguelike/components/inventory.py",
+		"/C/dev/ClonedRL/atrl-master/game/menus.py",
+		"/C/dev/p3roguelike/components/consumable.py",
+		"/C/dev/p3roguelike/mocks.py",
+		"/C/dev/p3roguelike/render_functions.py",
+		"/C/dev/p3roguelike/loader_functions/tile_codes.py",
+		"/C/dev/jsrl/jsrl.html",
+		"/C/dev/p3roguelike/main.py",
+		"/C/dev/p3roguelike/systems/attack.py",
+		"/C/dev/p3roguelike/potion_test.py",
+		"/C/dev/p3roguelike/entity.py",
+		"/C/dev/p3roguelike/systems/time_system.py",
+		"/C/dev/p3roguelike/components/defender.py",
+		"/C/dev/p3roguelike/components/skills.py",
+		"/C/dev/p3roguelike/menu_options.py",
+		"/C/dev/p3roguelike/loader_functions/data_loaders.py",
+		"/C/dev/p3roguelike/generators.py",
+		"/C/dev/p3roguelike/input_handlers.py",
+		"/C/dev/p3roguelike/game_messages.py",
+		"/C/dev/p3roguelike/dlevel.py",
+		"/C/dev/p3roguelike/components/stairs.py",
+		"/C/workspace/pingpong/index.html",
+		"/C/dev/p3roguelike/identified.py",
+		"/C/dev/property.py",
+		"/C/dev/p3roguelike/components/level.py",
+		"/C/dev/p3roguelike/fov_functions.py",
+		"/C/dev/p3roguelike/loader_functions/skill_book.py",
+		"/C/dev/p3roguelike/components/caster.py",
+		"/C/dev/p3roguelike/rltests.py",
+		"/C/dev/p3roguelike/rltests2.py",
+		"/C/dev/test.py",
+		"/C/dev/p3roguelike/components/fighter.py",
+		"/C/dev/p3roguelike-base/components/fighter.py",
+		"/C/dev/p3roguelike/monsters",
+		"/C/dev/animal.html",
+		"/C/dev/rock.html",
+		"/C/dev/pong/pong3.html",
+		"/C/dev/p3roguelike/map_objects/rectangle.py",
+		"/C/dev/p3roguelike/engine.py",
+		"/C/dev/p3roguelike-base/map_objects/game_map.py",
+		"/C/dev/p3roguelike/loader_functions/initialize_new_game.py",
+		"/C/dev/p3roguelike/map_objects/tile.py",
+		"/C/dev/p3roguelike/components/level",
+		"/C/workspace/pingpong/js/pingpong.js",
+		"/C/dev/simple.py",
+		"/C/dev/p3roguelike/components/__init__.py",
+		"/C/workspace/pingpong/css/pingpong.css",
+		"/C/Users/Leon/AppData/Local/Programs/Python/Python36-32/Lib/site-packages/linkedin/server.py",
+		"/C/workspace/linkedin/posts.txt",
+		"/C/workspace/linkedin/linkedinapp3.py",
+		"/C/workspace/linkedin/linkedinapp.py",
+		"/C/dev/p3roguelike/map_objects/__init__.py",
+		"/C/workspace/linkedin/Best supplements to naturally boost testosterone",
+		"/C/Users/Leon/Documents/Emoji/Emoji",
+		"/C/workspace/round.py",
+		"/C/dev/tweeter/newTweeterEU.py",
+		"/C/Users/Leon/Documents/Business/SurveyAspirations",
+		"/C/dev/tweeter/tracker.py",
+		"/C/workspace/tweetbot/blogTweets.txt",
+		"/C/workspace/tweetbot/articleTweets.txt",
+		"/C/dev/linkstrip/linkstrip/sourcelinks.txt",
+		"/C/dev/linkstrip/linkstrip/targetlinks.txt",
+		"/C/Users/Leon/AppData/Local/Temp/Temp1_rltut03.zip/rl tut 03/src/rltut/WorldBuilder.java",
+		"/C/Users/Leon/AppData/Local/Temp/Temp1_rltut03 (1).zip/rl tut 03/src/rltut/screens/PlayScreen.java",
+		"/C/Users/Leon/AppData/Local/Temp/Temp1_rltut03 (1).zip/rl tut 03/src/rltut/Tile.java",
+		"/C/workspace/pygame/game2.py",
+		"/C/workspace/pygame/game1.py",
+		"/C/workspace/RLtdl/input_handlers.py",
+		"/C/workspace/RLtdl/render_functions.py",
+		"/C/workspace/RLtdl/components/ai.py",
+		"/C/workspace/RLtdl/components/fighter.py",
+		"/C/workspace/RLtdl/map_utils.py",
+		"/C/Users/Leon/Documents/Suncorp",
+		"/C/workspace/RLtdl/entity.py",
+		"/C/workspace/RLtdl/game_states.py",
+		"/C/Users/Leon/Documents/pport",
+		"/C/workspace/RLtdl/engine.py",
+		"/C/dev/pong/pong.html",
+		"/C/dev/pong/pong2.html"
+	],
+	"find":
+	{
+		"height": 34.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+			"C:\\dev\\p3roguelike",
+			"<open files>,C:\\dev\\p3roguelike",
+			"<open files>",
+			"C:\\Users\\Leon\\Downloads\\rltut09\\rl tut 09\\src\\rltut",
+			"C:\\Users\\Leon\\AppData\\Local\\Temp\\Temp1_rltut09.zip\\rl tut 09\\src\\rltut"
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"ENEMY_TURN",
+			"spell_func",
+			"TODO",
+			"cast(",
+			"todo",
+			"Effect(",
+			"turns_left",
+			"poison",
+			"assign_po",
+			"make_ble",
+			")\n",
+			"POISON",
+			"effects",
+			"confusion",
+			"EffectNames",
+			"effect",
+			"TODO",
+			"item-added",
+			"inventoryt",
+			"TODO",
+			"print(",
+			"TODO",
+			"get_equipped",
+			"equipment",
+			"show_equipment_sc",
+			"TODO",
+			"make_dropped",
+			"make_dropp",
+			"TODO",
+			"missile_dropped",
+			"currently",
+			"attack_miss",
+			"print(",
+			"load(",
+			"load",
+			"\"s\"",
+			"of stuff",
+			"ammunition",
+			"arrows",
+			"get_weapon_sk",
+			"quanti",
+			"missile_damage_b",
+			"weaponcateg",
+			"TODO",
+			"exit",
+			"potion_index",
+			"potion_ind",
+			"POTION_SC",
+			"print(",
+			"currently_targeting_cons",
+			"spell_tar",
+			"spell_t",
+			"targeting_item",
+			"spell_targeting",
+			"action_free = False",
+			"game_state = GameStates.PLAYERS_TURN",
+			"game_state =",
+			"fire_weapon",
+			"fired_weapon",
+			"self",
+			"get_current_missile",
+			"self",
+			"damage_mess",
+			"weapon",
+			"TODO",
+			"get_current_melee",
+			"damage",
+			"missile",
+			"missile_dam",
+			"get_basic",
+			"resolve_h",
+			"resolve_hit",
+			"get_current_mel",
+			"get_current_m",
+			"melee_damage_bonus",
+			"dice_roll",
+			"dice",
+			"dice_r",
+			"d6_d6_dice_roll",
+			"dice_roll",
+			"TODO",
+			"heal(",
+			"roll",
+			"dice",
+			"TODO",
+			"print(",
+			"Searching",
+			"print(",
+			"damage_modif",
+			"hit_modif",
+			"print(",
+			"returning from",
+			"learn_spell",
+			"you learned",
+			"toggle_mai",
+			"targeting",
+			"kill",
+			"add_ite",
+			"you pick up the",
+			"player_turn_results.extend(time_system.process_entity_turn(player))",
+			"missile_targ",
+			"print(",
+			"spell_targeting",
+			"game_state = GameStates.TARGETING",
+			"action_free",
+			"targeting_item",
+			"spell_targeting",
+			":\n",
+			"handle_de",
+			"message_log",
+			"con",
+			"constants",
+			"is dead!",
+			"gets burned",
+			"spell_targ",
+			"({'targeting'",
+			"es.TAR",
+			"con",
+			"targeting",
+			"spell_targeting",
+			"spell_tar",
+			"spell_targ",
+			"spell",
+			"fov",
+			"attack_def",
+			"dlevels",
+			"fov_rec",
+			"fov_map"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"melee_damage",
+			"d6_dice_roll",
+			"action_free = False",
+			"entity",
+			"SkillNames.SHIELD",
+			"SkillNames.SWORD",
+			"entity.fighter.effect_list",
+			"make_longsword",
+			"make_shortbow",
+			"make_longsword",
+			"scroll",
+			"hit_modifier",
+			"damage_modifier",
+			"move_system",
+			"target.name",
+			"true_name",
+			"make_heal_book",
+			"make_fireball_book",
+			"make_confusion_scroll",
+			"make_lightning_scroll",
+			"make_fireball_scroll",
+			"make_poison_potion",
+			"make_sword",
+			"make_bolts",
+			"make_sword",
+			"make_leather_armor",
+			"make_dagger",
+			"make_crossbow",
+			"make_bow",
+			"make_shield",
+			"make_arrows",
+			"set_skill_rank",
+			"set_skill",
+			"get_skill",
+			"set_skill",
+			"evade",
+			"PIERCING",
+			"SLASHING",
+			"missile",
+			"dice_roll",
+			"get_block",
+			"get_dodge",
+			"get_parry",
+			"self.owner.stats",
+			"PD",
+			"",
+			" Testosterone ",
+			"Testosterone",
+			"",
+			"    ",
+			"https://www.extremeuncertainty.com",
+			"",
+			"hair",
+			"teeth",
+			"eyes",
+			"weight",
+			"height",
+			"age",
+			"name"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 23,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "entity.py",
+					"settings":
+					{
+						"buffer_size": 2145,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1971,
+								1971
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 210.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "engine.py",
+					"settings":
+					{
+						"buffer_size": 5759,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4978,
+								4978
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 966.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "loader_functions/constants.py",
+					"settings":
+					{
+						"buffer_size": 2585,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2361,
+								2361
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 420.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "loader_functions/initialize_new_game.py",
+					"settings":
+					{
+						"buffer_size": 5155,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								440,
+								440
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "map_objects/game_map.py",
+					"settings":
+					{
+						"buffer_size": 7701,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								6004,
+								6004
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1653.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "input_handlers.py",
+					"settings":
+					{
+						"buffer_size": 4588,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2007,
+								2007
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 546.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "render_functions.py",
+					"settings":
+					{
+						"buffer_size": 5983,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5922,
+								5922
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1008.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "menus.py",
+					"settings":
+					{
+						"buffer_size": 6960,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1852,
+								1852
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "systems/move_system.py",
+					"settings":
+					{
+						"buffer_size": 3938,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								439,
+								439
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "components/ai.py",
+					"settings":
+					{
+						"buffer_size": 2653,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1945,
+								1945
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "systems/damage.py",
+					"settings":
+					{
+						"buffer_size": 4404,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1388,
+								1388
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "systems/attack.py",
+					"settings":
+					{
+						"buffer_size": 4691,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1015,
+								1152
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 12,
+					"file": "components/fighter.py",
+					"settings":
+					{
+						"buffer_size": 2715,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1606,
+								1606
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 13,
+					"file": "components/defender.py",
+					"settings":
+					{
+						"buffer_size": 2180,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								111,
+								111
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 14,
+					"file": "mocks.py",
+					"settings":
+					{
+						"buffer_size": 9667,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								39,
+								46
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 15,
+					"file": "components/effects.py",
+					"settings":
+					{
+						"buffer_size": 347,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								180,
+								180
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 16,
+					"file": "systems/effects_manager.py",
+					"settings":
+					{
+						"buffer_size": 1379,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1300,
+								1300
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 17,
+					"file": "spells.py",
+					"settings":
+					{
+						"buffer_size": 349,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 18,
+					"file": "components/caster.py",
+					"settings":
+					{
+						"buffer_size": 153,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								23,
+								23
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 14.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 19,
+					"file": "systems/spell_system.py",
+					"settings":
+					{
+						"buffer_size": 1546,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								920,
+								920
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 20,
+					"file": "systems/skill_manager.py",
+					"settings":
+					{
+						"buffer_size": 1694,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 21,
+					"file": "components/skills.py",
+					"settings":
+					{
+						"buffer_size": 736,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								80,
+								80
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 22,
+					"file": "rltests.py",
+					"settings":
+					{
+						"buffer_size": 37094,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								36896,
+								36897
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 10008.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 23,
+					"file": "systems/feat_system.py",
+					"settings":
+					{
+						"buffer_size": 1035,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								118,
+								118
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 24,
+					"file": "feats.py",
+					"settings":
+					{
+						"buffer_size": 498,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								151,
+								151
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 25,
+					"file": "components/performer.py",
+					"settings":
+					{
+						"buffer_size": 90,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								90,
+								90
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 26,
+					"file": "targeting.py",
+					"settings":
+					{
+						"buffer_size": 284,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								274,
+								274
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 27,
+					"file": "systems/results_process_system.py",
+					"settings":
+					{
+						"buffer_size": 4276,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1959,
+								1959
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 84.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 28,
+					"file": "systems/input_process_system.py",
+					"settings":
+					{
+						"buffer_size": 7121,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1714,
+								1714
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 29,
+					"file": "systems/pickup_system.py",
+					"settings":
+					{
+						"buffer_size": 386,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								33,
+								33
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 30,
+					"file": "components/inventory.py",
+					"settings":
+					{
+						"buffer_size": 3500,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2867,
+								2867
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 31,
+					"file": "generators.py",
+					"settings":
+					{
+						"buffer_size": 1008,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								446,
+								446
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 32,
+					"file": "item_factory.py",
+					"settings":
+					{
+						"buffer_size": 4312,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								888,
+								888
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 33,
+					"file": "item_functions.py",
+					"settings":
+					{
+						"buffer_size": 6250,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3601,
+								3601
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 924.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 34,
+					"file": "monsters.py",
+					"settings":
+					{
+						"buffer_size": 3629,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								488,
+								488
+							]
+						],
+						"settings":
+						{
+							"auto_name": "",
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 630.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 35,
+					"file": ".gitignore",
+					"settings":
+					{
+						"buffer_size": 26,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								26,
+								26
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 36,
+					"file": "components/item.py",
+					"settings":
+					{
+						"buffer_size": 104,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								104,
+								104
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 37,
+					"file": "/C/Users/Leon/Documents/steem",
+					"settings":
+					{
+						"buffer_size": 52,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								52,
+								52
+							]
+						],
+						"settings":
+						{
+							"auto_name": "P5Jw8CykYmrcXN8FSRYAp7LCWC2b22KDePfcpxhC9rGHSSpDk5",
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 0.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"replace":
+	{
+		"height": 62.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"selected_items":
+		[
+		],
+		"width": 380.0
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 287.0,
+	"status_bar_visible": true
+}

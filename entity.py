@@ -7,7 +7,7 @@ class Entity:
 	A generic object for anything
 	"""
 	def __init__(self, x, y, char, color, blocks=False, render_order=RenderOrder.CORPSE, fighter=None, ai=None, item=None, inventory=None, stairs=None, level=None, equipment=None,
-		equippable=None, caster=None, stats=None, defender=None, skills=None, melee_weapon=None, missile_weapon=None, name=None, identified=None, consumable=None, ammunition=None):
+		equippable=None, caster=None, stats=None, defender=None, skills=None, melee_weapon=None, missile_weapon=None, name=None, identified=None, consumable=None, ammunition=None, performer=None):
 		self.x = x
 		self.y = y
 		self.char = char
@@ -32,6 +32,7 @@ class Entity:
 		self.identified = identified
 		self.consumable = consumable
 		self.ammunition = ammunition
+		self.performer = performer
 
 		if self.fighter:
 			self.fighter.owner = self
@@ -69,6 +70,8 @@ class Entity:
 			self.consumable.owner = self
 		if self.ammunition:
 			self.ammunition.owner = self
+		if self.performer:
+			self.performer.owner = self
 
 	def __str__(self):
 		rep = ""

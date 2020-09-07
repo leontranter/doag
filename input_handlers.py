@@ -69,6 +69,8 @@ def handle_player_turn_keys(key):
 		return {'load_weapon': True}
 	elif key_char == 'q':
 		return {'quaff_potion': True}
+	elif key_char == 'p':
+		return {'perform_feat': True}
 	elif key.vk == libtcod.KEY_ESCAPE:
 		#exit the game
 		return {'exit': True}

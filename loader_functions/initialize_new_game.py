@@ -9,6 +9,7 @@ from components.equippable import Equippable, EquippableFactory
 from components.stats import Stats
 from components.skills import Skills
 from components.defender import Defender
+from components.performer import Performer
 from entity import Entity
 from game_messages import MessageLog
 from game_states import GameStates
@@ -68,6 +69,7 @@ def create_player(constants):
 	level_component = Level()
 	equipment_component = Equipment()
 	defender_component = Defender()
+	performer_component = Performer()
 	stats_component = Stats(Strength=14, Precision=14, Agility=14, Intellect=14, Willpower=14, Stamina=14, Endurance=14)
 	skills_component = Skills()
 	skills_component.set_skill_rank(SkillNames.SWORD, 1)

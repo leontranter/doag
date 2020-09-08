@@ -31,6 +31,7 @@ from systems.spell_system import learn_spell, cast
 from systems.skill_manager import SkillNames, get_intellect, get_willpower
 from systems.move_system import distance_to
 from systems.pickup_system import pickup_item
+from systems.feat_system import get_targetable_entities_in_range
 from components.inventory import Inventory
 from item_functions import heal, learn_spell_from_book, make_bless_spell
 from fov_functions import initialize_fov
@@ -767,7 +768,15 @@ class FeatTests(unittest.TestCase):
 	def test_can_get_current_feats(self):
 		test_performer = Performer()
 		test_player = entity.Entity(1, 1, 'A', libtcod.white, performer=test_performer)
-		self.assertEqual(len(test_player.performer.feat_list), 0)		
+		self.assertEqual(len(test_player.performer.feat_list), 0)
+
+	def test_can_get_targetable_entities(self):
+		test_player_fighter = Fighter()
+		test_player = entity.Entity(1, 1, 'A', libtcod.white, fighter=test_player_fighter)
+		fighter_component = Fighter()
+		test_monster = entity.Entity(1, 0, 'B', libtcod.white, fighter=fighter_component)
+		entities = [test_player, test_monster]
+		self.assertEqual(len(get_targetable_entities_in_range(test_player, 5, entities)), 1)
 
 	def test_can_get_available_feats(self):
 		pass

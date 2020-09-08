@@ -1,6 +1,6 @@
 from systems import move_system
 from systems import time_system
-from systems.feat_system import perform
+from systems.feat_system import attempt_feat
 from systems.pickup_system import pickup_item
 from game_states import GameStates
 from game_messages import Message
@@ -124,11 +124,11 @@ def process_input(action, mouse_action, player, entities, game_state, previous_g
 
 	if feat_index is not None and feat_index < len(player.performer.feat_list):
 		feat = player.performer.feat_list[feat_index]
-		print(feat_index)
-		player_turn_results.extend(perform(player, feat, entities=entities, fov_map=fov_map))
+		player_turn_results.extend(attempt_feat(player, feat, entities=entities, fov_map=fov_map))
 		# TODO: This is not at all great - analysing player turn results should happen in result process system!
 		for result in player_turn_results:
 			if result.get('performed'):
+				print("used action via feat")
 				action_free = False		
 
 	if fire_weapon:
@@ -156,9 +156,11 @@ def process_input(action, mouse_action, player, entities, game_state, previous_g
 				missile_attack_results = player.fighter.fire_weapon(weapon=player.equipment.main_hand.equippable, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y)
 				player_turn_results.extend(missile_attack_results)	
 			elif targets.current_targeting_feat:
-				feat_perform_results = perform(player, targets.current_targeting_feat, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y)
-				player_turn_results.extend(feat_perform_results)	
-			action_free = False
+				feat_perform_results = attempt_feat(player, targets.current_targeting_feat, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y)
+				player_turn_results.extend(feat_perform_results)
+				for result in player_turn_results:
+					if result.get('performed'):
+						action_free = False
 		elif right_click:
 			player_turn_results.append({'targeting_cancelled': True})
 

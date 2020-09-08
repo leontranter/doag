@@ -4,6 +4,34 @@
 		"selected_items":
 		[
 			[
+				"get",
+				"get_targetable_entities_in_range"
+			],
+			[
+				"targ",
+				"targetable_entity"
+			],
+			[
+				"test_pl",
+				"test_player_fighter"
+			],
+			[
+				"target",
+				"targetable_entity"
+			],
+			[
+				"tar",
+				"targetable_entities"
+			],
+			[
+				"per",
+				"performer_component"
+			],
+			[
+				"feat_",
+				"feat_damage_modifier"
+			],
+			[
 				"ta",
 				"targeting_message"
 			],
@@ -78,10 +106,6 @@
 			[
 				"get_hit",
 				"get_hit_modifier_from_equipment"
-			],
-			[
-				"get",
-				"get_basic_swing_damage"
 			],
 			[
 				"missile_",
@@ -388,10 +412,6 @@
 				"player_turn_results"
 			],
 			[
-				"target",
-				"target_y"
-			],
-			[
 				"missile_d",
 				"missile_damage_bonus"
 			],
@@ -494,31 +514,27 @@
 			[
 				"ammunition",
 				"ammunition"
-			],
-			[
-				"togl",
-				"toggle_main_hand"
-			],
-			[
-				"equippable",
-				"equippable_entity"
-			],
-			[
-				"equip_fa",
-				"equip_fail_message"
-			],
-			[
-				"player_t",
-				"player_turn_result"
-			],
-			[
-				"targetin",
-				"targeting_message"
 			]
 		]
 	},
 	"buffers":
 	[
+		{
+			"file": "loader_functions/constants.py",
+			"settings":
+			{
+				"buffer_size": 2585,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "loader_functions/initialize_new_game.py",
+			"settings":
+			{
+				"buffer_size": 5307,
+				"line_ending": "Windows"
+			}
+		},
 		{
 			"file": "entity.py",
 			"settings":
@@ -536,18 +552,36 @@
 			}
 		},
 		{
-			"file": "loader_functions/constants.py",
+			"file": "systems/input_process_system.py",
 			"settings":
 			{
-				"buffer_size": 2585,
+				"buffer_size": 8118,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "loader_functions/initialize_new_game.py",
+			"contents": "Searching 75 files for \"performed\"\n\nC:\\dev\\p3roguelike\\p3RL.sublime-workspace:\n  577  		},\n  578  		{\n  579: 			\"contents\": \"Searching 75 files for \\\"spells_menu\\\"\\n\\nC:\\\\dev\\\\p3roguelike\\\\menus.py:\\n   19  	menu(con, header, options, inventory_width, screen_width, screen_height)\\n   20  \\n   21: def spells_menu(con, header, spells_width, screen_width, screen_height, player):\\n   22  	if len(player.caster.spells) == 0:\\n   23  		header = \\\"You don't know any spells yet.\\\"\\n\\nC:\\\\dev\\\\p3roguelike\\\\render_functions.py:\\n    2  from enum import Enum\\n    3  from game_states import GameStates\\n    4: from menus import inventory_menu, level_up_menu, character_screen, spells_menu, potion_menu, equipment_menu\\n    5  from systems.name_system import get_display_name\\n    6  from loader_functions.tile_codes import *\\n    .\\n   97  \\n   98  	elif game_state == GameStates.SPELLS_SCREEN:\\n   99: 		spells_menu(con, \\\"Choose a spell to cast...\\\", 50, screen_width, screen_height, player)\\n  100  \\n  101  	elif game_state == GameStates.POTION_SCREEN:\\n\\n3 matches across 2 files\\n\\n\\nSearching 75 files for \\\"spell_targeting\\\"\\n\\nC:\\\\dev\\\\p3roguelike\\\\p3RL.sublime-workspace:\\n   98  			[\\n   99  				\\\"spell_\\\",\\n  100: 				\\\"spell_targeting_result\\\"\\n  101  			],\\n  102  			[\\n  ...\\n 1056  			\\\"spell_t\\\",\\n 1057  			\\\"targeting_item\\\",\\n 1058: 			\\\"spell_targeting\\\",\\n 1059  			\\\"action_free = False\\\",\\n 1060  			\\\"game_state = GameStates.PLAYERS_TURN\\\",\\n ....\\n 1105  			\\\"missile_targ\\\",\\n 1106  			\\\"print(\\\",\\n 1107: 			\\\"spell_targeting\\\",\\n 1108  			\\\"game_state = GameStates.TARGETING\\\",\\n 1109  			\\\"action_free\\\",\\n 1110  			\\\"targeting_item\\\",\\n 1111: 			\\\"spell_targeting\\\",\\n 1112  			\\\":\\\\n\\\",\\n 1113  			\\\"handle_de\\\",\\n ....\\n 1122  			\\\"con\\\",\\n 1123  			\\\"targeting\\\",\\n 1124: 			\\\"spell_targeting\\\",\\n 1125  			\\\"spell_tar\\\",\\n 1126  			\\\"spell_targ\\\",\\n\\nC:\\\\dev\\\\p3roguelike\\\\systems\\\\results_process_system.py:\\n   14  		item_dropped = player_turn_result.get('item_dropped')\\n   15  		targeting = player_turn_result.get('targeting')\\n   16: 		spell_targeting_result = player_turn_result.get('spell_targeting')\\n   17  		targeting_cancelled = player_turn_result.get('targeting_cancelled')\\n   18  		equip = player_turn_result.get('equip')\\n   ..\\n   40  			targets.current_targeting_consumable = targeting\\n   41  			message_log.add_message(targets.current_targeting_consumable.consumable.targeting_message)\\n   42: 		if spell_targeting_result:\\n   43  			print(\\\"result process system picked up the spell targeting result\\\")\\n   44  			previous_game_state = GameStates.PLAYERS_TURN\\n   45  			game_state = GameStates.TARGETING\\n   46: 			targets.current_targeting_spell = spell_targeting_result\\n   47  			message_log.add_message(targets.current_targeting_spell.targeting_message)\\n   48  		if missile_targeting:\\n\\nC:\\\\dev\\\\p3roguelike\\\\systems\\\\spell_system.py:\\n   24  \\n   25  	if spell.targeting and not (kwargs.get('target_x') or kwargs.get('target_y')):\\n   26: 		print(\\\"spell system is returning spell_targeting\\\")\\n   27: 		results.append({'spell_targeting': spell})\\n   28  	else:\\n   29  		kwargs = {**spell.function_kwargs, **kwargs}\\n\\n11 matches across 3 files\\n\\n\\nSearching 75 files for \\\"stamina\\\"\\n\\nC:\\\\dev\\\\p3roguelike\\\\components\\\\stats.py:\\n    1  class Stats:\\n    2: 	def __init__(self, Strength=10, Precision=10, Agility=10, Intellect=10, Willpower=10, Stamina=10, Endurance=10):\\n    3  		self.Strength = Strength\\n    4  		self.Precision = Precision\\n    .\\n    6  		self.Intellect = Intellect\\n    7  		self.Willpower = Willpower\\n    8: 		self.Stamina = Stamina\\n    9  		self.Endurance = Endurance\\n   10: 		self.base_max_hp = self.Stamina + self.Endurance\\n   11  		self.hp = self.base_max_hp\\n   12  		self.evade = int((self.Agility + self.Precision) / 4)\\n\\nC:\\\\dev\\\\p3roguelike\\\\feats.py:\\n    1  class Feat:\\n    2: 	def __init__(self, name, display_name, parent_skill, minimum_rank, stamina_cost, use_function, targeting, targeting_message, feat_range, **kwargs):\\n    3  		self.name = name\\n    4  		self.display_name = display_name\\n    5  		self.parent_skill = parent_skill\\n    6  		self.minimum_rank = minimum_rank\\n    7: 		self.stamina_cost = stamina_cost\\n    8  		self.use_function = use_function\\n    9  		self.targeting = targeting\\n\\nC:\\\\dev\\\\p3roguelike\\\\loader_functions\\\\initialize_new_game.py:\\n   72  	defender_component = Defender()\\n   73  	performer_component = Performer()\\n   74: 	stats_component = Stats(Strength=14, Precision=14, Agility=14, Intellect=14, Willpower=14, Stamina=14, Endurance=14)\\n   75  	skills_component = Skills()\\n   76  	skills_component.set_skill_rank(SkillNames.SWORD, 1)\\n\\nC:\\\\dev\\\\p3roguelike\\\\mocks.py:\\n   20  	test_identified = Identified()\\n   21  	test_inventory = Inventory(10)\\n   22: 	test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)\\n   23  	test_entity = Entity(1, 1, 'A', libtcod.white, \\\"Player\\\", inventory=test_inventory, skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component, defender=test_defender_component, identified=test_identified)\\n   24  	return test_entity\\n   ..\\n   29  	test_skills_component = Skills()\\n   30  	test_equipment_component = Equipment()\\n   31: 	test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)\\n   32  	test_entity = Entity(1, 1, 'A', libtcod.white, \\\"Player\\\", skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component, defender=test_defender_component)	\\n   33  	test_skills_component.set_skill_rank(SkillNames.SWORD, 1)\\n   ..\\n   44  	test_fighter = Fighter()\\n   45  	test_name = Name(\\\"Mock\\\")\\n   46: 	test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)\\n   47  	test_entity = Entity(1, 1, 'A', libtcod.white, \\\"Player\\\", skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component, defender=test_defender_component, fighter=test_fighter, name=test_name)	\\n   48  	test_skills_component.set_skill_rank(SkillNames.SWORD, 1)\\n   ..\\n   57  	test_sword = EquippableFactory.make_longsword()\\n   58  	test_equipment_component.main_hand = test_sword	\\n   59: 	test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)\\n   60  	test_entity = Entity(1, 1, 'A', libtcod.white, \\\"Player\\\", skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component, defender=test_defender_component)	\\n   61  	test_skills_component.set_skill_rank(SkillNames.SWORD, 14)\\n   ..\\n   72  	test_equipment_component.main_hand = test_sword\\n   73  	test_equipment_component.off_hand = test_shield	\\n   74: 	test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)\\n   75  	test_entity = Entity(1, 1, 'A', libtcod.white, \\\"Player\\\", skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component, defender=test_defender_component, fighter=test_fighter_component)\\n   76  	test_skills_component.set_skill_rank(SkillNames.SWORD, 1)\\n   ..\\n   87  	test_equipment_component.main_hand = test_sword\\n   88  	test_equipment_component.off_hand = test_shield\\n   89: 	test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)\\n   90  	test_entity = Entity(1, 1, 'A', libtcod.white, \\\"Player\\\", skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component, defender=test_defender_component)	\\n   91  	test_skills_component.set_skill_rank(SkillNames.SWORD, 1)\\n   ..\\n  101  	test_sword = EquippableFactory.make_longsword()\\n  102  	test_equipment_component.main_hand = test_sword\\n  103: 	test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)\\n  104  	test_entity = Entity(1, 1, 'A', libtcod.white, \\\"Player\\\", skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component, defender=test_defender_component)	\\n  105  	test_skills_component.set_skill_rank(SkillNames.SWORD, 14)\\n  ...\\n  117  	test_equipment_component.main_hand = test_sword\\n  118  	test_equipment_component.off_hand = test_shield	\\n  119: 	test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)\\n  120  	test_entity = Entity(1, 1, 'A', libtcod.white, \\\"Player\\\", skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component, defender=test_defender_component, fighter=test_fighter_component)\\n  121  	test_skills_component.set_skill_rank(SkillNames.SWORD, 14)\\n  ...\\n  130  	test_bow = EquippableFactory.make_shortbow()\\n  131  	test_equipment_component.main_hand = test_bow\\n  132: 	test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)\\n  133  	test_entity = Entity(1, 1, 'A', libtcod.white, \\\"Player\\\", fighter=test_fighter, skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component, defender=test_defender_component)	\\n  134  	return test_entity\\n  ...\\n  144  	test_equipment_component.main_hand = test_bow\\n  145  	test_equipment_component.ammunition = test_arrows\\n  146: 	test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)\\n  147  	test_entity = Entity(1, 1, 'A', libtcod.white, \\\"Player\\\", fighter=test_fighter, skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component, defender=test_defender_component)	\\n  148  	return test_entity\\n  ...\\n  157  	test_equipment_component.main_hand = test_sword\\n  158  	test_equipment_component.off_hand = test_shield	\\n  159: 	test_stats_component = Stats(Strength=14, Precision=11, Agility=14, Intellect=10, Willpower=9, Stamina=10, Endurance=9)\\n  160  	test_entity = Entity(1, 1, 'A', libtcod.white, \\\"Player\\\", skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component, defender=test_defender_component)	\\n  161  	test_skills_component.set_skill_rank(SkillNames.SWORD, 1)\\n  ...\\n  167  	test_skills_component = Skills()\\n  168  	test_equipment_component = Equipment()\\n  169: 	test_stats_component = Stats(Strength=14, Precision=11, Agility=13	, Intellect=10, Willpower=9, Stamina=10, Endurance=9)\\n  170  	test_entity = Entity(1, 1, 'A', libtcod.white, \\\"Player\\\", skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component)\\n  171  	test_skills_component.set_skill_rank(SkillNames.UNARMED, 1)\\n\\nC:\\\\dev\\\\p3roguelike\\\\monsters.py:\\n   19  def makeOrc(x, y):\\n   20  	fighter_component = Fighter(xp=35)\\n   21: 	stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)\\n   22  	ai_component = BasicMonster()\\n   23  	equipment_component = Equipment()\\n   ..\\n   40  def makeTroll(x, y):\\n   41  	fighter_component = Fighter(xp=100)\\n   42: 	stats_component = Stats(Strength=12, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)\\n   43  	ai_component = BasicMonster()\\n   44  	equipment_component = Equipment()\\n   ..\\n   58  def makeKobold(x, y):\\n   59  	fighter_component = Fighter(xp=30)\\n   60: 	stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)\\n   61  	ai_component = BasicMonster()\\n   62  	equipment_component = Equipment()\\n\\nC:\\\\dev\\\\p3roguelike\\\\rltests.py:\\n  115  		test_caster = Caster(spells=[], max_mana=50)\\n  116  		test_fighter = Fighter(xp=100)\\n  117: 		test_stats = Stats(Strength=1, Precision=1, Agility=1, Intellect=1, Willpower=1, Stamina=1, Endurance=1)\\n  118  		test_skills = Skills()\\n  119  		test_entity = entity.Entity(1, 1, 'A', libtcod.white, \\\"Player\\\", caster=test_caster, fighter=test_fighter, skills=test_skills, stats=test_stats)\\n  ...\\n  180  class StatsTests(unittest.TestCase):\\n  181  	def test_can_create_entity_with_stats(self):\\n  182: 		test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)\\n  183  		test_entity = entity.Entity(1, 1, 'A', libtcod.white, \\\"Player\\\", stats=test_stats_component)\\n  184  		self.assertEqual(test_entity.stats, test_stats_component)\\n  185  \\n  186  	def test_can_calculate_hp(self):\\n  187: 		test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)\\n  188  		test_entity = entity.Entity(1, 1, 'A', libtcod.white, \\\"Player\\\", stats=test_stats_component)\\n  189  		self.assertEqual(test_entity.stats.max_hp, 19)\\n  ...\\n  219  \\n  220  	def test_can_get_damage_string(self):\\n  221: 		test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)\\n  222  		test_fighter_component = Fighter(xp=10)\\n  223  		test_equipment = Equipment()\\n  ...\\n  645  	def test_damage_over_time_effects_work(self):\\n  646  		fighter_component = Fighter(xp=100)\\n  647: 		stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)\\n  648  		test_entity = entity.Entity(1, 1, 'A', libtcod.white, stats=stats_component, fighter=fighter_component)\\n  649  		test_effect = Effect(name=EffectNames.POISON, description=\\\"Poisoned\\\", turns_left=5, damage_per_turn=3)\\n\\nC:\\\\dev\\\\p3roguelike\\\\systems\\\\feat_system.py:\\n   17  	results = []\\n   18  \\n   19: 	if feat.stamina_cost > entity.stats.stamina:\\n   20: 		results.append({'message': Message(\\\"You don't have enough stamina to perform that feat.\\\")})\\n   21  		return results\\n   22  \\n   ..\\n   26  	else:\\n   27  		kwargs = {**feat.function_kwargs, **kwargs}\\n   28: 		entity.stats.stamina -= feat.stamina_cost\\n   29  		feat_perform_results = feat.use_function(entity, **kwargs)\\n   30  \\n\\nC:\\\\dev\\\\p3roguelike\\\\systems\\\\skill_manager.py:\\n   35  		return entity.stats.Willpower or 0\\n   36  \\n   37: def get_stamina(entity):\\n   38  	if entity.stats:\\n   39: 		return entity.stats.Stamina or 0\\n   40  \\n   41  def get_endurance(entity):\\n\\n35 matches across 8 files\\n\\n\\nSearching 75 files for \\\"feat_perform_re\\\"\\n\\nC:\\\\dev\\\\p3roguelike\\\\systems\\\\feat_system.py:\\n   32  		kwargs = {**feat.function_kwargs, **kwargs}\\n   33  		entity.stats.sp -= feat.stamina_cost\\n   34: 		feat_perform_results = feat.use_function(entity, **kwargs)\\n   35  \\n   36: 		results.extend(feat_perform_results)\\n   37  		results.append({'performed': spell.name})\\n   38  	return results\\n\\nC:\\\\dev\\\\p3roguelike\\\\systems\\\\input_process_system.py:\\n  157  				player_turn_results.extend(missile_attack_results)	\\n  158  			elif targets.current_targeting_missile:\\n  159: 				feat_perform_results = player.fighter.fire_weapon(weapon=player.equipment.main_hand.equippable, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y)\\n  160  				player_turn_results.extend(missile_attack_results)	\\n  161  			action_free = False\\n\\n3 matches across 2 files\\n\\n\\nSearching 75 files for \\\"perform(\\\"\\n\\nC:\\\\dev\\\\p3roguelike\\\\systems\\\\feat_system.py:\\n   16  	return feat\\n   17  \\n   18: def perform(entity, feat, **kwargs):\\n   19  	results = []\\n   20  	target_x = kwargs.get('target_x')\\n\\nC:\\\\dev\\\\p3roguelike\\\\systems\\\\input_process_system.py:\\n  126  		feat = player.performer.feat_list[feat_index]\\n  127  		print(feat_index)\\n  128: 		player_turn_results.extend(perform(player, feat, entities=entities, fov_map=fov_map))\\n  129  		# TODO: This is not at all great - analysing player turn results should happen in result process system!\\n  130  		for result in player_turn_results:\\n  ...\\n  157  				player_turn_results.extend(missile_attack_results)	\\n  158  			elif targets.current_targeting_missile:\\n  159: 				feat_perform_results = perform(weapon=player.equipment.main_hand.equippable, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y)\\n  160  				player_turn_results.extend(missile_attack_results)	\\n  161  			action_free = False\\n\\n3 matches across 2 files\\n\\n\\nSearching 75 files for \\\"current_targeting_fe\\\"\\n\\nC:\\\\dev\\\\p3roguelike\\\\systems\\\\results_process_system.py:\\n   51  			previous_game_state = GameStates.PLAYERS_TURN\\n   52  			game_state = GameStates.TARGETING\\n   53: 			targets.current_targeting_feat = feat_targeting\\n   54: 			message_log.add_message(targets.current_targeting_feat.targeting_message)\\n   55  		if missile_targeting:\\n   56  			previous_game_state = GameStates.PLAYERS_TURN\\n\\nC:\\\\dev\\\\p3roguelike\\\\targeting.py:\\n    4  		self.current_targeting_spell = None\\n    5  		self.current_targeting_missile = False\\n    6: 		self.current_targeting_feat = None\\n    7  \\n    8  	def __str__(self):\\n\\n3 matches across 2 files\\n\",\n  580  			\"settings\":\n  581  			{\n\nC:\\dev\\p3roguelike\\systems\\feat_system.py:\n   39  \n   40  		results.extend(feat_perform_results)\n   41: 		results.append({'performed': feat.name})\n   42  	return results\n   43  \n\nC:\\dev\\p3roguelike\\systems\\input_process_system.py:\n  128  		# TODO: This is not at all great - analysing player turn results should happen in result process system!\n  129  		for result in player_turn_results:\n  130: 			if result.get('performed'):\n  131  				print(\"used action via feat\")\n  132  				action_free = False		\n\n3 matches across 3 files\n\n\nSearching 75 files for \"perform(\"\n\nC:\\dev\\p3roguelike\\p3RL.sublime-workspace:\n  561  		},\n  562  		{\n  563: 			\"contents\": \"Searching 75 files for \\\"performed\\\"\\n\\nC:\\\\dev\\\\p3roguelike\\\\p3RL.sublime-workspace:\\n  577  		},\\n  578  		{\\n  579: 			\\\"contents\\\": \\\"Searching 75 files for \\\\\\\"spells_menu\\\\\\\"\\\\n\\\\nC:\\\\\\\\dev\\\\\\\\p3roguelike\\\\\\\\menus.py:\\\\n   19  	menu(con, header, options, inventory_width, screen_width, screen_height)\\\\n   20  \\\\n   21: def spells_menu(con, header, spells_width, screen_width, screen_height, player):\\\\n   22  	if len(player.caster.spells) == 0:\\\\n   23  		header = \\\\\\\"You don't know any spells yet.\\\\\\\"\\\\n\\\\nC:\\\\\\\\dev\\\\\\\\p3roguelike\\\\\\\\render_functions.py:\\\\n    2  from enum import Enum\\\\n    3  from game_states import GameStates\\\\n    4: from menus import inventory_menu, level_up_menu, character_screen, spells_menu, potion_menu, equipment_menu\\\\n    5  from systems.name_system import get_display_name\\\\n    6  from loader_functions.tile_codes import *\\\\n    .\\\\n   97  \\\\n   98  	elif game_state == GameStates.SPELLS_SCREEN:\\\\n   99: 		spells_menu(con, \\\\\\\"Choose a spell to cast...\\\\\\\", 50, screen_width, screen_height, player)\\\\n  100  \\\\n  101  	elif game_state == GameStates.POTION_SCREEN:\\\\n\\\\n3 matches across 2 files\\\\n\\\\n\\\\nSearching 75 files for \\\\\\\"spell_targeting\\\\\\\"\\\\n\\\\nC:\\\\\\\\dev\\\\\\\\p3roguelike\\\\\\\\p3RL.sublime-workspace:\\\\n   98  			[\\\\n   99  				\\\\\\\"spell_\\\\\\\",\\\\n  100: 				\\\\\\\"spell_targeting_result\\\\\\\"\\\\n  101  			],\\\\n  102  			[\\\\n  ...\\\\n 1056  			\\\\\\\"spell_t\\\\\\\",\\\\n 1057  			\\\\\\\"targeting_item\\\\\\\",\\\\n 1058: 			\\\\\\\"spell_targeting\\\\\\\",\\\\n 1059  			\\\\\\\"action_free = False\\\\\\\",\\\\n 1060  			\\\\\\\"game_state = GameStates.PLAYERS_TURN\\\\\\\",\\\\n ....\\\\n 1105  			\\\\\\\"missile_targ\\\\\\\",\\\\n 1106  			\\\\\\\"print(\\\\\\\",\\\\n 1107: 			\\\\\\\"spell_targeting\\\\\\\",\\\\n 1108  			\\\\\\\"game_state = GameStates.TARGETING\\\\\\\",\\\\n 1109  			\\\\\\\"action_free\\\\\\\",\\\\n 1110  			\\\\\\\"targeting_item\\\\\\\",\\\\n 1111: 			\\\\\\\"spell_targeting\\\\\\\",\\\\n 1112  			\\\\\\\":\\\\\\\\n\\\\\\\",\\\\n 1113  			\\\\\\\"handle_de\\\\\\\",\\\\n ....\\\\n 1122  			\\\\\\\"con\\\\\\\",\\\\n 1123  			\\\\\\\"targeting\\\\\\\",\\\\n 1124: 			\\\\\\\"spell_targeting\\\\\\\",\\\\n 1125  			\\\\\\\"spell_tar\\\\\\\",\\\\n 1126  			\\\\\\\"spell_targ\\\\\\\",\\\\n\\\\nC:\\\\\\\\dev\\\\\\\\p3roguelike\\\\\\\\systems\\\\\\\\results_process_system.py:\\\\n   14  		item_dropped = player_turn_result.get('item_dropped')\\\\n   15  		targeting = player_turn_result.get('targeting')\\\\n   16: 		spell_targeting_result = player_turn_result.get('spell_targeting')\\\\n   17  		targeting_cancelled = player_turn_result.get('targeting_cancelled')\\\\n   18  		equip = player_turn_result.get('equip')\\\\n   ..\\\\n   40  			targets.current_targeting_consumable = targeting\\\\n   41  			message_log.add_message(targets.current_targeting_consumable.consumable.targeting_message)\\\\n   42: 		if spell_targeting_result:\\\\n   43  			print(\\\\\\\"result process system picked up the spell targeting result\\\\\\\")\\\\n   44  			previous_game_state = GameStates.PLAYERS_TURN\\\\n   45  			game_state = GameStates.TARGETING\\\\n   46: 			targets.current_targeting_spell = spell_targeting_result\\\\n   47  			message_log.add_message(targets.current_targeting_spell.targeting_message)\\\\n   48  		if missile_targeting:\\\\n\\\\nC:\\\\\\\\dev\\\\\\\\p3roguelike\\\\\\\\systems\\\\\\\\spell_system.py:\\\\n   24  \\\\n   25  	if spell.targeting and not (kwargs.get('target_x') or kwargs.get('target_y')):\\\\n   26: 		print(\\\\\\\"spell system is returning spell_targeting\\\\\\\")\\\\n   27: 		results.append({'spell_targeting': spell})\\\\n   28  	else:\\\\n   29  		kwargs = {**spell.function_kwargs, **kwargs}\\\\n\\\\n11 matches across 3 files\\\\n\\\\n\\\\nSearching 75 files for \\\\\\\"stamina\\\\\\\"\\\\n\\\\nC:\\\\\\\\dev\\\\\\\\p3roguelike\\\\\\\\components\\\\\\\\stats.py:\\\\n    1  class Stats:\\\\n    2: 	def __init__(self, Strength=10, Precision=10, Agility=10, Intellect=10, Willpower=10, Stamina=10, Endurance=10):\\\\n    3  		self.Strength = Strength\\\\n    4  		self.Precision = Precision\\\\n    .\\\\n    6  		self.Intellect = Intellect\\\\n    7  		self.Willpower = Willpower\\\\n    8: 		self.Stamina = Stamina\\\\n    9  		self.Endurance = Endurance\\\\n   10: 		self.base_max_hp = self.Stamina + self.Endurance\\\\n   11  		self.hp = self.base_max_hp\\\\n   12  		self.evade = int((self.Agility + self.Precision) / 4)\\\\n\\\\nC:\\\\\\\\dev\\\\\\\\p3roguelike\\\\\\\\feats.py:\\\\n    1  class Feat:\\\\n    2: 	def __init__(self, name, display_name, parent_skill, minimum_rank, stamina_cost, use_function, targeting, targeting_message, feat_range, **kwargs):\\\\n    3  		self.name = name\\\\n    4  		self.display_name = display_name\\\\n    5  		self.parent_skill = parent_skill\\\\n    6  		self.minimum_rank = minimum_rank\\\\n    7: 		self.stamina_cost = stamina_cost\\\\n    8  		self.use_function = use_function\\\\n    9  		self.targeting = targeting\\\\n\\\\nC:\\\\\\\\dev\\\\\\\\p3roguelike\\\\\\\\loader_functions\\\\\\\\initialize_new_game.py:\\\\n   72  	defender_component = Defender()\\\\n   73  	performer_component = Performer()\\\\n   74: 	stats_component = Stats(Strength=14, Precision=14, Agility=14, Intellect=14, Willpower=14, Stamina=14, Endurance=14)\\\\n   75  	skills_component = Skills()\\\\n   76  	skills_component.set_skill_rank(SkillNames.SWORD, 1)\\\\n\\\\nC:\\\\\\\\dev\\\\\\\\p3roguelike\\\\\\\\mocks.py:\\\\n   20  	test_identified = Identified()\\\\n   21  	test_inventory = Inventory(10)\\\\n   22: 	test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)\\\\n   23  	test_entity = Entity(1, 1, 'A', libtcod.white, \\\\\\\"Player\\\\\\\", inventory=test_inventory, skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component, defender=test_defender_component, identified=test_identified)\\\\n   24  	return test_entity\\\\n   ..\\\\n   29  	test_skills_component = Skills()\\\\n   30  	test_equipment_component = Equipment()\\\\n   31: 	test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)\\\\n   32  	test_entity = Entity(1, 1, 'A', libtcod.white, \\\\\\\"Player\\\\\\\", skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component, defender=test_defender_component)	\\\\n   33  	test_skills_component.set_skill_rank(SkillNames.SWORD, 1)\\\\n   ..\\\\n   44  	test_fighter = Fighter()\\\\n   45  	test_name = Name(\\\\\\\"Mock\\\\\\\")\\\\n   46: 	test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)\\\\n   47  	test_entity = Entity(1, 1, 'A', libtcod.white, \\\\\\\"Player\\\\\\\", skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component, defender=test_defender_component, fighter=test_fighter, name=test_name)	\\\\n   48  	test_skills_component.set_skill_rank(SkillNames.SWORD, 1)\\\\n   ..\\\\n   57  	test_sword = EquippableFactory.make_longsword()\\\\n   58  	test_equipment_component.main_hand = test_sword	\\\\n   59: 	test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)\\\\n   60  	test_entity = Entity(1, 1, 'A', libtcod.white, \\\\\\\"Player\\\\\\\", skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component, defender=test_defender_component)	\\\\n   61  	test_skills_component.set_skill_rank(SkillNames.SWORD, 14)\\\\n   ..\\\\n   72  	test_equipment_component.main_hand = test_sword\\\\n   73  	test_equipment_component.off_hand = test_shield	\\\\n   74: 	test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)\\\\n   75  	test_entity = Entity(1, 1, 'A', libtcod.white, \\\\\\\"Player\\\\\\\", skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component, defender=test_defender_component, fighter=test_fighter_component)\\\\n   76  	test_skills_component.set_skill_rank(SkillNames.SWORD, 1)\\\\n   ..\\\\n   87  	test_equipment_component.main_hand = test_sword\\\\n   88  	test_equipment_component.off_hand = test_shield\\\\n   89: 	test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)\\\\n   90  	test_entity = Entity(1, 1, 'A', libtcod.white, \\\\\\\"Player\\\\\\\", skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component, defender=test_defender_component)	\\\\n   91  	test_skills_component.set_skill_rank(SkillNames.SWORD, 1)\\\\n   ..\\\\n  101  	test_sword = EquippableFactory.make_longsword()\\\\n  102  	test_equipment_component.main_hand = test_sword\\\\n  103: 	test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)\\\\n  104  	test_entity = Entity(1, 1, 'A', libtcod.white, \\\\\\\"Player\\\\\\\", skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component, defender=test_defender_component)	\\\\n  105  	test_skills_component.set_skill_rank(SkillNames.SWORD, 14)\\\\n  ...\\\\n  117  	test_equipment_component.main_hand = test_sword\\\\n  118  	test_equipment_component.off_hand = test_shield	\\\\n  119: 	test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)\\\\n  120  	test_entity = Entity(1, 1, 'A', libtcod.white, \\\\\\\"Player\\\\\\\", skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component, defender=test_defender_component, fighter=test_fighter_component)\\\\n  121  	test_skills_component.set_skill_rank(SkillNames.SWORD, 14)\\\\n  ...\\\\n  130  	test_bow = EquippableFactory.make_shortbow()\\\\n  131  	test_equipment_component.main_hand = test_bow\\\\n  132: 	test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)\\\\n  133  	test_entity = Entity(1, 1, 'A', libtcod.white, \\\\\\\"Player\\\\\\\", fighter=test_fighter, skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component, defender=test_defender_component)	\\\\n  134  	return test_entity\\\\n  ...\\\\n  144  	test_equipment_component.main_hand = test_bow\\\\n  145  	test_equipment_component.ammunition = test_arrows\\\\n  146: 	test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)\\\\n  147  	test_entity = Entity(1, 1, 'A', libtcod.white, \\\\\\\"Player\\\\\\\", fighter=test_fighter, skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component, defender=test_defender_component)	\\\\n  148  	return test_entity\\\\n  ...\\\\n  157  	test_equipment_component.main_hand = test_sword\\\\n  158  	test_equipment_component.off_hand = test_shield	\\\\n  159: 	test_stats_component = Stats(Strength=14, Precision=11, Agility=14, Intellect=10, Willpower=9, Stamina=10, Endurance=9)\\\\n  160  	test_entity = Entity(1, 1, 'A', libtcod.white, \\\\\\\"Player\\\\\\\", skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component, defender=test_defender_component)	\\\\n  161  	test_skills_component.set_skill_rank(SkillNames.SWORD, 1)\\\\n  ...\\\\n  167  	test_skills_component = Skills()\\\\n  168  	test_equipment_component = Equipment()\\\\n  169: 	test_stats_component = Stats(Strength=14, Precision=11, Agility=13	, Intellect=10, Willpower=9, Stamina=10, Endurance=9)\\\\n  170  	test_entity = Entity(1, 1, 'A', libtcod.white, \\\\\\\"Player\\\\\\\", skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component)\\\\n  171  	test_skills_component.set_skill_rank(SkillNames.UNARMED, 1)\\\\n\\\\nC:\\\\\\\\dev\\\\\\\\p3roguelike\\\\\\\\monsters.py:\\\\n   19  def makeOrc(x, y):\\\\n   20  	fighter_component = Fighter(xp=35)\\\\n   21: 	stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)\\\\n   22  	ai_component = BasicMonster()\\\\n   23  	equipment_component = Equipment()\\\\n   ..\\\\n   40  def makeTroll(x, y):\\\\n   41  	fighter_component = Fighter(xp=100)\\\\n   42: 	stats_component = Stats(Strength=12, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)\\\\n   43  	ai_component = BasicMonster()\\\\n   44  	equipment_component = Equipment()\\\\n   ..\\\\n   58  def makeKobold(x, y):\\\\n   59  	fighter_component = Fighter(xp=30)\\\\n   60: 	stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)\\\\n   61  	ai_component = BasicMonster()\\\\n   62  	equipment_component = Equipment()\\\\n\\\\nC:\\\\\\\\dev\\\\\\\\p3roguelike\\\\\\\\rltests.py:\\\\n  115  		test_caster = Caster(spells=[], max_mana=50)\\\\n  116  		test_fighter = Fighter(xp=100)\\\\n  117: 		test_stats = Stats(Strength=1, Precision=1, Agility=1, Intellect=1, Willpower=1, Stamina=1, Endurance=1)\\\\n  118  		test_skills = Skills()\\\\n  119  		test_entity = entity.Entity(1, 1, 'A', libtcod.white, \\\\\\\"Player\\\\\\\", caster=test_caster, fighter=test_fighter, skills=test_skills, stats=test_stats)\\\\n  ...\\\\n  180  class StatsTests(unittest.TestCase):\\\\n  181  	def test_can_create_entity_with_stats(self):\\\\n  182: 		test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)\\\\n  183  		test_entity = entity.Entity(1, 1, 'A', libtcod.white, \\\\\\\"Player\\\\\\\", stats=test_stats_component)\\\\n  184  		self.assertEqual(test_entity.stats, test_stats_component)\\\\n  185  \\\\n  186  	def test_can_calculate_hp(self):\\\\n  187: 		test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)\\\\n  188  		test_entity = entity.Entity(1, 1, 'A', libtcod.white, \\\\\\\"Player\\\\\\\", stats=test_stats_component)\\\\n  189  		self.assertEqual(test_entity.stats.max_hp, 19)\\\\n  ...\\\\n  219  \\\\n  220  	def test_can_get_damage_string(self):\\\\n  221: 		test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)\\\\n  222  		test_fighter_component = Fighter(xp=10)\\\\n  223  		test_equipment = Equipment()\\\\n  ...\\\\n  645  	def test_damage_over_time_effects_work(self):\\\\n  646  		fighter_component = Fighter(xp=100)\\\\n  647: 		stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)\\\\n  648  		test_entity = entity.Entity(1, 1, 'A', libtcod.white, stats=stats_component, fighter=fighter_component)\\\\n  649  		test_effect = Effect(name=EffectNames.POISON, description=\\\\\\\"Poisoned\\\\\\\", turns_left=5, damage_per_turn=3)\\\\n\\\\nC:\\\\\\\\dev\\\\\\\\p3roguelike\\\\\\\\systems\\\\\\\\feat_system.py:\\\\n   17  	results = []\\\\n   18  \\\\n   19: 	if feat.stamina_cost > entity.stats.stamina:\\\\n   20: 		results.append({'message': Message(\\\\\\\"You don't have enough stamina to perform that feat.\\\\\\\")})\\\\n   21  		return results\\\\n   22  \\\\n   ..\\\\n   26  	else:\\\\n   27  		kwargs = {**feat.function_kwargs, **kwargs}\\\\n   28: 		entity.stats.stamina -= feat.stamina_cost\\\\n   29  		feat_perform_results = feat.use_function(entity, **kwargs)\\\\n   30  \\\\n\\\\nC:\\\\\\\\dev\\\\\\\\p3roguelike\\\\\\\\systems\\\\\\\\skill_manager.py:\\\\n   35  		return entity.stats.Willpower or 0\\\\n   36  \\\\n   37: def get_stamina(entity):\\\\n   38  	if entity.stats:\\\\n   39: 		return entity.stats.Stamina or 0\\\\n   40  \\\\n   41  def get_endurance(entity):\\\\n\\\\n35 matches across 8 files\\\\n\\\\n\\\\nSearching 75 files for \\\\\\\"feat_perform_re\\\\\\\"\\\\n\\\\nC:\\\\\\\\dev\\\\\\\\p3roguelike\\\\\\\\systems\\\\\\\\feat_system.py:\\\\n   32  		kwargs = {**feat.function_kwargs, **kwargs}\\\\n   33  		entity.stats.sp -= feat.stamina_cost\\\\n   34: 		feat_perform_results = feat.use_function(entity, **kwargs)\\\\n   35  \\\\n   36: 		results.extend(feat_perform_results)\\\\n   37  		results.append({'performed': spell.name})\\\\n   38  	return results\\\\n\\\\nC:\\\\\\\\dev\\\\\\\\p3roguelike\\\\\\\\systems\\\\\\\\input_process_system.py:\\\\n  157  				player_turn_results.extend(missile_attack_results)	\\\\n  158  			elif targets.current_targeting_missile:\\\\n  159: 				feat_perform_results = player.fighter.fire_weapon(weapon=player.equipment.main_hand.equippable, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y)\\\\n  160  				player_turn_results.extend(missile_attack_results)	\\\\n  161  			action_free = False\\\\n\\\\n3 matches across 2 files\\\\n\\\\n\\\\nSearching 75 files for \\\\\\\"perform(\\\\\\\"\\\\n\\\\nC:\\\\\\\\dev\\\\\\\\p3roguelike\\\\\\\\systems\\\\\\\\feat_system.py:\\\\n   16  	return feat\\\\n   17  \\\\n   18: def perform(entity, feat, **kwargs):\\\\n   19  	results = []\\\\n   20  	target_x = kwargs.get('target_x')\\\\n\\\\nC:\\\\\\\\dev\\\\\\\\p3roguelike\\\\\\\\systems\\\\\\\\input_process_system.py:\\\\n  126  		feat = player.performer.feat_list[feat_index]\\\\n  127  		print(feat_index)\\\\n  128: 		player_turn_results.extend(perform(player, feat, entities=entities, fov_map=fov_map))\\\\n  129  		# TODO: This is not at all great - analysing player turn results should happen in result process system!\\\\n  130  		for result in player_turn_results:\\\\n  ...\\\\n  157  				player_turn_results.extend(missile_attack_results)	\\\\n  158  			elif targets.current_targeting_missile:\\\\n  159: 				feat_perform_results = perform(weapon=player.equipment.main_hand.equippable, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y)\\\\n  160  				player_turn_results.extend(missile_attack_results)	\\\\n  161  			action_free = False\\\\n\\\\n3 matches across 2 files\\\\n\\\\n\\\\nSearching 75 files for \\\\\\\"current_targeting_fe\\\\\\\"\\\\n\\\\nC:\\\\\\\\dev\\\\\\\\p3roguelike\\\\\\\\systems\\\\\\\\results_process_system.py:\\\\n   51  			previous_game_state = GameStates.PLAYERS_TURN\\\\n   52  			game_state = GameStates.TARGETING\\\\n   53: 			targets.current_targeting_feat = feat_targeting\\\\n   54: 			message_log.add_message(targets.current_targeting_feat.targeting_message)\\\\n   55  		if missile_targeting:\\\\n   56  			previous_game_state = GameStates.PLAYERS_TURN\\\\n\\\\nC:\\\\\\\\dev\\\\\\\\p3roguelike\\\\\\\\targeting.py:\\\\n    4  		self.current_targeting_spell = None\\\\n    5  		self.current_targeting_missile = False\\\\n    6: 		self.current_targeting_feat = None\\\\n    7  \\\\n    8  	def __str__(self):\\\\n\\\\n3 matches across 2 files\\\\n\\\",\\n  580  			\\\"settings\\\":\\n  581  			{\\n\\nC:\\\\dev\\\\p3roguelike\\\\systems\\\\feat_system.py:\\n   39  \\n   40  		results.extend(feat_perform_results)\\n   41: 		results.append({'performed': feat.name})\\n   42  	return results\\n   43  \\n\\nC:\\\\dev\\\\p3roguelike\\\\systems\\\\input_process_system.py:\\n  128  		# TODO: This is not at all great - analysing player turn results should happen in result process system!\\n  129  		for result in player_turn_results:\\n  130: 			if result.get('performed'):\\n  131  				print(\\\"used action via feat\\\")\\n  132  				action_free = False		\\n\\n3 matches across 3 files\\n\",\n  564  			\"settings\":\n  565  			{\n  ...\n 1031  			\"performed\",\n 1032  			\"current_targeting_fe\",\n 1033: 			\"perform(\",\n 1034  			\"feat_perform_re\",\n 1035  			\"stamina\",\n\nC:\\dev\\p3roguelike\\systems\\input_process_system.py:\n  125  	if feat_index is not None and feat_index < len(player.performer.feat_list):\n  126  		feat = player.performer.feat_list[feat_index]\n  127: 		player_turn_results.extend(perform(player, feat, entities=entities, fov_map=fov_map))\n  128  		# TODO: This is not at all great - analysing player turn results should happen in result process system!\n  129  		for result in player_turn_results:\n  ...\n  157  				player_turn_results.extend(missile_attack_results)	\n  158  			elif targets.current_targeting_feat:\n  159: 				feat_perform_results = perform(player, targets.current_targeting_feat, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y)\n  160  				player_turn_results.extend(feat_perform_results)\n  161  				for result in player_turn_results:\n\n7 matches across 2 files\n",
 			"settings":
 			{
-				"buffer_size": 5155,
+				"buffer_size": 36946,
+				"line_ending": "Windows",
+				"name": "Find Results",
+				"scratch": true
+			}
+		},
+		{
+			"file": "components/stats.py",
+			"settings":
+			{
+				"buffer_size": 824,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "systems/results_process_system.py",
+			"settings":
+			{
+				"buffer_size": 4627,
 				"line_ending": "Windows"
 			}
 		},
@@ -563,7 +597,15 @@
 			"file": "input_handlers.py",
 			"settings":
 			{
-				"buffer_size": 4588,
+				"buffer_size": 4960,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "game_states.py",
+			"settings":
+			{
+				"buffer_size": 332,
 				"line_ending": "Windows"
 			}
 		},
@@ -571,7 +613,7 @@
 			"file": "render_functions.py",
 			"settings":
 			{
-				"buffer_size": 5983,
+				"buffer_size": 6155,
 				"line_ending": "Windows"
 			}
 		},
@@ -579,7 +621,7 @@
 			"file": "menus.py",
 			"settings":
 			{
-				"buffer_size": 6960,
+				"buffer_size": 7329,
 				"line_ending": "Windows"
 			}
 		},
@@ -611,7 +653,7 @@
 			"file": "systems/attack.py",
 			"settings":
 			{
-				"buffer_size": 4691,
+				"buffer_size": 4802,
 				"line_ending": "Windows"
 			}
 		},
@@ -699,7 +741,7 @@
 			"file": "rltests.py",
 			"settings":
 			{
-				"buffer_size": 37094,
+				"buffer_size": 37665,
 				"line_ending": "Windows"
 			}
 		},
@@ -707,7 +749,7 @@
 			"file": "systems/feat_system.py",
 			"settings":
 			{
-				"buffer_size": 1035,
+				"buffer_size": 3050,
 				"line_ending": "Windows"
 			}
 		},
@@ -715,7 +757,7 @@
 			"file": "feats.py",
 			"settings":
 			{
-				"buffer_size": 498,
+				"buffer_size": 491,
 				"line_ending": "Windows"
 			}
 		},
@@ -731,23 +773,7 @@
 			"file": "targeting.py",
 			"settings":
 			{
-				"buffer_size": 284,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "systems/results_process_system.py",
-			"settings":
-			{
-				"buffer_size": 4276,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "systems/input_process_system.py",
-			"settings":
-			{
-				"buffer_size": 7121,
+				"buffer_size": 321,
 				"line_ending": "Windows"
 			}
 		},
@@ -852,6 +878,7 @@
 	},
 	"file_history":
 	[
+		"/C/dev/p3roguelike/.git/COMMIT_EDITMSG",
 		"/C/dev/p3roguelike/components/meleeweapon.py",
 		"/C/dev/p3roguelike/components/missileweapon.py",
 		"/C/dev/p3roguelike/components/equipment.py",
@@ -873,7 +900,6 @@
 		"/C/dev/microblog/app/__init__.py",
 		"/C/dev/microblog/config.py",
 		"/C/dev/microblog/app/forms.py",
-		"/C/dev/p3roguelike/.git/COMMIT_EDITMSG",
 		"/C/dev/p3roguelike/components/effects.py",
 		"/C/dev/p3roguelike/map_objects/game_map.py",
 		"/C/dev/p3roguelike/components/stats.py",
@@ -1002,6 +1028,16 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"perform",
+			"perform(",
+			"performed",
+			"current_targeting_fe",
+			"perform(",
+			"feat_perform_re",
+			"stamina",
+			"feat",
+			"spell_targeting",
+			"spells_menu",
 			"ENEMY_TURN",
 			"spell_func",
 			"TODO",
@@ -1119,17 +1155,7 @@
 			"spell_targ",
 			"({'targeting'",
 			"es.TAR",
-			"con",
-			"targeting",
-			"spell_targeting",
-			"spell_tar",
-			"spell_targ",
-			"spell",
-			"fov",
-			"attack_def",
-			"dlevels",
-			"fov_rec",
-			"fov_map"
+			"con"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1206,65 +1232,11 @@
 	"groups":
 	[
 		{
-			"selected": 23,
+			"selected": 28,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "entity.py",
-					"settings":
-					{
-						"buffer_size": 2145,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1971,
-								1971
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 210.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "engine.py",
-					"settings":
-					{
-						"buffer_size": 5759,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								4978,
-								4978
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 966.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 2,
 					"file": "loader_functions/constants.py",
 					"settings":
 					{
@@ -1291,19 +1263,19 @@
 					"type": "text"
 				},
 				{
-					"buffer": 3,
+					"buffer": 1,
 					"file": "loader_functions/initialize_new_game.py",
 					"settings":
 					{
-						"buffer_size": 5155,
+						"buffer_size": 5307,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								440,
-								440
+								454,
+								454
 							]
 						],
 						"settings":
@@ -1318,7 +1290,221 @@
 					"type": "text"
 				},
 				{
+					"buffer": 2,
+					"file": "entity.py",
+					"settings":
+					{
+						"buffer_size": 2145,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1971,
+								1971
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 210.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "engine.py",
+					"settings":
+					{
+						"buffer_size": 5759,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4978,
+								4978
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 966.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
 					"buffer": 4,
+					"file": "systems/input_process_system.py",
+					"settings":
+					{
+						"buffer_size": 8118,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1525,
+								1525
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1302.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"settings":
+					{
+						"buffer_size": 36946,
+						"regions":
+						{
+							"match":
+							{
+								"flags": 112,
+								"regions":
+								[
+									[
+										14720,
+										14729
+									],
+									[
+										17141,
+										17150
+									],
+									[
+										17432,
+										17441
+									],
+									[
+										33547,
+										33555
+									],
+									[
+										33665,
+										33673
+									],
+									[
+										33958,
+										33966
+									],
+									[
+										34340,
+										34348
+									],
+									[
+										36036,
+										36044
+									],
+									[
+										36325,
+										36333
+									],
+									[
+										36692,
+										36700
+									]
+								],
+								"scope": ""
+							}
+						},
+						"selection":
+						[
+							[
+								17547,
+								17547
+							]
+						],
+						"settings":
+						{
+							"detect_indentation": false,
+							"output_tag": 2,
+							"result_base_dir": "",
+							"result_file_regex": "^([A-Za-z\\\\/<].*):$",
+							"result_line_regex": "^ +([0-9]+):",
+							"scroll_past_end": true,
+							"syntax": "Packages/Default/Find Results.hidden-tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 2800.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "components/stats.py",
+					"settings":
+					{
+						"buffer_size": 824,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								509,
+								509
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "systems/results_process_system.py",
+					"settings":
+					{
+						"buffer_size": 4627,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2517,
+								2517
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 252.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 8,
 					"file": "map_objects/game_map.py",
 					"settings":
 					{
@@ -1345,19 +1531,19 @@
 					"type": "text"
 				},
 				{
-					"buffer": 5,
+					"buffer": 9,
 					"file": "input_handlers.py",
 					"settings":
 					{
-						"buffer_size": 4588,
+						"buffer_size": 4960,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2007,
-								2007
+								4798,
+								4798
 							]
 						],
 						"settings":
@@ -1366,52 +1552,25 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 546.0,
+						"translation.y": 1974.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 6,
-					"file": "render_functions.py",
+					"buffer": 10,
+					"file": "game_states.py",
 					"settings":
 					{
-						"buffer_size": 5983,
+						"buffer_size": 332,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								5922,
-								5922
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 1008.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 7,
-					"file": "menus.py",
-					"settings":
-					{
-						"buffer_size": 6960,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1852,
-								1852
+								332,
+								332
 							]
 						],
 						"settings":
@@ -1426,7 +1585,61 @@
 					"type": "text"
 				},
 				{
-					"buffer": 8,
+					"buffer": 11,
+					"file": "render_functions.py",
+					"settings":
+					{
+						"buffer_size": 6155,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								199,
+								199
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 12,
+					"file": "menus.py",
+					"settings":
+					{
+						"buffer_size": 7329,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1309,
+								1309
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 13,
 					"file": "systems/move_system.py",
 					"settings":
 					{
@@ -1447,13 +1660,13 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 504.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 9,
+					"buffer": 14,
 					"file": "components/ai.py",
 					"settings":
 					{
@@ -1480,7 +1693,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 10,
+					"buffer": 15,
 					"file": "systems/damage.py",
 					"settings":
 					{
@@ -1501,25 +1714,25 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 378.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 11,
+					"buffer": 16,
 					"file": "systems/attack.py",
 					"settings":
 					{
-						"buffer_size": 4691,
+						"buffer_size": 4802,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1015,
-								1152
+								901,
+								901
 							]
 						],
 						"settings":
@@ -1534,7 +1747,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 12,
+					"buffer": 17,
 					"file": "components/fighter.py",
 					"settings":
 					{
@@ -1561,7 +1774,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 13,
+					"buffer": 18,
 					"file": "components/defender.py",
 					"settings":
 					{
@@ -1588,7 +1801,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 14,
+					"buffer": 19,
 					"file": "mocks.py",
 					"settings":
 					{
@@ -1615,7 +1828,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 15,
+					"buffer": 20,
 					"file": "components/effects.py",
 					"settings":
 					{
@@ -1641,7 +1854,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 16,
+					"buffer": 21,
 					"file": "systems/effects_manager.py",
 					"settings":
 					{
@@ -1668,7 +1881,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 17,
+					"buffer": 22,
 					"file": "spells.py",
 					"settings":
 					{
@@ -1694,7 +1907,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 18,
+					"buffer": 23,
 					"file": "components/caster.py",
 					"settings":
 					{
@@ -1721,7 +1934,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 19,
+					"buffer": 24,
 					"file": "systems/spell_system.py",
 					"settings":
 					{
@@ -1732,8 +1945,8 @@
 						"selection":
 						[
 							[
-								920,
-								920
+								789,
+								789
 							]
 						],
 						"settings":
@@ -1748,7 +1961,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 20,
+					"buffer": 25,
 					"file": "systems/skill_manager.py",
 					"settings":
 					{
@@ -1775,7 +1988,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 21,
+					"buffer": 26,
 					"file": "components/skills.py",
 					"settings":
 					{
@@ -1802,19 +2015,19 @@
 					"type": "text"
 				},
 				{
-					"buffer": 22,
+					"buffer": 27,
 					"file": "rltests.py",
 					"settings":
 					{
-						"buffer_size": 37094,
+						"buffer_size": 37665,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								36896,
-								36897
+								37465,
+								37465
 							]
 						],
 						"settings":
@@ -1823,51 +2036,52 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 10008.0,
+						"translation.y": 10176.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 23,
+					"buffer": 28,
 					"file": "systems/feat_system.py",
 					"settings":
 					{
-						"buffer_size": 1035,
+						"buffer_size": 3050,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								118,
-								118
+								2008,
+								2008
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Python/Python.tmLanguage"
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 210.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 24,
+					"buffer": 29,
 					"file": "feats.py",
 					"settings":
 					{
-						"buffer_size": 498,
+						"buffer_size": 491,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								151,
-								151
+								467,
+								467
 							]
 						],
 						"settings":
@@ -1882,7 +2096,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 25,
+					"buffer": 30,
 					"file": "components/performer.py",
 					"settings":
 					{
@@ -1908,19 +2122,19 @@
 					"type": "text"
 				},
 				{
-					"buffer": 26,
+					"buffer": 31,
 					"file": "targeting.py",
 					"settings":
 					{
-						"buffer_size": 284,
+						"buffer_size": 321,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								274,
-								274
+								196,
+								196
 							]
 						],
 						"settings":
@@ -1935,61 +2149,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 27,
-					"file": "systems/results_process_system.py",
-					"settings":
-					{
-						"buffer_size": 4276,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1959,
-								1959
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 84.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 28,
-					"file": "systems/input_process_system.py",
-					"settings":
-					{
-						"buffer_size": 7121,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1714,
-								1714
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 29,
+					"buffer": 32,
 					"file": "systems/pickup_system.py",
 					"settings":
 					{
@@ -2015,7 +2175,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 30,
+					"buffer": 33,
 					"file": "components/inventory.py",
 					"settings":
 					{
@@ -2042,7 +2202,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 31,
+					"buffer": 34,
 					"file": "generators.py",
 					"settings":
 					{
@@ -2068,7 +2228,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 32,
+					"buffer": 35,
 					"file": "item_factory.py",
 					"settings":
 					{
@@ -2095,7 +2255,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 33,
+					"buffer": 36,
 					"file": "item_functions.py",
 					"settings":
 					{
@@ -2106,8 +2266,8 @@
 						"selection":
 						[
 							[
-								3601,
-								3601
+								817,
+								911
 							]
 						],
 						"settings":
@@ -2116,13 +2276,13 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 924.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 34,
+					"buffer": 37,
 					"file": "monsters.py",
 					"settings":
 					{
@@ -2150,7 +2310,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 35,
+					"buffer": 38,
 					"file": ".gitignore",
 					"settings":
 					{
@@ -2176,7 +2336,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 36,
+					"buffer": 39,
 					"file": "components/item.py",
 					"settings":
 					{
@@ -2203,7 +2363,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 37,
+					"buffer": 40,
 					"file": "/C/Users/Leon/Documents/steem",
 					"settings":
 					{

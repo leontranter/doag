@@ -23,14 +23,11 @@ def cast(entity, spell, **kwargs):
 		return results
 
 	if spell.targeting and not (kwargs.get('target_x') or kwargs.get('target_y')):
-		print("spell system is returning spell_targeting")
 		results.append({'spell_targeting': spell})
 	else:
 		kwargs = {**spell.function_kwargs, **kwargs}
 		entity.caster.mana -= spell.mana_cost
-		spell_cast_results = spell.use_function(entity, **kwargs)
-
-		results.extend(spell_cast_results)
+		results.extend(spell.use_function(entity, **kwargs))
 		results.append({'cast': spell.name})
 	return results
 

@@ -124,11 +124,11 @@ def process_input(action, mouse_action, player, entities, game_state, previous_g
 
 	if feat_index is not None and feat_index < len(player.performer.feat_list):
 		feat = player.performer.feat_list[feat_index]
+		feat_index = None
 		player_turn_results.extend(attempt_feat(player, feat, entities=entities, fov_map=fov_map))
 		# TODO: This is not at all great - analysing player turn results should happen in result process system!
 		for result in player_turn_results:
 			if result.get('performed'):
-				print("used action via feat")
 				action_free = False		
 
 	if fire_weapon:

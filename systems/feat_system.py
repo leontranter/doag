@@ -14,7 +14,7 @@ def get_available_feats(player):
 	return []
 
 def make_savage_strike():
-	feat = Feat(FeatNames.SAVAGE_STRIKE, "Savage Strike", SkillNames.SWORD, 2, 3, perform_savage_strike, True, Message('Left-click a target to strike, or right-click to cancel.', libtcod.light_cyan), 1)
+	feat = Feat(FeatNames.SAVAGE_STRIKE, "Savage Strike", SkillNames.SWORD, 2, 3, perform_savage_strike, True, Message('Left-click a target to strike, or right-click to cancel.', libtcod.light_cyan), 1, feat_attack_modifier=2, feat_damage_modifier=2)
 	return feat
 
 def attempt_feat(entity, feat, **kwargs):
@@ -29,22 +29,23 @@ def attempt_feat(entity, feat, **kwargs):
 		return results
 
 	entities = kwargs.get('entities')
+	target_x, target_y = kwargs.get('target_x'), kwargs.get('target_y')
 
 	if len(get_targetable_entities_in_range(entity, feat.feat_range, entities)) == 1:
 		target = get_targetable_entities_in_range(entity, feat.feat_range, entities)[0]
 		kwargs = {**feat.function_kwargs, **kwargs}
 		results = perform_feat(entity, feat, target, results, **kwargs)
 	
-	elif not (kwargs.get('target_x') or kwargs.get('target_y')):
+	elif not (target_x or target_y):
 		results.append({'feat_targeting': feat})
 	
 	elif int(distance(entity, target_x, target_y)) > feat.feat_range:
 		results.append({'message': Message("That target is out of range for the selected feat.")})
 	
 	else:
-		for entity in entities:
-			if entity.x == target_x and entity.y == target_y and entity.fighter:
-				target = entity
+		for targetable_entity in entities:
+			if targetable_entity.x == target_x and targetable_entity.y == target_y and entity.fighter:
+				target = targetable_entity
 				break
 		else:
 			results.append({'message': Message('There are no valid targets there.')})
@@ -61,13 +62,11 @@ def perform_feat(entity, feat, target, results, **kwargs):
 	return results
 
 def perform_savage_strike(attacker, target, **kwargs):
-	entities = kwargs.get('entities')
-	fov_map = kwargs.get('fov_map')
-	target_x = kwargs.get('target_x')
-	target_y = kwargs.get('target_y')
-
+	feat_attack_modifier = kwargs.get('feat_attack_modifier')
+	feat_damage_modifier = kwargs.get('feat_damage_modifier')
+	print(f"feat attack mod is {feat_attack_modifier}")
 	results = []
-	results.extend(attack(attacker, target, AttackTypes.MELEE, 10, 10))
+	results.extend(attack(attacker, target, AttackTypes.MELEE, feat_attack_modifier, feat_damage_modifier))
 	return results
 
 def get_targetable_entities_in_range(entity, feat_range, entities):

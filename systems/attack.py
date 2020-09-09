@@ -8,6 +8,7 @@ from attack_types import AttackTypes
 
 def attack(attacker, target, attack_type, feat_attack_modifier=0, feat_damage_modifier=0):
 	results = []
+	print(f"attacker: {attacker.name.true_name}, target: {target.name.true_name}")
 	if check_hit(attacker, target, feat_attack_modifier):
 		defense_result, defense_choice = target.defender.defend_melee_attack() if attack_type == AttackTypes.MELEE else target.defender.defend_missile_attack()
 		if not defense_result:

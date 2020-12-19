@@ -10,8 +10,7 @@ from loader_functions.data_loaders import load_game, save_game
 import tcod as libtcod
 from systems import spell_system
 
-
-def process_input(action, mouse_action, player, entities, game_state, previous_game_state, message_log, game_map, dlevels, fov_recompute, fov_map, constants, con, action_free, targets):
+def process_input(action, mouse_action, player, entities, game_state, message_log, game_map, dlevels, fov_recompute, fov_map, constants, con, action_free, targets):
 	move, wait = action.get('move'), action.get('wait')
 	pickup = action.get('pickup')
 	show_inventory, drop_inventory = action.get('show_inventory'), action.get('drop_inventory')
@@ -31,47 +30,49 @@ def process_input(action, mouse_action, player, entities, game_state, previous_g
 	left_click, right_click = mouse_action.get('left_click'), mouse_action.get('right_click')
 
 	player_turn_results = []
+	if move:
+		print('got a move')
 
-	if move and game_state == GameStates.PLAYERS_TURN:
+	if move and game_state.current_game_state == GameStates.PLAYERS_TURN:
 		player_turn_results, fov_recompute, game_state, action_free = move_system.attempt_move_entity(move, game_map, player, entities, game_state, player_turn_results, fov_recompute, action_free)
 
 	elif wait:
-		action_free = False
+		player_turn_results.append({'waited': True})
 
-	elif pickup and game_state == GameStates.PLAYERS_TURN:
+	elif pickup and game_state.current_game_state == GameStates.PLAYERS_TURN:
 		player_turn_results.extend(pickup_item(player, entities))
 		for result in player_turn_results:
 			if 'item_added' in result.keys():
 				action_free = False
 
 	if show_inventory:
-		previous_game_state = game_state
-		game_state = GameStates.SHOW_INVENTORY
+		game_state.previous_game_state = game_state.current_game_state
+		game_state.current_game_state = GameStates.SHOW_INVENTORY
 	if drop_inventory:
-		previous_game_state = game_state
-		game_state = GameStates.DROP_INVENTORY
+		game_state.previous_game_state = game_state.current_game_state
+		game_state.current_game_state = GameStates.DROP_INVENTORY
 
 	if equipment_screen:
-		previous_game_state = game_state
-		game_state = GameStates.EQUIPMENT_SCREEN
+		game_state.previous_game_state = game_state.current_game_state
+		game_state.current_game_state = GameStates.EQUIPMENT_SCREEN
 
 	if quaff_potion:
-		previous_game_state = game_state
-		game_state = GameStates.POTION_SCREEN
+		game_state.previous_game_state = game_state.current_game_state
+		game_state.current_game_state = GameStates.POTION_SCREEN
 
 	if perform_feat:
-		previous_game_state = game_state
-		game_state = GameStates.FEATS_SCREEN
+		game_state.previous_game_state = game_state.current_game_state
+		game_state.current_game_state = GameStates.FEATS_SCREEN
 
-	if inventory_index is not None and previous_game_state != GameStates.PLAYER_DEAD and inventory_index < len(player.inventory.items):
+	if inventory_index is not None and game_state.previous_game_state != GameStates.PLAYER_DEAD and inventory_index < len(player.inventory.items):
 		item = player.inventory.items[inventory_index]
-		if game_state == GameStates.SHOW_INVENTORY:
+		if game_state.current_game_state == GameStates.SHOW_INVENTORY:
 			player_turn_results.extend(player.inventory.use(item, entities=entities, fov_map=fov_map))
-			game_state = GameStates.PLAYERS_TURN
+			game_state.current_game_state = GameStates.PLAYERS_TURN
 			action_free = False
-		elif game_state == GameStates.DROP_INVENTORY:
+		elif game_state.current_game_state == GameStates.DROP_INVENTORY:
 			player_turn_results.extend(player.inventory.drop_item(item))
-			game_state = GameStates.PLAYERS_TURN
+			game_state.current_game_state = GameStates.PLAYERS_TURN
 
 	if potion_index is not None and potion_index < len(get_carried_potions(player)):
 		potions = get_carried_potions(player)
@@ -107,12 +108,12 @@ def process_input(action, mouse_action, player, entities, game_state, previous_g
 			message_log.add_message(Message("There are no up stairs here.", libtcod.yellow))
 
 	if show_character_screen:
-		previous_game_state = game_state
-		game_state = GameStates.CHARACTER_SCREEN
+		game_state.previous_game_state = game_state
+		game_state.current_game_state = GameStates.CHARACTER_SCREEN
 
 	if spells_screen:
-		previous_game_state = game_state
-		game_state = GameStates.SPELLS_SCREEN
+		game_state.previous_game_state = game_state
+		game_state.current_game_state = GameStates.SPELLS_SCREEN
 
 	if spells_index is not None and spells_index < len(player.caster.spells):
 		spell = player.caster.spells[spells_index]
@@ -134,7 +135,9 @@ def process_input(action, mouse_action, player, entities, game_state, previous_g
 	if fire_weapon:
 		if player.equipment.ammunition and player.equipment.ammunition.item.quantity > 0:
 			player_turn_results.extend(player.fighter.fire_weapon())
-			action_free = False
+			for result in player_turn_results:
+				if result.get('attacked'):
+					action_free = False
 		else:
 			player_turn_results.append({"message": Message("You don't have any ammunition to fire!")})
 
@@ -142,7 +145,7 @@ def process_input(action, mouse_action, player, entities, game_state, previous_g
 		player_turn_results = player.fighter.load_missile_weapon()
 		action_free = False
 
-	if game_state == GameStates.TARGETING:
+	if game_state.current_game_state == GameStates.TARGETING:
 		if left_click:
 			target_x, target_y = left_click
 			if targets.current_targeting_consumable:	
@@ -150,24 +153,26 @@ def process_input(action, mouse_action, player, entities, game_state, previous_g
 				player_turn_results.extend(item_use_results)
 			elif targets.current_targeting_spell:
 				spell_use_results = spell_system.cast(player, targets.current_targeting_spell, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y)
-				player_turn_results.extend(spell_use_results)
-			# TODO: do we really need this current targeting weapon thing?
-			elif targets.current_targeting_missile:
-				missile_attack_results = player.fighter.fire_weapon(weapon=player.equipment.main_hand.equippable, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y)
-				player_turn_results.extend(missile_attack_results)	
+				player_turn_results.extend(spell_use_results)	
 			elif targets.current_targeting_feat:
 				feat_perform_results = attempt_feat(player, targets.current_targeting_feat, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y)
 				player_turn_results.extend(feat_perform_results)
 				for result in player_turn_results:
 					if result.get('performed'):
 						action_free = False
+			else:
+				missile_attack_results = player.fighter.fire_weapon(weapon=player.equipment.main_hand.equippable, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y)
+				player_turn_results.extend(missile_attack_results)
+				for result in player_turn_results:
+					if result.get('attacked'):
+						action_free = False
 		elif right_click:
 			player_turn_results.append({'targeting_cancelled': True})
 
 	if exit:
-		if game_state in (GameStates.SHOW_INVENTORY, GameStates.DROP_INVENTORY, GameStates.CHARACTER_SCREEN, GameStates.SPELLS_SCREEN, GameStates.POTION_SCREEN, GameStates.EQUIPMENT_SCREEN):
-			game_state = previous_game_state
-		elif game_state == GameStates.TARGETING:
+		if game_state.current_game_state in (GameStates.SHOW_INVENTORY, GameStates.DROP_INVENTORY, GameStates.CHARACTER_SCREEN, GameStates.SPELLS_SCREEN, GameStates.POTION_SCREEN, GameStates.EQUIPMENT_SCREEN):
+			game_state.current_game_state = game_state.previous_game_state
+		elif game_state.current_game_state == GameStates.TARGETING:
 			player_turn_results.append({'targeting_cancelled': True})
 		else:
 			save_game(player, entities, game_map, message_log, game_state, dlevels)
@@ -176,4 +181,4 @@ def process_input(action, mouse_action, player, entities, game_state, previous_g
 	if fullscreen:
 		libtcod.console_set_fullscreen(not libtcod.console_is_fullscreen())
 
-	return player_turn_results, fov_recompute, game_state, previous_game_state, entities, game_map, fov_map, dlevels, targets, action_free
+	return player_turn_results, fov_recompute, game_state, entities, game_map, fov_map, dlevels, targets, action_free

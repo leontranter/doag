@@ -2,25 +2,25 @@ import tcod as libtcod
 from game_states import GameStates
 
 def handle_keys(key, game_state):
-	if game_state == GameStates.PLAYERS_TURN:
+	if game_state.current_game_state == GameStates.PLAYERS_TURN:
 		return handle_player_turn_keys(key)
-	elif game_state == GameStates.PLAYER_DEAD:
+	elif game_state.current_game_state == GameStates.PLAYER_DEAD:
 		return handle_player_dead_keys(key)
-	elif game_state == GameStates.TARGETING:
+	elif game_state.current_game_state == GameStates.TARGETING:
 		return handle_targeting_keys(key)
-	elif game_state in (GameStates.SHOW_INVENTORY, GameStates.DROP_INVENTORY):
+	elif game_state.current_game_state in (GameStates.SHOW_INVENTORY, GameStates.DROP_INVENTORY):
 		return handle_inventory_keys(key)
-	elif game_state == GameStates.LEVEL_UP:
+	elif game_state.current_game_state == GameStates.LEVEL_UP:
 		return handle_level_up_menu(key)
-	elif game_state == GameStates.CHARACTER_SCREEN:
+	elif game_state.current_game_state == GameStates.CHARACTER_SCREEN:
 		return handle_character_screen(key)
-	elif game_state == GameStates.SPELLS_SCREEN:
+	elif game_state.current_game_state == GameStates.SPELLS_SCREEN:
 		return handle_spells_screen(key)
-	elif game_state == GameStates.POTION_SCREEN:
+	elif game_state.current_game_state == GameStates.POTION_SCREEN:
 		return handle_potions_menu(key)
-	elif game_state == GameStates.EQUIPMENT_SCREEN:
+	elif game_state.current_game_state == GameStates.EQUIPMENT_SCREEN:
 		return handle_equipment_menu(key)
-	elif game_state == GameStates.FEATS_SCREEN:
+	elif game_state.current_game_state == GameStates.FEATS_SCREEN:
 		return handle_feats_screen(key)
 	return {}
 

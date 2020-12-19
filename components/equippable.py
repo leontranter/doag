@@ -10,7 +10,7 @@ from components.ammunition import Ammunition
 import tcod as libtcod
 
 class Equippable:
-	def __init__(self, slot, DR_bonus=0, max_hp_bonus=0, two_handed=False, isShield=False, hit_modifier=0, physical_damage_modifier=0):
+	def __init__(self, slot, DR_bonus=0, max_hp_bonus=0, two_handed=False, isShield=False, hit_modifier=0, physical_damage_modifier=0, is_metal=False):
 		self.slot = slot
 		self.DR_bonus = DR_bonus
 		self.max_hp_bonus = max_hp_bonus
@@ -142,21 +142,21 @@ class EquippableFactory:
 		return leather_armor_entity
 
 	def make_chain_armor(x=1, y=1):
-		chain_armor_equippable = Equippable(EquipmentSlots.BODY, DR_bonus=2)
+		chain_armor_equippable = Equippable(EquipmentSlots.BODY, DR_bonus=2, is_metal=True)
 		chain_armor_name = Name("Chain Armor")
 		chain_armor_item = Item(25, 1)
 		chain_armor_entity = Entity(x, y, ')', libtcod.sky, equippable=padded_armor_equippable, name=chain_armor_name, item=chain_armor_item)
 		return chain_armor_entity
 
 	def make_scale_armor(x=1, y=1):
-		scale_armor_equippable = Equippable(EquipmentSlots.BODY, DR_bonus=3)
+		scale_armor_equippable = Equippable(EquipmentSlots.BODY, DR_bonus=3, is_metal=True)
 		scale_armor_name = Name("Scale Armor")
 		scale_armor_item = Item(35, 1)
 		scale_armor_entity = Entity(x, y, ')', libtcod.sky, equippable=padded_armor_equippable, name=scale_armor_name, item=scale_armor_item)
 		return scale_armor_entity		
 
 	def make_plate_armor(x=1, y=1):
-		plate_armor_equippable = Equippable(EquipmentSlots.BODY, DR_bonus=5)
+		plate_armor_equippable = Equippable(EquipmentSlots.BODY, DR_bonus=5, is_metal=True)
 		plate_armor_name = Name("Plate Armor")
 		plate_armor_item = Item(45, 1)
 		plate_armor_entity = Entity(x, y, ')', libtcod.darker, equippable=padded_armor_equippable, name=plate_armor_name, item=plate_armor_item)

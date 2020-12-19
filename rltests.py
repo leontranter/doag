@@ -18,7 +18,9 @@ from components.identified import Identified
 from components.effects import Effect
 from components.performer import Performer
 from components.consumable import ConsumableTypes, get_carried_potions
+from components.inventory import Inventory
 from damage_types import DamageTypes
+from death_functions import kill_monster
 from loader_functions.constants import WeaponTypes, WeaponCategories, get_constants, AmmunitionTypes
 from loader_functions.initialize_new_game import get_game_variables, assign_potion_descriptions, assign_scroll_descriptions, populate_dlevels
 from loader_functions.data_loaders import save_game, load_game
@@ -27,16 +29,16 @@ from systems.effects_manager import add_effect, tick_down_effects, process_damag
 from systems.name_system import get_display_name
 from systems.damage import get_physical_damage_modifier_from_status_effects, get_physical_damage_modifier_from_equipment, apply_physical_damage_modifiers, get_damage_string, get_current_missile_damage, get_current_melee_damage
 from systems.attack import get_hit_modifier_from_status_effects, get_hit_modifier_from_equipment, attack
-from systems.spell_system import learn_spell, cast
+from systems.spell_system import learn_spell, cast, get_spell_target
 from systems.skill_manager import SkillNames, get_intellect, get_willpower
 from systems.move_system import distance_to
 from systems.pickup_system import pickup_item
 from systems.feat_system import get_targetable_entities_in_range
-from components.inventory import Inventory
 from item_functions import heal, learn_spell_from_book, make_bless_spell
 from fov_functions import initialize_fov
 from render_functions import get_names_under_mouse
 from item_factory import make_healing_potion, make_lightning_scroll, make_fireball_scroll, make_confusion_scroll, make_fireball_book, make_heal_book, make_bless_book, make_poison_potion, make_confusion_potion
+from components.equippable import EquippableFactory
 import monsters
 import mocks
 from menus import menu
@@ -50,7 +52,7 @@ class EntityTests(unittest.TestCase):
 		self.assertEqual(test_entity.x, 1)
 
 	def test_can_make_entity_with_fighter(self):
-		test_fighter = Fighter(xp=10)
+		test_fighter = Fighter(xp_reward=10)
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", fighter=test_fighter)
 		self.assertEqual(test_entity.fighter, test_fighter)
 
@@ -96,7 +98,7 @@ class SpellTests(unittest.TestCase):
 
 	def test_can_cast_bless_spell_with_high_skill(self):
 		test_caster = Caster(spells=[], max_mana=50)
-		test_fighter = Fighter(xp=100)
+		test_fighter = Fighter(xp_reward=100)
 		test_stats = Stats()
 		test_skills = Skills()
 		test_skills.set_skill_rank(SkillNames.HOLY, 8)
@@ -114,7 +116,7 @@ class SpellTests(unittest.TestCase):
 
 	def test_cannot_cast_bless_spell_with_no_skill(self):
 		test_caster = Caster(spells=[], max_mana=50)
-		test_fighter = Fighter(xp=100)
+		test_fighter = Fighter(xp_reward=100)
 		test_stats = Stats(Strength=1, Precision=1, Agility=1, Intellect=1, Willpower=1, Stamina=1, Endurance=1)
 		test_skills = Skills()
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", caster=test_caster, fighter=test_fighter, skills=test_skills, stats=test_stats)
@@ -124,6 +126,24 @@ class SpellTests(unittest.TestCase):
 		results = cast(test_entity, spell, target_x=1, target_y=1, entities=entities)
 		self.assertTrue(len(results), 1)
 		self.assertEqual(len(test_entity.fighter.effect_list), 0)
+
+	def test_can_get_spell_target(self):
+		constants = get_constants()
+		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants, start_equipped=True)
+		fov_map = initialize_fov(game_map)
+		test_monster = mocks.create_mockchar_11()
+		test_monster.x, test_monster.y = 2, 2
+		entities = [player, test_monster]
+		self.assertEqual(get_spell_target(player, 2, 2, entities, fov_map), test_monster)
+
+	def test_cannot_get_spell_target_out_of_range(self):
+		constants = get_constants()
+		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants, start_equipped=True)
+		fov_map = initialize_fov(game_map)
+		test_monster = mocks.create_mockchar_11()
+		test_monster.x, test_monster.y = 10, 10
+		entities = [player, test_monster]
+		self.assertEqual(get_spell_target(player, 2, 2, entities, fov_map), None)
 
 class EquipmentTests(unittest.TestCase):
 	def test_can_equip_main_hand(self):
@@ -208,7 +228,7 @@ class DamageTests(unittest.TestCase):
 
 	def test_can_apply_damage_modifiers(self):
 		test_equipment = Equipment()
-		test_fighter = Fighter(xp=100)
+		test_fighter = Fighter(xp_reward=100)
 		padded_armor_equippable = Equippable(EquipmentSlots.BODY, DR_bonus=1, physical_damage_modifier=2)
 		padded_armor_name = Name("Padded Armor")
 		padded_armor_entity = entity.Entity(1, 1, ')', libtcod.purple, equippable=padded_armor_equippable, name=padded_armor_name)
@@ -220,7 +240,7 @@ class DamageTests(unittest.TestCase):
 
 	def test_can_get_damage_string(self):
 		test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)
-		test_fighter_component = Fighter(xp=10)
+		test_fighter_component = Fighter(xp_reward=10)
 		test_equipment = Equipment()
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", stats=test_stats_component, fighter=test_fighter_component, equipment=test_equipment)
 		self.assertTrue("d" in get_damage_string(test_entity))
@@ -321,33 +341,41 @@ class DefenderTests(unittest.TestCase):
 		self.assertEqual(results[0], "block")
 		self.assertEqual(results[1], 7)
 
+class DeathTests(unittest.TestCase):
+	def test_killing_a_monster_gives_xp(self):
+		# TODO: write this test
+		test_char = mocks.create_mockchar_11()
+		test_monster = monsters.make_orc(1, 1)
+		self.assertEqual(test_char.fighter.unspent_xp, 0)
+		message = message, test_char = kill_monster(test_monster, test_char)
+		self.assertGreater(test_char.fighter.unspent_xp, 0)
 
 class DeathDropTests(unittest.TestCase):
 	def test_monster_has_items(self):
-		test_monster = monsters.makeKobold(1, 1)
+		test_monster = monsters.make_kobold(1, 1)
 		self.assertNotEqual(len(test_monster.inventory.items), 0)
 
 	def test_kobold_drops_all_items(self):
-		test_monster = monsters.makeKobold(1, 1)
+		test_monster = monsters.make_kobold(1, 1)
 		entities = []
 		entities = test_monster.inventory.drop_on_death(entities, test_monster)
 		self.assertEqual(len(entities), 3)
 
 	def test_orc_drops_all_items(self):
-		test_monster = monsters.makeOrc(1, 1)
+		test_monster = monsters.make_orc(1, 1)
 		entities = []
 		entities = test_monster.inventory.drop_on_death(entities, test_monster)
 		self.assertEqual(len(entities), 2)
 
 class DroppedMissileTests(unittest.TestCase):
 	def test_can_drop_missile(self):
-		test_monster = monsters.makeKobold(1, 1)
+		test_monster = monsters.make_kobold(1, 1)
 		entities = []
 		entities.append(make_dropped_missile(AmmunitionTypes.ARROWS, (1,1)))
 		self.assertEqual(len(entities), 1)
 
 	def test_can_drop_missile_at_correct_location(self):
-		test_monster = monsters.makeKobold(1, 1)
+		test_monster = monsters.make_kobold(1, 1)
 		entities = []
 		entities.append(make_dropped_missile(AmmunitionTypes.ARROWS, (1,1)))
 		self.assertEqual(entities[0].x, 1)
@@ -610,14 +638,14 @@ class BasicGameTests(unittest.TestCase):
 class EffectsTests(unittest.TestCase):
 
 	def test_effects_manager_can_add_effect(self):
-		test_fighter = Fighter(xp=100)
+		test_fighter = Fighter(xp_reward=100)
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, fighter=test_fighter)
 		test_effect = Effect(name=EffectNames.POISON, description="Poisoned", turns_left=5, damage_per_turn=3)
 		self.assertEqual(add_effect(test_effect, test_entity), "appended")
 		self.assertEqual(len(test_fighter.effect_list), 1)
 
 	def test_effects_stack_properly(self):
-		test_fighter = Fighter(xp=100)
+		test_fighter = Fighter(xp_reward=100)
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, fighter=test_fighter)
 		test_effect = Effect(name=EffectNames.POISON, description="Poisoned", turns_left=5, damage_per_turn=3)
 		add_effect(test_effect, test_entity)
@@ -626,7 +654,7 @@ class EffectsTests(unittest.TestCase):
 		self.assertEqual(test_fighter.effect_list[0].turns_left, 8)
 
 	def test_effects_tick_down(self):
-		test_fighter = Fighter(xp=100)
+		test_fighter = Fighter(xp_reward=100)
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, fighter=test_fighter)
 		test_effect = Effect(name=EffectNames.POISON, description="Poisoned", turns_left=5, damage_per_turn=3)
 		add_effect(test_effect, test_entity)
@@ -634,7 +662,7 @@ class EffectsTests(unittest.TestCase):
 		self.assertEqual(test_effect.turns_left, 4)
 
 	def test_effects_disappear_when_done(self):
-		test_fighter = Fighter(xp=100)
+		test_fighter = Fighter(xp_reward=100)
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, fighter=test_fighter)
 		test_effect = Effect(name=EffectNames.POISON, description="Poisoned", turns_left=5, damage_per_turn=3)
 		add_effect(test_effect, test_entity)
@@ -644,7 +672,7 @@ class EffectsTests(unittest.TestCase):
 		self.assertEqual(len(test_entity.fighter.effect_list), 0)
 
 	def test_damage_over_time_effects_work(self):
-		fighter_component = Fighter(xp=100)
+		fighter_component = Fighter(xp_reward=100)
 		stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, stats=stats_component, fighter=fighter_component)
 		test_effect = Effect(name=EffectNames.POISON, description="Poisoned", turns_left=5, damage_per_turn=3)
@@ -653,7 +681,7 @@ class EffectsTests(unittest.TestCase):
 		self.assertEqual(test_entity.stats.hp, 16)
 
 	def test_can_calculate_hit_bonus_from_effects(self):
-		test_fighter = Fighter(xp=100)
+		test_fighter = Fighter(xp_reward=100)
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, fighter=test_fighter)
 		test_effect = Effect(name=EffectNames.POISON, description="Poisoned", turns_left=5, damage_per_turn=3)
 		add_effect(test_effect, test_entity)
@@ -663,7 +691,7 @@ class EffectsTests(unittest.TestCase):
 		self.assertEqual(get_hit_modifier_from_status_effects(test_entity), 3)
 
 	def test_can_calculate_damage_bonus_from_effects(self):
-		test_fighter = Fighter(xp=100)
+		test_fighter = Fighter(xp_reward=100)
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, fighter=test_fighter)
 		self.assertEqual(get_physical_damage_modifier_from_status_effects(test_entity), 0)
 		test_effect = Effect(name=EffectNames.BLESS, description="Blessed", turns_left=5, physical_damage_modifier=3)
@@ -787,6 +815,24 @@ class FeatTests(unittest.TestCase):
 	def test_cannot_learn_locked_feat(self):
 		pass
 
+class DRTests(unittest.TestCase):
+	def test_can_get_base_DR(self):
+		test_equipment = Equipment()
+		test_fighter = Fighter()
+		test_player = test_player = entity.Entity(1, 1, 'A', libtcod.white, fighter=test_fighter, equipment=test_equipment)
+		self.assertEqual(test_player.fighter.DR, 0)
+		test_fighter2 = Fighter(base_DR=2)
+		test_player2 = entity.Entity(1, 1, 'A', libtcod.white, fighter=test_fighter2, equipment=test_equipment)
+		self.assertEqual(test_player2.fighter.DR, 2)
+
+	def test_can_get_DR_from_equipment(self):
+		test_equipment = Equipment()
+		test_fighter = Fighter()
+		test_player = test_player = entity.Entity(1, 1, 'A', libtcod.white, fighter=test_fighter, equipment=test_equipment)
+		self.assertEqual(test_player.fighter.DR, 0)
+		test_armor = EquippableFactory.make_padded_armor()
+		test_equipment.body = test_armor
+		self.assertEqual(test_player.fighter.DR, 1)
 
 
 if __name__ == "__main__":

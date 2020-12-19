@@ -8,7 +8,6 @@ from attack_types import AttackTypes
 
 def attack(attacker, target, attack_type, feat_attack_modifier=0, feat_damage_modifier=0):
 	results = []
-	print(f"attacker: {attacker.name.true_name}, target: {target.name.true_name}")
 	if check_hit(attacker, target, feat_attack_modifier):
 		defense_result, defense_choice = target.defender.defend_melee_attack() if attack_type == AttackTypes.MELEE else target.defender.defend_missile_attack()
 		if not defense_result:
@@ -24,6 +23,7 @@ def attack(attacker, target, attack_type, feat_attack_modifier=0, feat_damage_mo
 		if attack_type == AttackTypes.MISSILE:
 			if d6_dice_roll(1, 0) > 2:
 				results.append({'missile_dropped': attacker.equipment.ammunition.ammunition.ammunition_type, 'dropped_location': (target.x, target.y)})
+	results.append({'attacked': True})
 	return results
 
 def resolve_hit(attacker, results, dice_number, dice_type, modifier, damage_type, target):

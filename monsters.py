@@ -16,8 +16,8 @@ from systems.skill_manager import SkillNames
 def getMonsterByDungeonLevel(level):
 	pass
 
-def makeOrc(x, y):
-	fighter_component = Fighter(xp=35)
+def make_orc(x, y):
+	fighter_component = Fighter(xp_reward=2)
 	stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)
 	ai_component = BasicMonster()
 	equipment_component = Equipment()
@@ -37,8 +37,8 @@ def makeOrc(x, y):
 	monster.equipment.body = item
 	return monster
 
-def makeTroll(x, y):
-	fighter_component = Fighter(xp=100)
+def make_troll(x, y):
+	fighter_component = Fighter(xp_reward=4)
 	stats_component = Stats(Strength=12, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)
 	ai_component = BasicMonster()
 	equipment_component = Equipment()
@@ -55,8 +55,8 @@ def makeTroll(x, y):
 	monster.equipment.main_hand = item
 	return monster
 
-def makeKobold(x, y):
-	fighter_component = Fighter(xp=30)
+def make_kobold(x, y):
+	fighter_component = Fighter(xp_reward=1)
 	stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)
 	ai_component = BasicMonster()
 	equipment_component = Equipment()

@@ -13,6 +13,7 @@ class SkillNames(Enum):
 	ALCHEMY = auto()
 	HOLY = auto()
 	FIRE = auto()
+	JUMPING = auto()
 
 def get_strength(entity):
 	if entity.stats:

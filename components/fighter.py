@@ -8,13 +8,15 @@ from systems.damage import get_current_melee_damage
 from attack_types import AttackTypes
 
 class Fighter:
-	def __init__(self, base_DR=0, xp=0):
+	def __init__(self, base_DR=0, xp_reward=0):
 		self.base_DR = base_DR
-		self.xp = xp
+		self.xp_reward = xp_reward
 		self.effect_list = []
+		# TODO: fix this up
 		self.current_targeting_weapon = None
 		self.current_targeting_spell = None
 		self.current_targeting_consumable = None
+		self.unspent_xp = 0
 
 	@property
 	def DR(self):
@@ -28,7 +30,7 @@ class Fighter:
 		results = []
 		self.owner.stats.hp -= amount
 		if self.owner.stats.hp <= 0:
-			results.append({'dead': self.owner, 'xp': self.xp})
+			results.append({'dead': self.owner})
 		return results
 
 	def load_missile_weapon(self):

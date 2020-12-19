@@ -4,13 +4,16 @@ from render_functions import RenderOrder
 from game_messages import Message
 from loader_functions.tile_codes import *
 
-def kill_player(player):
+def kill_player(player, game_state):
 	player.char = '%'
 	player.color = libtcod.dark_red
-	return Message('You died!', libtcod.red), GameStates.PLAYER_DEAD
+	game_state.current_game_state = GameStates.PLAYER_DEAD
+	return Message('You died!', libtcod.red), game_state
 
-def kill_monster(monster):
+def kill_monster(monster, player):
 	death_message = Message('{0} is dead!'.format(monster.name.subject_name), libtcod.orange)
+
+	player.fighter.unspent_xp += monster.fighter.xp_reward
 
 	monster.char = CORPSE
 	monster.color = libtcod.dark_red
@@ -23,12 +26,13 @@ def kill_monster(monster):
 		monster.name.true_name = 'remains of a ' + monster.name.true_name
 	monster.render_order = RenderOrder.CORPSE	
 
-	return death_message
+	return death_message, player
 
 def handle_death(entities, dead_entity, player, game_state):
 	if dead_entity == player:
-		message, game_state = kill_player(dead_entity)
+		message, game_state = kill_player(dead_entity, game_state)
+		print(game_state.current_game_state)
 	else:
-		message = kill_monster(dead_entity)
+		message, player = kill_monster(dead_entity, player)
 		entities = dead_entity.inventory.drop_on_death(entities, dead_entity)
 	return message, game_state, entities

@@ -23,7 +23,7 @@ class Inventory:
 				temp_display_name = temp_display_name[:-1]
 			results.append({
 				'item_added': item,
-				'message': Message('You pick up the {0}!'.format(temp_display_name), libtcod.yellow)
+				'message': Message(f'You pick up the {temp_display_name}', libtcod.yellow)
 			})
 			for current_item in self.items:
 				if current_item.name.true_name == item.name.true_name and current_item.item.quantity and current_item.item.quantity > 0:

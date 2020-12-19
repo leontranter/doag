@@ -74,39 +74,38 @@ def render_all(con, panel, entities, player, game_map, fov_map, fov_recompute, m
 	render_bar(panel, 1, 1, bar_width, 'HP', player.stats.hp, player.stats.max_hp, libtcod.light_red, libtcod.darker_red)
 	render_bar(panel, 1, 5, bar_width, 'Mana', player.caster.mana, player.caster.max_mana, libtcod.blue, libtcod.darker_blue)
 	libtcod.console_print_ex(panel, 1, 8, libtcod.BKGND_NONE, libtcod.LEFT, 'Dungeon level: {0}'.format(game_map.dungeon_level))
-	libtcod.console_print_ex(panel, 1, 8, libtcod.BKGND_NONE, libtcod.LEFT, f'GS: {game_state}')
+	libtcod.console_print_ex(panel, 1, 8, libtcod.BKGND_NONE, libtcod.LEFT, f'GS: {game_state.current_game_state}')
 	libtcod.console_print_ex(panel, 1, 10, libtcod.BKGND_NONE, libtcod.LEFT, 'Effects:')
 	append_effects(panel, player, 11)
 	libtcod.console_set_default_foreground(panel, libtcod.light_gray)
 	libtcod.console_print_ex(panel, 1, 0, libtcod.BKGND_NONE, libtcod.LEFT, get_names_under_mouse(mouse, entities, fov_map, player))
 
 	libtcod.console_blit(panel, 0, 0, screen_width, panel_height, 0, 0, panel_y)
-	if game_state in (GameStates.SHOW_INVENTORY, GameStates.DROP_INVENTORY):
+	if game_state.current_game_state in (GameStates.SHOW_INVENTORY, GameStates.DROP_INVENTORY):
 		if game_state == GameStates.SHOW_INVENTORY:
 			inventory_title = 'Press the key next to an item to use it, or Esc to cancel.\n'
 		else:
 			inventory_title = 'Press the key next to an item to drop it, or Esc to cancel.\n'
-	
 		inventory_menu(con, inventory_title, 50, screen_width, screen_height, player)
 
-	elif game_state == GameStates.LEVEL_UP:
+	elif game_state.current_game_state == GameStates.LEVEL_UP:
 		level_up_menu(con, 'Level up! Choose a stat to raise:', player, 40, screen_width, screen_height)
 
-	elif game_state == GameStates.CHARACTER_SCREEN:
-		character_screen(player, 50, 10, screen_width, screen_height)
+	elif game_state.current_game_state == GameStates.CHARACTER_SCREEN:
+		character_screen(player, 50, 15, screen_width, screen_height)
 
-	elif game_state == GameStates.SPELLS_SCREEN:
+	elif game_state.current_game_state == GameStates.SPELLS_SCREEN:
 		spells_menu(con, "Choose a spell to cast...", 50, screen_width, screen_height, player)
 
-	elif game_state == GameStates.POTION_SCREEN:
+	elif game_state.current_game_state == GameStates.POTION_SCREEN:
 		menu_title = "Choose a potion to quaff."
 		potion_menu(con, menu_title, 50, screen_width, screen_height, player)
 
-	elif game_state == GameStates.EQUIPMENT_SCREEN:
+	elif game_state.current_game_state == GameStates.EQUIPMENT_SCREEN:
 		menu_title = "Your currently equipped items."
 		equipment_menu(con, menu_title, 50, screen_width, screen_height, player)
 
-	elif game_state == GameStates.FEATS_SCREEN:
+	elif game_state.current_game_state == GameStates.FEATS_SCREEN:
 		menu_title = "Choose a feat to perform..."
 		feats_menu(con, menu_title, 50, screen_width, screen_height, player)
 

@@ -158,11 +158,11 @@ class GameMap:
 			if not any([entity for entity in entities if entity.x == x and entity.y == y]):
 				monster_choice = random_choice_from_dict(monster_chances)
 				if monster_choice == 'orc':
-					monster = monsters.makeOrc(x, y)
+					monster = monsters.make_orc(x, y)
 				elif monster_choice == 'kobold':
-					monster = monsters.makeKobold(x, y)
+					monster = monsters.make_kobold(x, y)
 				else:
-					monster = monsters.makeTroll(x, y)
+					monster = monsters.make_troll(x, y)
 				entities.append(monster)
 
 		for i in range(number_of_items):

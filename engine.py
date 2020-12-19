@@ -22,12 +22,13 @@ from systems.pickup_system import pickup_item
 from systems import input_process_system
 from systems import results_process_system
 from targeting import Targeting
+from game_state import GameState
 
 def main():
 	constants = get_constants()
 	#libtcod.console_set_custom_font('dejavu10x10_gs_tc.png', libtcod.FONT_TYPE_GREYSCALE | libtcod.FONT_LAYOUT_TCOD)
 	libtcod.console_set_custom_font('res/tiles.png', libtcod.FONT_TYPE_GREYSCALE | libtcod.FONT_LAYOUT_CP437, 16, 24)
-	libtcod.console_init_root(constants['screen_width'], constants['screen_height'], constants['window_title'], False)
+	libtcod.console_init_root(constants['screen_width'], constants['screen_height'], constants['window_title'], True, vsync=True)
 
 	con = libtcod.console_new(constants['screen_width'], constants['screen_height'])
 	panel = libtcod.console_new(constants['screen_width'], constants['panel_height'])
@@ -73,7 +74,7 @@ def main():
 			elif exit_game:
 				break
 		else:
-			libtcod.console_clear(con)
+			con.clear()
 			play_game(player, entities, game_map, message_log, game_state, con, panel, constants, dlevels)
 			show_main_menu = True
 
@@ -84,8 +85,8 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 	key = libtcod.Key()
 	mouse = libtcod.Mouse()
 
-	game_state = GameStates.PLAYERS_TURN
-	previous_game_state = game_state
+	game_state = GameState()
+	print(game_state.current_game_state)
 	action_free = True
 	targets = Targeting()
 
@@ -107,14 +108,14 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 			mouse_action = handle_mouse(mouse)
 
 			# It all happens here - start off by process the action / mouse action, to get player_turn_results list, plus update some game state, e.g. as a result of combat
-			player_turn_results, fov_recompute, game_state, previous_game_state, entities, game_map, fov_map, dlevels, targets, action_free = input_process_system.process_input(action, mouse_action, player, entities, game_state, previous_game_state, message_log, game_map, dlevels, fov_recompute, fov_map, constants, con, action_free, targets)
+			player_turn_results, fov_recompute, game_state, entities, game_map, fov_map, dlevels, targets, action_free = input_process_system.process_input(action, mouse_action, player, entities, game_state, message_log, game_map, dlevels, fov_recompute, fov_map, constants, con, action_free, targets)
 
 			#now pass the player turn results along to be processed
-			game_state, previous_game_state, entities, player, targets = results_process_system.process_results(player_turn_results, game_state, previous_game_state, entities, player, message_log, targets)
+			game_state, entities, player, targets = results_process_system.process_results(player_turn_results, game_state, entities, player, message_log, targets)
 
 		player_turn_results = []
 		player_turn_results.extend(time_system.process_entity_turn(player))
-		game_state, previous_game_state, entities, player, targets = results_process_system.process_results(player_turn_results, game_state, previous_game_state, entities, player, message_log, targets)
+		game_state, entities, player, targets = results_process_system.process_results(player_turn_results, game_state, entities, player, message_log, targets)
 
 		#now enemy chooses an action, process the results
 		for entity in entities:
@@ -123,8 +124,10 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 				entities, game_state, message_log = results_process_system.process_ai_results(enemy_turn_results, entity, entities, player, message_log, game_state)
 		
 		# reset action_free to True to player gets a turn again
+		print("finishing turn")
 		action_free = True
-		game_state = GameStates.PLAYERS_TURN
+		if game_state.current_game_state != GameStates.PLAYER_DEAD:
+			game_state.current_game_state = GameStates.PLAYERS_TURN
 
 if __name__ == "__main__":
 	main()

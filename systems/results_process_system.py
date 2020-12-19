@@ -4,7 +4,7 @@ from death_functions import handle_death
 from components.equippable import make_dropped_missile
 from death_functions import kill_player, kill_monster
 
-def process_results(player_turn_results, game_state, previous_game_state, entities, player, message_log, targets):
+def process_results(player_turn_results, game_state, entities, player, message_log, targets):
 	for player_turn_result in player_turn_results:
 		quit = player_turn_result.get('quit')
 		message = player_turn_result.get('message')
@@ -36,25 +36,23 @@ def process_results(player_turn_results, game_state, previous_game_state, entiti
 			entities.remove(item_added)
 		# TODO: roll these three results into one?
 		if targeting:
-			previous_game_state = GameStates.PLAYERS_TURN
-			game_state = GameStates.TARGETING
+			game_state.previous_game_state = GameStates.PLAYERS_TURN
+			game_state.current_game_state = GameStates.TARGETING
 			targets.current_targeting_consumable = targeting
 			message_log.add_message(targets.current_targeting_consumable.consumable.targeting_message)
 		if spell_targeting:
-			print("result process system picked up the spell targeting result")
-			previous_game_state = GameStates.PLAYERS_TURN
-			game_state = GameStates.TARGETING
-			targets.current_targeting_spell = spell_targeting_result
+			game_state.previous_game_state = GameStates.PLAYERS_TURN
+			game_state.current_game_state = GameStates.TARGETING
+			targets.current_targeting_spell = spell_targeting
 			message_log.add_message(targets.current_targeting_spell.targeting_message)
 		if feat_targeting:
-			print("result process system picked up the feat targeting result")
-			previous_game_state = GameStates.PLAYERS_TURN
-			game_state = GameStates.TARGETING
+			game_state.previous_game_state = GameStates.PLAYERS_TURN
+			game_state.current_game_state = GameStates.TARGETING
 			targets.current_targeting_feat = feat_targeting
 			message_log.add_message(targets.current_targeting_feat.targeting_message)
 		if missile_targeting:
-			previous_game_state = GameStates.PLAYERS_TURN
-			game_state = GameStates.TARGETING
+			game_state.previous_game_state = GameStates.PLAYERS_TURN
+			game_state.current_game_state = GameStates.TARGETING
 			targets.current_targeting_weapon = True
 			message_log.add_message(Message("Choose a target for your missile attack..."))
 		if missile_dropped:
@@ -76,10 +74,10 @@ def process_results(player_turn_results, game_state, previous_game_state, entiti
 					message_log.add_message(Message(fail_equip))
 			pass
 		if targeting_cancelled:
-			game_state = previous_game_state
+			game_state.current_game_state = previous_game_state
 			message_log.add_message(Message('Targeting cancelled'))
 
-	return game_state, previous_game_state, entities, player, targets
+	return game_state, entities, player, targets
 
 def process_ai_results(enemy_turn_results, acting_entity, entities, player, message_log, game_state):
 	for enemy_turn_result in enemy_turn_results:
@@ -98,7 +96,8 @@ def process_ai_results(enemy_turn_results, acting_entity, entities, player, mess
 			acting_entity.equipment.toggle_equip(equips)
 		if dead_entity:
 			if dead_entity == player:
-				message, game_state = kill_player(dead_entity)
+				message, game_state = kill_player(dead_entity, game_state)
+				print(f"gs is {game_state.current_game_state}")
 			else:
 				message = kill_monster(dead_entity)
 			message_log.add_message(message)

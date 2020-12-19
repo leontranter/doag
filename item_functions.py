@@ -19,6 +19,10 @@ def make_bless_spell():
 	spell = Spell("Bless", 4, SkillNames.HOLY, bless, targeting=True, targeting_message=Message('Left-click a target to cast Bless on, or right-click to cancel.', libtcod.light_cyan), bonus=1)
 	return spell
 
+def make_lightning_bolt_spell():
+	spell = Spell("Lightning Bolt", 5, SkillNames.STORM, lightning_bolt, targeting=True, targeting_message=Message('Left-click a target to cast Lightning Bolt on, or right-click to cancel.', libtcod.light_cyan), damage_dice=(3,6))
+	return spell
+
 def heal(*args, **kwargs):
 	entity = args[0]
 	amount = kwargs.get('amount')
@@ -45,23 +49,36 @@ def poison(*args, **kwargs):
 	results.append({'consumed': True, 'message': Message('You drink a potion of poison! You feel terrible!', libtcod.green)})
 	return results
 
-def bless(*args, **kwargs):
-	caster = args[0]
+def lightning_bolt(*args, **kwargs):
 	entities = kwargs.get('entities')
 	fov_map = kwargs.get('fov_map')
+	damage = kwargs.get('damage')
 	target_x = kwargs.get('target_x')
 	target_y = kwargs.get('target_y')
+
+	results = []
+
+	if not libtcod.map_is_in_fov(fov_map, target_x, target_y):
+		results.append({'consumed': False, 'message': Message('You cannot target a tile outside your field of view.', libtcod.yellow)})
+		return results
+	results.append({'consumed': True, 'message': Message('The fireball explodes, burning everything within {0} tiles!'.format(radius), libtcod.orange)})
+
+	for entity in entities:
+		if distance(entity, target_x, target_y) <= radius and entity.fighter:
+			quantity = "point" if damage == 1 else "points"
+			verb = "get" if entity.name.true_name == "Player" else "gets"
+			results.append({'message': Message(f'{entity.name.subject_name} {verb} burned for {damage} {quantity}.', libtcod.orange)})
+			results.extend(entity.fighter.take_damage(damage))
+	return results
+
+def bless(*args, **kwargs):
+	caster, target = args[0], args[1]
 	bonus = kwargs.get('bonus')
 	duration = (caster.skills.get_skill_rank(SkillNames.HOLY) * 3) + 1
 	results = []
 	bless_effect = Effect(name=EffectNames.BLESS, description="Blessed", turns_left=duration, hit_modifier=bonus, physical_damage_modifier=bonus)
-	for entity in entities:
-		if entity.x == target_x and entity.y == target_y and entity.fighter:
-			add_effect(bless_effect, entity)
-			results.append({'consumed': True, 'message': Message('You cast bless on the target.', libtcod.green)})
-			break
-	else:
-		results.append({'message': Message("There is no target there to cast that spell on.", libtcod.red)})
+	add_effect(bless_effect, target)
+	results.append({'consumed': True, 'message': Message('You cast bless on the target.', libtcod.green)})
 	return results
 
 def cast_lightning(*args, **kwargs):

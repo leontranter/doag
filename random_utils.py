@@ -40,6 +40,3 @@ def dn_dice_roll(number_of_dice, dice_type, modifier=0):
 		roll += this_roll
 	roll += modifier
 	return roll
-
-def contestOf(compare1, compare2):
-	pass

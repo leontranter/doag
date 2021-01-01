@@ -8,10 +8,8 @@ from systems.attack import attack
 from systems.move_system import distance
 
 def add_feat(player, feat):
+	# TODO: Is this required? Do I need any more logic here?
 	player.performer.feat_list.append(feat)
-
-def get_available_feats(player):
-	return []
 
 def make_savage_strike():
 	feat = Feat(FeatNames.SAVAGE_STRIKE, "Savage Strike", SkillNames.SWORD, 2, 3, perform_savage_strike, True, False, Message('Left-click a target to strike, or right-click to cancel.', libtcod.light_cyan), 1, feat_attack_modifier=2, feat_damage_modifier=2)

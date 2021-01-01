@@ -23,6 +23,10 @@ def make_lightning_bolt_spell():
 	spell = Spell("Lightning Bolt", 5, SkillNames.STORM, lightning_bolt, targeting=True, targeting_message=Message('Left-click a target to cast Lightning Bolt on, or right-click to cancel.', libtcod.light_cyan), damage_dice=(3,6))
 	return spell
 
+def make_firebolt_spell():
+	spell = Spell("Lightning Bolt", 5, SkillNames.FIRE, bolt_spell, targeting=True, targeting_message=Message('Left-click a target to cast Fire Bolt on, or right-click to cancel.', libtcod.light_cyan), damage_dice=(2,6))
+	return spell	
+
 def heal(*args, **kwargs):
 	entity = args[0]
 	amount = kwargs.get('amount')
@@ -49,6 +53,30 @@ def poison(*args, **kwargs):
 	results.append({'consumed': True, 'message': Message('You drink a potion of poison! You feel terrible!', libtcod.green)})
 	return results
 
+def bolt_spell(*args, **kwargs):
+	entities = kwargs.get('entities')
+	fov_map = kwargs.get('fov_map')
+	damage = kwargs.get('damage')
+	target_x = kwargs.get('target_x')
+	target_y = kwargs.get('target_y')
+	damage_dice_type = kwargs.get('damage_dice_type')
+	damage_dice_num = kwargs.get('damage_dice_num')
+	results = []
+
+	if not libtcod.map_is_in_fov(fov_map, target_x, target_y):
+		results.append('message': Message('You cannot target a tile outside your field of view.', libtcod.yellow)})
+		return results
+
+	for entity in entities:
+		if entity.x == target_x and entity.y == target_y and entity.fighter:
+			num_dice, type_dice = damage_dice
+			damage = d6_dice_roll(num_dice, type_dice)
+			results.append({'message': Message(f'{entity.name.subject_name} is hit for {damage}.')})
+			results.extend(entity.fighter.take_damage(damage))
+	else:
+		results.append('message': Message('There is no valid target there!', libtcod.yellow)})
+	return results
+
 def lightning_bolt(*args, **kwargs):
 	entities = kwargs.get('entities')
 	fov_map = kwargs.get('fov_map')
@@ -57,7 +85,7 @@ def lightning_bolt(*args, **kwargs):
 	target_y = kwargs.get('target_y')
 
 	results = []
-
+	# TODO: fix this up!
 	if not libtcod.map_is_in_fov(fov_map, target_x, target_y):
 		results.append({'consumed': False, 'message': Message('You cannot target a tile outside your field of view.', libtcod.yellow)})
 		return results
@@ -174,5 +202,6 @@ def learn_spell_from_book(*args, **kwargs):
 spell_function_lookup = {
 	'fireball': make_fireball_spell,
 	'bless': make_bless_spell,
-	'heal': make_heal_spell
+	'heal': make_heal_spell,
+	'firebolt': make_firebolt_spell
 }

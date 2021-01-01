@@ -1,4 +1,4 @@
-from item_functions import make_fireball_spell, make_bless_spell, make_heal_spell
+from magic_functions import make_fireball_spell, make_bless_spell, make_heal_spell
 from game_messages import Message
 from random_utils import d6_dice_roll
 from systems.move_system import distance
@@ -66,5 +66,6 @@ def attempt_cast(entity, spell):
 spell_function_lookup = {
 	'fireball': make_fireball_spell,
 	'bless': make_bless_spell,
-	'heal': make_heal_spell
+	'heal': make_heal_spell,
+	'firebolt': make_firebolt_spell
 }

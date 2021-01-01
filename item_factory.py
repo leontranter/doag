@@ -1,6 +1,6 @@
 from components.item import Item
 from entity import Entity
-from item_functions import heal, cast_lightning, cast_fireball, cast_confuse, poison, learn_spell_from_book, apply_confuse
+from magic_functions import heal, cast_lightning, cast_fireball, cast_confuse, poison, learn_spell_from_book, apply_confuse
 import tcod as libtcod
 from render_functions import RenderOrder
 from game_messages import Message

@@ -34,7 +34,7 @@ from systems.skill_manager import SkillNames, get_intellect, get_willpower
 from systems.move_system import distance_to
 from systems.pickup_system import pickup_item
 from systems.feat_system import get_targetable_entities_in_range
-from item_functions import heal, learn_spell_from_book, make_bless_spell
+from magic_functions import heal, learn_spell_from_book, make_bless_spell
 from fov_functions import initialize_fov
 from render_functions import get_names_under_mouse
 from item_factory import make_healing_potion, make_lightning_scroll, make_fireball_scroll, make_confusion_scroll, make_fireball_book, make_heal_book, make_bless_book, make_poison_potion, make_confusion_potion

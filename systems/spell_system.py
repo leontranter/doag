@@ -1,4 +1,4 @@
-from magic_functions import make_fireball_spell, make_bless_spell, make_heal_spell
+from magic_functions import make_fireball_spell, make_bless_spell, make_heal_spell, make_firebolt_spell
 from game_messages import Message
 from random_utils import d6_dice_roll
 from systems.move_system import distance
@@ -20,6 +20,8 @@ def cast(entity, spell, **kwargs):
 
 	if not attempt_cast(entity, spell):
 		results.append({'message': Message("You fail to cast the spell properly!")})
+		results.append({'failed_cast': True})
+		print('failed cast')
 		entity.caster.mana -= spell.mana_cost
 		return results
 

@@ -6,11 +6,10 @@ from attack_types import AttackTypes
 from systems.effects_manager import is_confused
 from random import randint
 
-def attempt_move_entity(move, game_map, moving_entity, entities, game_state, player_turn_results, fov_recompute, action_free):
+def attempt_move_entity(move, game_map, moving_entity, entities, game_state, player_turn_results, fov_recompute):
 	if is_confused(moving_entity):
 		dx, dy = (randint(0,1), randint(0,1))
 		if (dx, dy) == (0, 0):
-			action_free = False
 			return player_turn_results, fov_recompute, game_state, action_free
 	else:
 		dx, dy = move
@@ -24,8 +23,8 @@ def attempt_move_entity(move, game_map, moving_entity, entities, game_state, pla
 		else:	
 			move_entity(moving_entity, dx, dy)
 			fov_recompute = True
-		action_free = False
-	return player_turn_results, fov_recompute, game_state, action_free
+			player_turn_results.append({'moved': True})
+	return player_turn_results, fov_recompute, game_state
 
 def move_entity(moving_entity, dx, dy):
 	moving_entity.x += dx

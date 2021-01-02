@@ -6,6 +6,7 @@ from systems.move_system import distance
 from systems.skill_manager import SkillNames
 from spells import Spell
 from components.effects import Effect
+from random_utils import dn_dice_roll
 
 def make_fireball_spell():
 	spell = Spell("Fireball", 10, SkillNames.FIRE, cast_fireball, targeting=True, targeting_message=Message('Left-click a target tile for the fireball, or right-click to cancel.', libtcod.light_cyan), damage=30, radius=3)
@@ -24,7 +25,7 @@ def make_lightning_bolt_spell():
 	return spell
 
 def make_firebolt_spell():
-	spell = Spell("Lightning Bolt", 5, SkillNames.FIRE, bolt_spell, targeting=True, targeting_message=Message('Left-click a target to cast Fire Bolt on, or right-click to cancel.', libtcod.light_cyan), damage_dice=(2,6))
+	spell = Spell("Fire Bolt", 5, SkillNames.FIRE, bolt_spell, targeting=True, targeting_message=Message('Left-click a target to cast Fire Bolt on, or right-click to cancel.', libtcod.light_cyan), damage_dice=(2,6))
 	return spell	
 
 def heal(*args, **kwargs):
@@ -59,22 +60,20 @@ def bolt_spell(*args, **kwargs):
 	damage = kwargs.get('damage')
 	target_x = kwargs.get('target_x')
 	target_y = kwargs.get('target_y')
-	damage_dice_type = kwargs.get('damage_dice_type')
-	damage_dice_num = kwargs.get('damage_dice_num')
+	damage_dice_num, damage_dice_type = kwargs.get('damage_dice')
 	results = []
 
 	if not libtcod.map_is_in_fov(fov_map, target_x, target_y):
-		results.append('message': Message('You cannot target a tile outside your field of view.', libtcod.yellow)})
+		results.append({'message': Message('You cannot target a tile outside your field of view.', libtcod.yellow)})
 		return results
 
 	for entity in entities:
 		if entity.x == target_x and entity.y == target_y and entity.fighter:
-			num_dice, type_dice = damage_dice
-			damage = d6_dice_roll(num_dice, type_dice)
+			damage = dn_dice_roll(damage_dice_num, damage_dice_type)
 			results.append({'message': Message(f'{entity.name.subject_name} is hit for {damage}.')})
 			results.extend(entity.fighter.take_damage(damage))
 	else:
-		results.append('message': Message('There is no valid target there!', libtcod.yellow)})
+		results.append({'message': Message('There is no valid target there!', libtcod.yellow)})
 	return results
 
 def lightning_bolt(*args, **kwargs):

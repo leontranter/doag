@@ -100,7 +100,7 @@ class EquippableFactory:
 
 	def make_bolts(x=1, y=1, quantity=1):
 		arrows_equippable = Equippable(EquipmentSlots.AMMUNITION)
-		bolts_name = Name("Bolts")
+		bolts_name = Name("Bolt")
 		bolts_item = Item(1, quantity)
 		bolts_ammunition = Ammunition(AmmunitionTypes.BOLTS, WeaponCategories.CROSSBOW)
 		bolts_entity = Entity(x, y, ')', libtcod.flame, equippable=crossbow_equippable, name=bolts_name, item=bolts_item, ammunition=bolts_ammunition)

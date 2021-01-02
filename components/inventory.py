@@ -19,8 +19,8 @@ class Inventory:
 				})
 		else:
 			temp_display_name = get_display_name(self.owner, item)
-			if item.equippable and item.item.quantity and item.item.quantity == 1:
-				temp_display_name = temp_display_name[:-1]
+			if item.equippable and item.item.quantity and item.item.quantity > 1:
+				temp_display_name += "s"
 			results.append({
 				'item_added': item,
 				'message': Message(f'You pick up the {temp_display_name}', libtcod.yellow)

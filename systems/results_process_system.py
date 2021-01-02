@@ -4,7 +4,7 @@ from death_functions import handle_death
 from components.equippable import make_dropped_missile
 from death_functions import kill_player, kill_monster
 
-def process_results(player_turn_results, game_state, entities, player, message_log, targets):
+def process_results(player_turn_results, game_state, entities, player, message_log, targets, action_free):
 	for player_turn_result in player_turn_results:
 		quit = player_turn_result.get('quit')
 		message = player_turn_result.get('message')
@@ -24,6 +24,10 @@ def process_results(player_turn_results, game_state, entities, player, message_l
 		dropped_location = player_turn_result.get("dropped_location") 
 		monster_drops = player_turn_result.get("monster_drops")
 		loaded = player_turn_result.get("loaded")
+		failed_cast = player_turn_result.get('failed_cast')
+		attacked = player_turn_result.get('attacked')
+		moved = player_turn_result.get('moved')
+		waited = player_turn_result.get('waited')
 
 		if quit:
 			return True
@@ -60,6 +64,14 @@ def process_results(player_turn_results, game_state, entities, player, message_l
 			entities.append(missile_entity)
 		if item_dropped:
 			entities.append(item_dropped)
+			action_free = False
+		if failed_cast:
+			# TODO: fix this - action_free = False
+			game_state.current_game_state = GameStates.PLAYERS_TURN
+			action_free = False
+			print(f'game state is {game_state.current_game_state}')
+		if attacked or cast or waited or moved:
+			action_free = False
 		if equip:
 			equip_results = player.equipment.toggle_equip(equip)
 			for equip_result in equip_results:
@@ -72,12 +84,12 @@ def process_results(player_turn_results, game_state, entities, player, message_l
 					message_log.add_message(Message('You dequipped the {0}.'.format(dequipped.name.true_name)))
 				if fail_equip:
 					message_log.add_message(Message(fail_equip))
-			pass
+			action_free = False
 		if targeting_cancelled:
-			game_state.current_game_state = previous_game_state
+			game_state.current_game_state = game_state.previous_game_state
 			message_log.add_message(Message('Targeting cancelled'))
 
-	return game_state, entities, player, targets
+	return game_state, entities, player, targets, action_free
 
 def process_ai_results(enemy_turn_results, acting_entity, entities, player, message_log, game_state):
 	for enemy_turn_result in enemy_turn_results:
@@ -104,4 +116,4 @@ def process_ai_results(enemy_turn_results, acting_entity, entities, player, mess
 			if game_state == GameStates.PLAYER_DEAD:
 				break
 
-	return entities, game_state, message_log
+	return entities, game_state, message_log	

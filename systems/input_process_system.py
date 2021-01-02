@@ -10,7 +10,7 @@ from loader_functions.data_loaders import load_game, save_game
 import tcod as libtcod
 from systems import spell_system
 
-def process_input(action, mouse_action, player, entities, game_state, message_log, game_map, dlevels, fov_recompute, fov_map, constants, con, action_free, targets):
+def process_input(action, mouse_action, player, entities, game_state, message_log, game_map, dlevels, fov_recompute, fov_map, constants, con, targets):
 	move, wait = action.get('move'), action.get('wait')
 	pickup = action.get('pickup')
 	show_inventory, drop_inventory = action.get('show_inventory'), action.get('drop_inventory')
@@ -30,11 +30,9 @@ def process_input(action, mouse_action, player, entities, game_state, message_lo
 	left_click, right_click = mouse_action.get('left_click'), mouse_action.get('right_click')
 
 	player_turn_results = []
-	if move:
-		print('got a move')
-
+	
 	if move and game_state.current_game_state == GameStates.PLAYERS_TURN:
-		player_turn_results, fov_recompute, game_state, action_free = move_system.attempt_move_entity(move, game_map, player, entities, game_state, player_turn_results, fov_recompute, action_free)
+		player_turn_results, fov_recompute, game_state = move_system.attempt_move_entity(move, game_map, player, entities, game_state, player_turn_results, fov_recompute)
 
 	elif wait:
 		player_turn_results.append({'waited': True})
@@ -181,4 +179,4 @@ def process_input(action, mouse_action, player, entities, game_state, message_lo
 	if fullscreen:
 		libtcod.console_set_fullscreen(not libtcod.console_is_fullscreen())
 
-	return player_turn_results, fov_recompute, game_state, entities, game_map, fov_map, dlevels, targets, action_free
+	return player_turn_results, fov_recompute, game_state, entities, game_map, fov_map, dlevels, targets

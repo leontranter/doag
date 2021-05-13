@@ -24,8 +24,8 @@ from magic_functions import make_firebolt_spell
 from item_factory import make_healing_potion, make_poison_potion, make_fireball_book, make_confusion_scroll, make_bless_book, make_fireball_scroll, make_confusion_potion
 from systems.skill_manager import SkillNames
 
-def get_game_variables(constants, start_equipped=False):
-	player = create_player(constants)
+def get_game_variables(constants, player_class, start_equipped=False):
+	player = create_player(constants, player_class)
 	if start_equipped:
 		player = equip_player(player)
 	
@@ -65,14 +65,14 @@ def assign_scroll_descriptions(scroll_descriptions, scroll_types):
 
 	return scroll_description_links
 
-def create_player(constants):
+def create_player(constants, player_class):
 	fighter_component = Fighter()
 	inventory_component = Inventory(26)
 	level_component = Level()
 	equipment_component = Equipment()
 	defender_component = Defender()
 	performer_component = Performer()
-	stats_component = Stats(Strength=14, Precision=14, Agility=14, Intellect=14, Willpower=14, Stamina=14, Endurance=14)
+	stats_component = set_stats(player_class)
 	skills_component = Skills()
 	skills_component.set_skill_rank(SkillNames.SWORD, 1)
 	skills_component.set_skill_rank(SkillNames.DAGGER, 1)
@@ -92,6 +92,16 @@ def create_player(constants):
 	player.performer.feat_list.extend([feat, feat2])
 	player.caster.spells.append(spell)
 	return player
+
+def set_stats(player_class):
+	if player_class['character_class'] == 0: #barbarian
+		player_stats = Stats(Strength=16, Precision=14, Agility=14, Intellect=10, Willpower=10, Stamina=16, Endurance=16)
+	elif player_class['character_class'] == 1: # paladin
+		player_stats = Stats(Strength=15, Precision=14, Agility=14, Intellect=15, Willpower=15, Stamina=15, Endurance=14)
+	else: #wizard
+		player_stats = Stats(Strength=12, Precision=14, Agility=14, Intellect=18, Willpower=16, Stamina=9, Endurance=11)
+	return player_stats
+
 
 def equip_player(player):
 	x, y = 1, 1

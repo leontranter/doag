@@ -10,7 +10,9 @@ def attempt_move_entity(move, game_map, moving_entity, entities, game_state, pla
 	if is_confused(moving_entity):
 		dx, dy = (randint(0,1), randint(0,1))
 		if (dx, dy) == (0, 0):
-			return player_turn_results, fov_recompute, game_state, action_free
+			print("dx, dy are zero")
+			player_turn_results.append({'waited': True})
+			return player_turn_results, fov_recompute, game_state
 	else:
 		dx, dy = move
 	destination_x = moving_entity.x + dx

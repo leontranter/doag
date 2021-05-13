@@ -33,6 +33,11 @@ class Fighter:
 			results.append({'dead': self.owner})
 		return results
 
+	def heal(self, amount):
+		self.owner.stats.hp += amount
+		if self.owner.stats.hp >= self.owner.stats.base_max_hp:
+			self.owner.stats.hp = self.owner.stats.base_max_hp
+		
 	def load_missile_weapon(self):
 		results = []
 		if self.owner.equipment.has_missile_weapon():

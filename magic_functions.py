@@ -33,7 +33,7 @@ def heal(*args, **kwargs):
 	amount = kwargs.get('amount')
 
 	results = []
-
+	# TODO: this needs work - healing someone else will incorrectly show a message about you
 	if entity.stats and entity.fighter:
 		if entity.stats.hp == entity.stats.max_hp:
 			results.append({'consumed': False, 'message': Message('You are already at full health.', libtcod.yellow)})
@@ -183,7 +183,7 @@ def cast_confuse(*args, **kwargs):
 def apply_confuse(*args, **kwargs):
 	results = []
 	entity=args[0]
-	effect = Effect(name=EffectNames.CONFUSION, description="Confused", turns_left=5)
+	effect = Effect(name=EffectNames.CONFUSION, description="Confused", turns_left=15)
 	add_effect(effect, entity)
 	results.append({'consumed': True, 'message': Message('You drink a potion of confusion! You feel confused!', libtcod.green)})
 	return results

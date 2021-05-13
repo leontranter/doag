@@ -23,6 +23,7 @@ from systems import input_process_system
 from systems import results_process_system
 from targeting import Targeting
 from game_state import GameState
+from character import get_character_class
 
 def main():
 	constants = get_constants()
@@ -51,7 +52,7 @@ def main():
 		if show_main_menu:
 			main_menu(con, main_menu_background_image, constants['screen_width'], constants['screen_height'])
 			if show_load_error_message:
-				message_box(con, 'No save gam to load', 50, constants['screen_width'], constants['screen_height'])
+				message_box(con, 'No save game to load', 50, constants['screen_width'], constants['screen_height'])
 
 			libtcod.console_flush()
 			action = handle_main_menu(key)
@@ -62,7 +63,9 @@ def main():
 			if show_load_error_message and (new_game or load_saved_game or exit_game):
 				show_load_error_message = False
 			elif new_game:
-				player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants, start_equipped=True)
+				character_class = get_character_class(con, constants)
+				print(character_class)
+				player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants, character_class, start_equipped=True)
 				game_state = GameStates.PLAYERS_TURN
 				show_main_menu = False
 			elif load_saved_game:

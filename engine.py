@@ -84,7 +84,6 @@ def main():
 def play_game(player, entities, game_map, message_log, game_state, con, panel, constants, dlevels):
 	fov_recompute = True
 	fov_map = initialize_fov(game_map)
-
 	key = libtcod.Key()
 	mouse = libtcod.Mouse()
 
@@ -92,7 +91,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 	print(game_state.current_game_state)
 	action_free = True
 	targets = Targeting()
-
+	game_state.game_turn = 1
 	while not libtcod.console_is_window_closed():
 		while action_free:
 			
@@ -125,7 +124,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 			if entity.ai:
 				enemy_turn_results = entity.ai.take_turn(player, fov_map, game_map, entities)
 				entities, game_state, message_log = results_process_system.process_ai_results(enemy_turn_results, entity, entities, player, message_log, game_state)
-		
+		game_state.game_turn += 1
 		# reset action_free to True to player gets a turn again
 		action_free = True
 		if game_state.current_game_state != GameStates.PLAYER_DEAD:

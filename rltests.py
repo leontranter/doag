@@ -620,20 +620,25 @@ class ItemNamesTests(unittest.TestCase):
 class BasicGameTests(unittest.TestCase):
 	def test_can_create_new_game(self):
 		constants = get_constants()
-		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants, 'a', start_equipped=True)
+		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants, start_equipped=True)
 		self.assertEqual(isinstance(entities, list), True)
 
 	def test_can_save_game(self):
 		constants = get_constants()
-		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants, 'a', start_equipped=True)
+		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants, start_equipped=True)
 		self.assertEqual(save_game(player, entities, game_map, message_log, game_state, dlevels), True)
 
 	def test_can_load_game(self):
 		constants = get_constants()
-		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants, 'a', start_equipped=True)
+		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants, start_equipped=True)
 		save_game(player, entities, game_map, message_log, game_state, dlevels)
 		player, entities, game_map, message_log, game_state, dlevels = load_game()
 		self.assertEqual(isinstance(entities, list), True)		
+
+	def test_game_starts_with_turn_count(self):
+		constants = get_constants()
+		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants, start_equipped=True)
+		self.assertEqual(game_state.game_turn, 0)
 
 class EffectsTests(unittest.TestCase):
 

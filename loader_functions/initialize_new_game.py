@@ -20,11 +20,14 @@ from dlevel import Dlevel
 from components.name import Name
 from components.identified import Identified
 from random import shuffle
+from game_state import GameState
 from magic_functions import make_firebolt_spell
 from item_factory import make_healing_potion, make_poison_potion, make_fireball_book, make_confusion_scroll, make_bless_book, make_fireball_scroll, make_confusion_potion
 from systems.skill_manager import SkillNames
 
-def get_game_variables(constants, player_class, start_equipped=False):
+def get_game_variables(constants, player_class=None, start_equipped=False):
+	if not player_class:
+		player_class = {'character_class': 0}
 	player = create_player(constants, player_class)
 	if start_equipped:
 		player = equip_player(player)
@@ -40,7 +43,7 @@ def get_game_variables(constants, player_class, start_equipped=False):
 
 	message_log = MessageLog(constants['message_x'], constants['message_width'], constants['message_height'])
 
-	game_state = GameStates.PLAYERS_TURN
+	game_state = GameState()
 	return player, entities, game_map, message_log, game_state, dlevels
 
 def assign_potion_descriptions(potion_descriptions, potion_types):	

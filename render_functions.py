@@ -75,6 +75,7 @@ def render_all(con, panel, entities, player, game_map, fov_map, fov_recompute, m
 	render_bar(panel, 1, 5, bar_width, 'Mana', player.caster.mana, player.caster.max_mana, libtcod.blue, libtcod.darker_blue)
 	libtcod.console_print_ex(panel, 1, 8, libtcod.BKGND_NONE, libtcod.LEFT, 'Dungeon level: {0}'.format(game_map.dungeon_level))
 	libtcod.console_print_ex(panel, 1, 8, libtcod.BKGND_NONE, libtcod.LEFT, f'GS: {game_state.current_game_state}')
+	libtcod.console_print_ex(panel, 1, 9, libtcod.BKGND_NONE, libtcod.LEFT, f'Turn: {game_state.game_turn}')
 	libtcod.console_print_ex(panel, 1, 10, libtcod.BKGND_NONE, libtcod.LEFT, 'Effects:')
 	append_effects(panel, player, 11)
 	libtcod.console_set_default_foreground(panel, libtcod.light_gray)

@@ -32,16 +32,13 @@ def process_input(action, mouse_action, player, entities, game_state, message_lo
 	player_turn_results = []
 	
 	if move and game_state.current_game_state == GameStates.PLAYERS_TURN:
-		player_turn_results, fov_recompute, game_state = move_system.attempt_move_entity(move, game_map, player, entities, game_state, player_turn_results, fov_recompute)
+		player_turn_results, fov_recompute = move_system.attempt_move_entity(move, game_map, player, entities, player_turn_results, fov_recompute)
 
 	elif wait:
 		player_turn_results.append({'waited': True})
 
 	elif pickup and game_state.current_game_state == GameStates.PLAYERS_TURN:
 		player_turn_results.extend(pickup_item(player, entities))
-		for result in player_turn_results:
-			if 'item_added' in result.keys():
-				action_free = False
 
 	if show_inventory:
 		game_state.previous_game_state = game_state.current_game_state
@@ -76,7 +73,6 @@ def process_input(action, mouse_action, player, entities, game_state, message_lo
 		potions = get_carried_potions(player)
 		used_potion = potions[potion_index]
 		player_turn_results.extend(player.inventory.use(used_potion))
-		action_free = False
 
 	# TODO: still needs some work
 	if take_stairs and game_state == GameStates.PLAYERS_TURN:
@@ -116,26 +112,15 @@ def process_input(action, mouse_action, player, entities, game_state, message_lo
 	if spells_index is not None and spells_index < len(player.caster.spells):
 		spell = player.caster.spells[spells_index]
 		player_turn_results.extend(spell_system.cast(player, spell, entities=entities, fov_map=fov_map))
-		# TODO: This is not at all great - analysing player turn results should happen in result process system!
-		for result in player_turn_results:
-			if result.get('cast'):
-				action_free = False
 
 	if feat_index is not None and feat_index < len(player.performer.feat_list):
 		feat = player.performer.feat_list[feat_index]
 		feat_index = None
 		player_turn_results.extend(attempt_feat(player, feat, entities=entities, fov_map=fov_map))
-		# TODO: This is not at all great - analysing player turn results should happen in result process system!
-		for result in player_turn_results:
-			if result.get('performed'):
-				action_free = False		
 
 	if fire_weapon:
 		if player.equipment.ammunition and player.equipment.ammunition.item.quantity > 0:
 			player_turn_results.extend(player.fighter.fire_weapon())
-			for result in player_turn_results:
-				if result.get('attacked'):
-					action_free = False
 		else:
 			player_turn_results.append({"message": Message("You don't have any ammunition to fire!")})
 
@@ -155,15 +140,9 @@ def process_input(action, mouse_action, player, entities, game_state, message_lo
 			elif targets.current_targeting_feat:
 				feat_perform_results = attempt_feat(player, targets.current_targeting_feat, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y)
 				player_turn_results.extend(feat_perform_results)
-				for result in player_turn_results:
-					if result.get('performed'):
-						action_free = False
 			else:
 				missile_attack_results = player.fighter.fire_weapon(weapon=player.equipment.main_hand.equippable, entities=entities, fov_map=fov_map, target_x=target_x, target_y=target_y)
 				player_turn_results.extend(missile_attack_results)
-				for result in player_turn_results:
-					if result.get('attacked'):
-						action_free = False
 		elif right_click:
 			player_turn_results.append({'targeting_cancelled': True})
 

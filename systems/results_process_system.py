@@ -28,6 +28,7 @@ def process_results(player_turn_results, game_state, entities, player, message_l
 		attacked = player_turn_result.get('attacked')
 		moved = player_turn_result.get('moved')
 		waited = player_turn_result.get('waited')
+		performed = player_turn_result.get('performed')
 
 		if quit:
 			return True
@@ -38,6 +39,7 @@ def process_results(player_turn_results, game_state, entities, player, message_l
 			message_log.add_message(message)
 		if item_added:
 			entities.remove(item_added)
+			action_free = False	
 		# TODO: roll these three results into one?
 		if targeting:
 			game_state.previous_game_state = GameStates.PLAYERS_TURN
@@ -70,8 +72,9 @@ def process_results(player_turn_results, game_state, entities, player, message_l
 			game_state.current_game_state = GameStates.PLAYERS_TURN
 			action_free = False
 			print(f'game state is {game_state.current_game_state}')
-		if attacked or cast or waited or moved:
+		if attacked or cast or waited or moved or loaded or item_consumed or performed:
 			action_free = False
+			game_state.current_game_state = GameStates.PLAYERS_TURN
 		if equip:
 			equip_results = player.equipment.toggle_equip(equip)
 			for equip_result in equip_results:

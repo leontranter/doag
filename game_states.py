@@ -13,3 +13,4 @@ class GameStates(Enum):
 	POTION_SCREEN = auto()
 	EQUIPMENT_SCREEN = auto()
 	FEATS_SCREEN = auto()
+	SKILLS_SCREEN = auto()

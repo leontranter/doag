@@ -86,9 +86,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 	fov_map = initialize_fov(game_map)
 	key = libtcod.Key()
 	mouse = libtcod.Mouse()
-
 	game_state = GameState()
-	print(game_state.current_game_state)
 	action_free = True
 	targets = Targeting()
 	game_state.game_turn = 1

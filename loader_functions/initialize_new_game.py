@@ -76,11 +76,7 @@ def create_player(constants, player_class):
 	defender_component = Defender()
 	performer_component = Performer()
 	stats_component = set_stats(player_class)
-	skills_component = Skills()
-	skills_component.set_skill_rank(SkillNames.SWORD, 1)
-	skills_component.set_skill_rank(SkillNames.DAGGER, 1)
-	skills_component.set_skill_rank(SkillNames.BOW, 1)
-	skills_component.set_skill_rank(SkillNames.HOLY, 1)
+	skills_component = set_skills(player_class)
 	feat = make_savage_strike()
 	feat2 = make_standing_jump()
 	spell = make_firebolt_spell()
@@ -97,14 +93,18 @@ def create_player(constants, player_class):
 	return player
 
 def set_stats(player_class):
-	if player_class['character_class'] == 0: #barbarian
-		player_stats = Stats(Strength=16, Precision=14, Agility=14, Intellect=10, Willpower=10, Stamina=16, Endurance=16)
-	elif player_class['character_class'] == 1: # paladin
-		player_stats = Stats(Strength=15, Precision=14, Agility=14, Intellect=15, Willpower=15, Stamina=15, Endurance=14)
-	else: #wizard
-		player_stats = Stats(Strength=12, Precision=14, Agility=14, Intellect=18, Willpower=16, Stamina=9, Endurance=11)
+	stats_mapping = {0: [16, 14, 14, 10, 10, 16, 16], 1: [15, 14, 14, 15, 15, 15, 14], 2: [12, 14, 14, 18, 6, 9, 11]}
+	p_str, p_pre, p_agi, p_int, p_wil, p_sta, p_end = stats_mapping[player_class.get('character_class')]
+	player_stats = Stats(Strength=p_str, Precision=p_pre, Agility=p_agi, Intellect=p_int, Willpower=p_wil, Stamina=p_sta, Endurance=p_end)
 	return player_stats
 
+def set_skills(player_class):
+	skills_component = Skills()
+	skills_mapping = {0: [(SkillNames.SWORD, 1)], 1: [(SkillNames.SWORD, 1), (SkillNames.HOLY, 1)], 2: [(SkillNames.FIRE, 1)]}
+	for character_skill in skills_mapping[player_class.get('character_class')]:
+		skill_name, skill_level = character_skill
+		skills_component.set_skill_rank(skill_name, skill_level)
+	return skills_component
 
 def equip_player(player):
 	x, y = 1, 1

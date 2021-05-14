@@ -640,6 +640,16 @@ class BasicGameTests(unittest.TestCase):
 		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants, start_equipped=True)
 		self.assertEqual(game_state.game_turn, 0)
 
+class CharacterTests(unittest.TestCase):
+	def test_can_create_character_with_stats(self):
+		constants = get_constants()
+		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants, start_equipped=True)
+		self.assertTrue(player.stats)
+	def test_can_create_character_with_correct_stats(self):
+		constants = get_constants()
+		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants, start_equipped=True)
+		self.assertTrue(player.stats.Strength, 16)
+
 class EffectsTests(unittest.TestCase):
 
 	def test_effects_manager_can_add_effect(self):

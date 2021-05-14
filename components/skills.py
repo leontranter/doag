@@ -1,4 +1,4 @@
-from systems.skill_manager import skill_check_lookups, SkillNames
+from systems.skill_manager import skill_check_lookups
 
 class Skills:
 	def __init__(self):

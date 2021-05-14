@@ -22,6 +22,8 @@ def handle_keys(key, game_state):
 		return handle_equipment_menu(key)
 	elif game_state.current_game_state == GameStates.FEATS_SCREEN:
 		return handle_feats_screen(key)
+	elif game_state.current_game_state == GameStates.SKILLS_SCREEN:
+		return handle_skills_screen(key)
 	return {}
 
 def handle_player_turn_keys(key):
@@ -71,6 +73,8 @@ def handle_player_turn_keys(key):
 		return {'quaff_potion': True}
 	elif key_char == 'p':
 		return {'perform_feat': True}
+	elif key_char == 's':
+		return {'show_skills_screen': True}
 	elif key.vk == libtcod.KEY_ESCAPE:
 		#exit the game
 		return {'exit': True}
@@ -132,6 +136,11 @@ def handle_level_up_menu(key):
 	return {}
 
 def handle_character_screen(key):
+	if key.vk == libtcod.KEY_ESCAPE:
+		return {'exit': True}
+	return {}
+
+def handle_skills_screen(key):
 	if key.vk == libtcod.KEY_ESCAPE:
 		return {'exit': True}
 	return {}

@@ -73,6 +73,20 @@ def character_class_menu(con, screen_width, screen_height):
 	options = ['a: Barbarian', 'b: Paladin', 'c: Wizard']	
 	menu(con, '', options, 24, screen_width, screen_height)
 
+def skills_screen(player, character_screen_width, character_screen_height, screen_width, screen_height):
+	window = libtcod.console_new(character_screen_width, character_screen_height)
+	libtcod.console_set_default_foreground(window, libtcod.white)
+	
+	libtcod.console_print_rect_ex(window, 0, 1, character_screen_width, character_screen_height, libtcod.BKGND_NONE, libtcod.LEFT, 'Player Skills')
+	offset = 3
+	for skill in player.skills.skills:
+		libtcod.console_print_rect_ex(window, 0, offset, character_screen_width, character_screen_height, libtcod.BKGND_NONE, libtcod.LEFT, f'{skill}')
+		offset += 1
+	x = screen_width // 2 - character_screen_width // 2
+	y = screen_height // 2 - character_screen_height // 2
+
+	libtcod.console_blit(window, 0, 0, character_screen_width, character_screen_height, 0, x, y, 1.0, 0.7)
+
 def message_box(con, header, width, screen_width, screen_height):
 	menu2(con, header, [], width, screen_width, screen_height)
 

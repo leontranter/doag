@@ -17,6 +17,7 @@ def process_input(action, mouse_action, player, entities, game_state, message_lo
 	inventory_index = action.get('inventory_index')
 	take_stairs, take_stairs_up = action.get('take_stairs'), action.get('take_stairs_up')
 	show_character_screen = action.get('show_character_screen')
+	show_skills_screen = action.get('show_skills_screen')
 	exit = action.get('exit')
 	fullscreen = action.get('fullscreen')
 	equipment_screen = action.get('show_equipment_screen')
@@ -102,8 +103,12 @@ def process_input(action, mouse_action, player, entities, game_state, message_lo
 			message_log.add_message(Message("There are no up stairs here.", libtcod.yellow))
 
 	if show_character_screen:
-		game_state.previous_game_state = game_state
+		game_state.previous_game_state = game_state.current_game_state
 		game_state.current_game_state = GameStates.CHARACTER_SCREEN
+
+	if show_skills_screen:
+		game_state.previous_game_state = game_state.current_game_state
+		game_state.current_game_state = GameStates.SKILLS_SCREEN		
 
 	if spells_screen:
 		game_state.previous_game_state = game_state
@@ -147,7 +152,7 @@ def process_input(action, mouse_action, player, entities, game_state, message_lo
 			player_turn_results.append({'targeting_cancelled': True})
 
 	if exit:
-		if game_state.current_game_state in (GameStates.SHOW_INVENTORY, GameStates.DROP_INVENTORY, GameStates.CHARACTER_SCREEN, GameStates.SPELLS_SCREEN, GameStates.POTION_SCREEN, GameStates.EQUIPMENT_SCREEN):
+		if game_state.current_game_state in (GameStates.SHOW_INVENTORY, GameStates.DROP_INVENTORY, GameStates.CHARACTER_SCREEN, GameStates.SPELLS_SCREEN, GameStates.POTION_SCREEN, GameStates.EQUIPMENT_SCREEN, GameStates.SKILLS_SCREEN):
 			game_state.current_game_state = game_state.previous_game_state
 		elif game_state.current_game_state == GameStates.TARGETING:
 			player_turn_results.append({'targeting_cancelled': True})

@@ -1,7 +1,7 @@
 import tcod as libtcod
 from enum import Enum
 from game_states import GameStates
-from menus import inventory_menu, level_up_menu, character_screen, spells_menu, potion_menu, equipment_menu, feats_menu
+from menus import inventory_menu, level_up_menu, character_screen, spells_menu, potion_menu, equipment_menu, feats_menu, skills_screen
 from systems.name_system import get_display_name
 from loader_functions.tile_codes import *
 from game_states import GameStates
@@ -93,7 +93,10 @@ def render_all(con, panel, entities, player, game_map, fov_map, fov_recompute, m
 		level_up_menu(con, 'Level up! Choose a stat to raise:', player, 40, screen_width, screen_height)
 
 	elif game_state.current_game_state == GameStates.CHARACTER_SCREEN:
-		character_screen(player, 50, 15, screen_width, screen_height)
+		character_screen(player, 50, 55, screen_width, screen_height)
+
+	elif game_state.current_game_state == GameStates.SKILLS_SCREEN:
+		skills_screen(player, 50, 55, screen_width, screen_height)
 
 	elif game_state.current_game_state == GameStates.SPELLS_SCREEN:
 		spells_menu(con, "Choose a spell to cast...", 50, screen_width, screen_height, player)

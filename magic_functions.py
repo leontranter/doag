@@ -21,7 +21,7 @@ def make_bless_spell():
 	return spell
 
 def make_lightning_bolt_spell():
-	spell = Spell("Lightning Bolt", 5, SkillNames.STORM, lightning_bolt, targeting=True, targeting_message=Message('Left-click a target to cast Lightning Bolt on, or right-click to cancel.', libtcod.light_cyan), damage_dice=(3,6))
+	spell = Spell("Lightning Bolt", 5, SkillNames.STORM, bolt_spell, targeting=True, targeting_message=Message('Left-click a target to cast Lightning Bolt on, or right-click to cancel.', libtcod.light_cyan), damage_dice=(3,6))
 	return spell
 
 def make_firebolt_spell():
@@ -74,28 +74,6 @@ def bolt_spell(*args, **kwargs):
 			results.extend(entity.fighter.take_damage(damage))
 	else:
 		results.append({'message': Message('There is no valid target there!', libtcod.yellow)})
-	return results
-
-def lightning_bolt(*args, **kwargs):
-	entities = kwargs.get('entities')
-	fov_map = kwargs.get('fov_map')
-	damage = kwargs.get('damage')
-	target_x = kwargs.get('target_x')
-	target_y = kwargs.get('target_y')
-
-	results = []
-	# TODO: fix this up!
-	if not libtcod.map_is_in_fov(fov_map, target_x, target_y):
-		results.append({'consumed': False, 'message': Message('You cannot target a tile outside your field of view.', libtcod.yellow)})
-		return results
-	results.append({'consumed': True, 'message': Message('The fireball explodes, burning everything within {0} tiles!'.format(radius), libtcod.orange)})
-
-	for entity in entities:
-		if distance(entity, target_x, target_y) <= radius and entity.fighter:
-			quantity = "point" if damage == 1 else "points"
-			verb = "get" if entity.name.true_name == "Player" else "gets"
-			results.append({'message': Message(f'{entity.name.subject_name} {verb} burned for {damage} {quantity}.', libtcod.orange)})
-			results.extend(entity.fighter.take_damage(damage))
 	return results
 
 def bless(*args, **kwargs):

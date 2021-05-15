@@ -39,7 +39,7 @@ class EquippableFactory:
 		mace_name = Name("Mace")
 		mace_melee_weapon = MeleeWeapon(WeaponTypes.MACE, WeaponCategories.MACE, melee_attack_type="swing", melee_damage=(1,6,2), melee_damage_type=DamageTypes.CRUSHING, min_strength=13)
 		mace_item = Item(9, 1)
-		mace_entity = Entity(x, y, '(', libtcod.dark, equippable=axe_equippable, melee_weapon=mace_melee_weapon, name=mace_name, item=mace_item)
+		mace_entity = Entity(x, y, '(', libtcod.orange, equippable=axe_equippable, melee_weapon=mace_melee_weapon, name=mace_name, item=mace_item)
 		return mace_entity
 
 	def make_dagger(x=1, y=1):
@@ -110,7 +110,7 @@ class EquippableFactory:
 		small_shield_equippable = Equippable(EquipmentSlots.OFF_HAND, isShield=True)
 		small_shield_name = Name("Small Shield")
 		small_shield_item = Item(10, 1)
-		small_shield_entity = Entity(x, y, '[', equippable=small_shield_equippable, name=small_shield_name, item=small_shield_item)
+		small_shield_entity = Entity(x, y, '[', libtcod.green, equippable=small_shield_equippable, name=small_shield_name, item=small_shield_item)
 		return small_shield_entity
 
 	def make_shield(x=1, y=1):
@@ -145,19 +145,19 @@ class EquippableFactory:
 		chain_armor_equippable = Equippable(EquipmentSlots.BODY, DR_bonus=2, is_metal=True)
 		chain_armor_name = Name("Chain Armor")
 		chain_armor_item = Item(25, 1)
-		chain_armor_entity = Entity(x, y, ')', libtcod.sky, equippable=padded_armor_equippable, name=chain_armor_name, item=chain_armor_item)
+		chain_armor_entity = Entity(x, y, ')', libtcod.sky, equippable=chain_armor_equippable, name=chain_armor_name, item=chain_armor_item)
 		return chain_armor_entity
 
 	def make_scale_armor(x=1, y=1):
 		scale_armor_equippable = Equippable(EquipmentSlots.BODY, DR_bonus=3, is_metal=True)
 		scale_armor_name = Name("Scale Armor")
 		scale_armor_item = Item(35, 1)
-		scale_armor_entity = Entity(x, y, ')', libtcod.sky, equippable=padded_armor_equippable, name=scale_armor_name, item=scale_armor_item)
+		scale_armor_entity = Entity(x, y, ')', libtcod.sky, equippable=scale_armor_equippable, name=scale_armor_name, item=scale_armor_item)
 		return scale_armor_entity		
 
 	def make_plate_armor(x=1, y=1):
 		plate_armor_equippable = Equippable(EquipmentSlots.BODY, DR_bonus=5, is_metal=True)
 		plate_armor_name = Name("Plate Armor")
 		plate_armor_item = Item(45, 1)
-		plate_armor_entity = Entity(x, y, ')', libtcod.darker, equippable=padded_armor_equippable, name=plate_armor_name, item=plate_armor_item)
+		plate_armor_entity = Entity(x, y, ')', libtcod.darker, equippable=plate_armor_equippable, name=plate_armor_name, item=plate_armor_item)
 		return plate_armor_entity

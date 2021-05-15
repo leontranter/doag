@@ -129,7 +129,7 @@ class SpellTests(unittest.TestCase):
 
 	def test_can_get_spell_target(self):
 		constants = get_constants()
-		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants, start_equipped=True)
+		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants)
 		fov_map = initialize_fov(game_map)
 		test_monster = mocks.create_mockchar_11()
 		test_monster.x, test_monster.y = 2, 2
@@ -138,7 +138,7 @@ class SpellTests(unittest.TestCase):
 
 	def test_cannot_get_spell_target_out_of_range(self):
 		constants = get_constants()
-		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants, start_equipped=True)
+		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants)
 		fov_map = initialize_fov(game_map)
 		test_monster = mocks.create_mockchar_11()
 		test_monster.x, test_monster.y = 10, 10
@@ -620,34 +620,34 @@ class ItemNamesTests(unittest.TestCase):
 class BasicGameTests(unittest.TestCase):
 	def test_can_create_new_game(self):
 		constants = get_constants()
-		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants, start_equipped=True)
+		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants)
 		self.assertEqual(isinstance(entities, list), True)
 
 	def test_can_save_game(self):
 		constants = get_constants()
-		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants, start_equipped=True)
+		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants)
 		self.assertEqual(save_game(player, entities, game_map, message_log, game_state, dlevels), True)
 
 	def test_can_load_game(self):
 		constants = get_constants()
-		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants, start_equipped=True)
+		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants)
 		save_game(player, entities, game_map, message_log, game_state, dlevels)
 		player, entities, game_map, message_log, game_state, dlevels = load_game()
 		self.assertEqual(isinstance(entities, list), True)		
 
 	def test_game_starts_with_turn_count(self):
 		constants = get_constants()
-		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants, start_equipped=True)
+		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants)
 		self.assertEqual(game_state.game_turn, 0)
 
 class CharacterTests(unittest.TestCase):
 	def test_can_create_character_with_stats(self):
 		constants = get_constants()
-		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants, start_equipped=True)
+		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants)
 		self.assertTrue(player.stats)
 	def test_can_create_character_with_correct_stats(self):
 		constants = get_constants()
-		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants, start_equipped=True)
+		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants)
 		self.assertTrue(player.stats.Strength, 16)
 
 class EffectsTests(unittest.TestCase):

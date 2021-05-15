@@ -188,7 +188,7 @@ def handle_feats_screen(key):
 def handle_character_menu(key):
 	index = key.c - ord('a')
 	if index >= 0:
-		return {'character_class': index}
+		return {'player_class': index}
 	elif key.vk == libtcod.KEY_ENTER and key.lalt:
 		return {'fullscreen': True}
 	elif key.vk == libtcod.KEY_ESCAPE:

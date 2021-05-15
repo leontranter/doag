@@ -111,7 +111,7 @@ def process_input(action, mouse_action, player, entities, game_state, message_lo
 		game_state.current_game_state = GameStates.SKILLS_SCREEN		
 
 	if spells_screen:
-		game_state.previous_game_state = game_state
+		game_state.previous_game_state = game_state.current_game_state
 		game_state.current_game_state = GameStates.SPELLS_SCREEN
 
 	if spells_index is not None and spells_index < len(player.caster.spells):

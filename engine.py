@@ -64,8 +64,8 @@ def main():
 				show_load_error_message = False
 			elif new_game:
 				character_class = get_character_class(con, constants)
-				print(character_class)
-				player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants, character_class, start_equipped=True)
+				player_class = character_class.get('player_class')
+				player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants, player_class)
 				game_state = GameStates.PLAYERS_TURN
 				show_main_menu = False
 			elif load_saved_game:

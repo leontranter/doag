@@ -25,7 +25,7 @@ def make_lightning_bolt_spell():
 	return spell
 
 def make_firebolt_spell():
-	spell = Spell("Fire Bolt", 5, SkillNames.FIRE, bolt_spell, targeting=True, targeting_message=Message('Left-click a target to cast Fire Bolt on, or right-click to cancel.', libtcod.light_cyan), damage_dice=(2,6))
+	spell = Spell("Fire Bolt", 3, SkillNames.FIRE, bolt_spell, targeting=True, targeting_message=Message('Left-click a target to cast Fire Bolt on, or right-click to cancel.', libtcod.light_cyan), damage_dice=(3,8))
 	return spell	
 
 def heal(*args, **kwargs):
@@ -58,8 +58,7 @@ def bolt_spell(*args, **kwargs):
 	entities = kwargs.get('entities')
 	fov_map = kwargs.get('fov_map')
 	damage = kwargs.get('damage')
-	target_x = kwargs.get('target_x')
-	target_y = kwargs.get('target_y')
+	target_x, target_y = kwargs.get('target_x'), kwargs.get('target_y')
 	damage_dice_num, damage_dice_type = kwargs.get('damage_dice')
 	results = []
 
@@ -72,8 +71,6 @@ def bolt_spell(*args, **kwargs):
 			damage = dn_dice_roll(damage_dice_num, damage_dice_type)
 			results.append({'message': Message(f'{entity.name.subject_name} is hit for {damage}.')})
 			results.extend(entity.fighter.take_damage(damage))
-	else:
-		results.append({'message': Message('There is no valid target there!', libtcod.yellow)})
 	return results
 
 def bless(*args, **kwargs):
@@ -155,7 +152,6 @@ def cast_confuse(*args, **kwargs):
 			break
 	else:
 		results.append({'consumed': False, 'message': Message('There is no targetable enemy at that location.', libtcod.yellow)})
-
 	return results
 
 def apply_confuse(*args, **kwargs):

@@ -37,7 +37,7 @@ from systems.feat_system import get_targetable_entities_in_range
 from magic_functions import heal, learn_spell_from_book, make_bless_spell
 from fov_functions import initialize_fov
 from render_functions import get_names_under_mouse
-from item_factory import make_healing_potion, make_lightning_scroll, make_fireball_scroll, make_confusion_scroll, make_fireball_book, make_heal_book, make_bless_book, make_poison_potion, make_confusion_potion
+from item_factory import make_healing_potion, make_fireball_scroll, make_confusion_scroll, make_fireball_book, make_heal_book, make_bless_book, make_poison_potion, make_confusion_potion
 from components.equippable import EquippableFactory
 import monsters
 import mocks

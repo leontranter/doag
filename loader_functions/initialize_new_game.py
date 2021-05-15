@@ -87,7 +87,7 @@ def create_player(constants, player_class):
 	return player
 
 def set_stats(player_class):
-	stats_mapping = {0: [16, 14, 14, 10, 10, 16, 16], 1: [15, 14, 14, 15, 15, 15, 14], 2: [12, 14, 14, 18, 6, 9, 11]}
+	stats_mapping = {0: [16, 14, 14, 10, 10, 16, 16], 1: [15, 14, 14, 15, 15, 15, 14], 2: [12, 14, 14, 18, 16, 9, 11]}
 	p_str, p_pre, p_agi, p_int, p_wil, p_sta, p_end = stats_mapping[player_class]
 	player_stats = Stats(Strength=p_str, Precision=p_pre, Agility=p_agi, Intellect=p_int, Willpower=p_wil, Stamina=p_sta, Endurance=p_end)
 	return player_stats

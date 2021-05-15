@@ -29,13 +29,6 @@ def make_confusion_potion(x=1, y=1):
 	temp_entity = Entity(x, y, '!', libtcod.violet, render_order=RenderOrder.ITEM, item=confusion_item, name=confusion_name, consumable=confusion_consumable)
 	return temp_entity
 
-def make_lightning_scroll(x=1, y=1):
-	lightning_scroll_consumable = Consumable(ConsumableTypes.SCROLL, use_function=cast_lightning, damage=40, maximum_range=5)
-	lightning_scroll_name = Name(true_name="Lightning Scroll")
-	lightning_item = Item(1, 1)
-	temp_entity = Entity(x, y, '?', libtcod.yellow, render_order=RenderOrder.ITEM, item=lightning_item, name=lightning_scroll_name, consumable=lightning_scroll_consumable)
-	return temp_entity
-
 def make_fireball_scroll(x=1, y=1):
 	fireball_scroll_consumable = Consumable(ConsumableTypes.SCROLL, use_function=cast_fireball, targeting=True, targeting_message=Message('Left-click a target tile for the fireball, or right-click to cancel.', libtcod.light_cyan), damage=25, radius=3)
 	fireball_scroll_name = Name(true_name="Fireball Scroll")

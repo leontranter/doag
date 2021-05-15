@@ -152,7 +152,7 @@ def process_input(action, mouse_action, player, entities, game_state, message_lo
 			player_turn_results.append({'targeting_cancelled': True})
 
 	if exit:
-		if game_state.current_game_state in (GameStates.SHOW_INVENTORY, GameStates.DROP_INVENTORY, GameStates.CHARACTER_SCREEN, GameStates.SPELLS_SCREEN, GameStates.POTION_SCREEN, GameStates.EQUIPMENT_SCREEN, GameStates.SKILLS_SCREEN):
+		if game_state.current_game_state in (GameStates.SHOW_INVENTORY, GameStates.DROP_INVENTORY, GameStates.CHARACTER_SCREEN, GameStates.SPELLS_SCREEN, GameStates.POTION_SCREEN, GameStates.EQUIPMENT_SCREEN, GameStates.SKILLS_SCREEN, GameStates.FEATS_SCREEN):
 			game_state.current_game_state = game_state.previous_game_state
 		elif game_state.current_game_state == GameStates.TARGETING:
 			player_turn_results.append({'targeting_cancelled': True})

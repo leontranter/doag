@@ -74,11 +74,9 @@ def create_player(constants, player_class):
 	level_component = Level()
 	equipment_component = Equipment()
 	defender_component = Defender()
-	performer_component = Performer()
+	performer_component = set_feats(player_class)
 	stats_component = set_stats(player_class)
 	skills_component = set_skills(player_class)
-	feat = make_savage_strike()
-	feat2 = make_standing_jump()
 	spell = make_firebolt_spell()
 	caster_component = Caster(max_mana=stats_component.Willpower)
 	potion_description_links = assign_potion_descriptions(constants['potion_descriptions'], constants['potion_types'])
@@ -88,7 +86,6 @@ def create_player(constants, player_class):
 	player = Entity(0, 0, '@', libtcod.white, blocks=True, render_order=RenderOrder.ACTOR, fighter=fighter_component, inventory=inventory_component, level=level_component,
 		equipment=equipment_component, caster=caster_component, stats=stats_component, skills=skills_component, defender=defender_component, name=player_name,
 		identified=identified_component, performer=performer_component)
-	player.performer.feat_list.extend([feat, feat2])
 	player.caster.spells.append(spell)
 	return player
 
@@ -105,6 +102,13 @@ def set_skills(player_class):
 		skill_name, skill_level = character_skill
 		skills_component.set_skill_rank(skill_name, skill_level)
 	return skills_component
+
+def set_feats(player_class):
+	player_performer = Performer()
+	feat = make_savage_strike()
+	feat2 = make_standing_jump()
+	player_performer.feat_list.extend([feat, feat2])
+	return player_performer
 
 def equip_player(player):
 	x, y = 1, 1

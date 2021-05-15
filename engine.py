@@ -90,6 +90,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 	action_free = True
 	targets = Targeting()
 	game_state.game_turn = 1
+	print(player.skills.skills)
 	while not libtcod.console_is_window_closed():
 		while action_free:
 			

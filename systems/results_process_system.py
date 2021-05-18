@@ -35,7 +35,7 @@ def process_results(player_turn_results, game_state, entities, player, message_l
 		if message:
 			message_log.add_message(message)
 		if dead_entity:
-			message, game_state, entities = handle_death(entities, dead_entity, player, game_state)
+			message, game_state, entities, player = handle_death(entities, dead_entity, player, game_state)
 			message_log.add_message(message)
 		if item_added:
 			entities.remove(item_added)
@@ -112,7 +112,6 @@ def process_ai_results(enemy_turn_results, acting_entity, entities, player, mess
 		if dead_entity:
 			if dead_entity == player:
 				message, game_state = kill_player(dead_entity, game_state)
-				print(f"gs is {game_state.current_game_state}")
 			else:
 				message = kill_monster(dead_entity)
 			message_log.add_message(message)

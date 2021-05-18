@@ -75,8 +75,7 @@ def process_input(action, mouse_action, player, entities, game_state, message_lo
 		used_potion = potions[potion_index]
 		player_turn_results.extend(player.inventory.use(used_potion))
 
-	# TODO: still needs some work
-	if take_stairs and game_state == GameStates.PLAYERS_TURN:
+	if take_stairs and game_state.current_game_state == GameStates.PLAYERS_TURN:
 		for entity in entities:
 			if entity.stairs and entity.x == player.x and entity.y == player.y:
 				entities, game_map.tiles, dlevels, game_map, player, fov_map, fov_recompute = game_map.down_stairs(entities, player, dlevels, game_map, fov_map, fov_recompute, constants)

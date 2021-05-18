@@ -16,7 +16,6 @@ class Fighter:
 		self.current_targeting_weapon = None
 		self.current_targeting_spell = None
 		self.current_targeting_consumable = None
-		self.unspent_xp = 0
 
 	@property
 	def DR(self):

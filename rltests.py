@@ -346,9 +346,9 @@ class DeathTests(unittest.TestCase):
 		# TODO: write this test
 		test_char = mocks.create_mockchar_11()
 		test_monster = monsters.make_orc(1, 1)
-		self.assertEqual(test_char.fighter.unspent_xp, 0)
+		self.assertEqual(test_char.level.current_xp, 0)
 		message = message, test_char = kill_monster(test_monster, test_char)
-		self.assertGreater(test_char.fighter.unspent_xp, 0)
+		self.assertGreater(test_char.level.current_xp, 0)
 
 class DeathDropTests(unittest.TestCase):
 	def test_monster_has_items(self):

@@ -33,8 +33,8 @@ def get_constants():
 	potion_descriptions = ["dark potion", "fizzy potion", "cloudy potion"]
 	potion_types = ["Healing Potion", "Poison Potion", "Confusion Potion"]
 	
-	scroll_descriptions = ["dusty scroll", "tidy scroll", "faded scroll"]
-	scroll_types = ['Confusion Scroll', 'Lightning Scroll', 'Fireball Scroll']
+	scroll_descriptions = ["dusty scroll", "faded scroll"]
+	scroll_types = ['Confusion Scroll', 'Fireball Scroll']
 
 	colors = {
 		'dark_wall': libtcod.Color(0, 0, 100),

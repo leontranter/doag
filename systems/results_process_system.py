@@ -71,7 +71,6 @@ def process_results(player_turn_results, game_state, entities, player, message_l
 			# TODO: fix this - action_free = False
 			game_state.current_game_state = GameStates.PLAYERS_TURN
 			action_free = False
-			print(f'game state is {game_state.current_game_state}')
 		if attacked or cast or waited or moved or loaded or item_consumed or performed:
 			action_free = False
 			game_state.current_game_state = GameStates.PLAYERS_TURN

@@ -56,7 +56,6 @@ def handle_player_turn_keys(key):
 	elif key_char == 'd':
 		return {'drop_inventory': True}
 	elif key_char == 'x':
-		print('prssed x')
 		return {'take_stairs': True}
 	elif key_char == 'u':
 		return {'take_stairs_up': True}

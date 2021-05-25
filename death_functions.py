@@ -14,7 +14,7 @@ def kill_monster(monster, player):
 	death_message = Message('{0} is dead!'.format(monster.name.subject_name), libtcod.orange)
 
 	if player.level.add_xp(monster.fighter.xp_reward):
-		player = player.level.level_up(player)
+		player.level.level_up()
 
 	monster.char = CORPSE
 	monster.color = libtcod.dark_red
@@ -32,7 +32,6 @@ def kill_monster(monster, player):
 def handle_death(entities, dead_entity, player, game_state):
 	if dead_entity == player:
 		message, game_state = kill_player(dead_entity, game_state)
-		print(game_state.current_game_state)
 	else:
 		message, player = kill_monster(dead_entity, player)
 		entities = dead_entity.inventory.drop_on_death(entities, dead_entity)

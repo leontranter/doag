@@ -14,6 +14,7 @@ from components.defender import Defender
 from components.meleeweapon import MeleeWeapon
 from components.item import Item
 from components.name import Name
+from components.level import Level
 from components.identified import Identified
 from components.effects import Effect
 from components.performer import Performer
@@ -209,6 +210,19 @@ class StatsTests(unittest.TestCase):
 		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", stats=test_stats_component)
 		self.assertEqual(test_entity.stats.max_hp, 19)
 		self.assertEqual(test_entity.stats.hp, 19)
+
+	def test_can_go_up_a_level(self):
+		test_fighter = Fighter()
+		test_level = Level()
+		test_stats = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)
+		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", fighter=test_fighter, level=test_level, stats=test_stats)
+		self.assertTrue(test_level.current_level, 1)
+		self.assertFalse(test_level.add_xp(1))
+		self.assertTrue(test_stats.Endurance, 9)
+		self.assertTrue(test_level.add_xp(200))
+		self.assertTrue(test_level.current_level, 2)
+		test_level.level_up()
+		self.assertTrue(test_stats.Endurance, 10)
 
 class DamageTests(unittest.TestCase):
 

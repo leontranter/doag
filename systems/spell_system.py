@@ -21,7 +21,6 @@ def cast(entity, spell, **kwargs):
 	if not attempt_cast(entity, spell):
 		results.append({'message': Message("You fail to cast the spell properly!")})
 		results.append({'failed_cast': True})
-		print('failed cast')
 		entity.caster.mana -= spell.mana_cost
 		return results
 

@@ -16,7 +16,6 @@ class Fighter:
 		self.current_targeting_weapon = None
 		self.current_targeting_spell = None
 		self.current_targeting_consumable = None
-		self.hp_regen_counter = 0
 
 	@property
 	def DR(self):
@@ -35,8 +34,8 @@ class Fighter:
 
 	def heal(self, amount):
 		self.owner.stats.hp += amount
-		if self.owner.stats.hp >= self.owner.stats.base_max_hp:
-			self.owner.stats.hp = self.owner.stats.base_max_hp
+		if self.owner.stats.hp >= self.owner.stats.max_hp:
+			self.owner.stats.hp = self.owner.stats.max_hp
 		
 	def load_missile_weapon(self):
 		results = []

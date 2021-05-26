@@ -7,19 +7,21 @@ class Stats:
 		self.Willpower = Willpower
 		self.Stamina = Stamina
 		self.Endurance = Endurance
-		self.base_max_hp = self.Stamina + self.Endurance
-		self.hp = self.base_max_hp
+		self.max_hp = self.Stamina + self.Endurance
+		self.hp = self.max_hp
 		self.evade = int((self.Agility + self.Precision) / 4)
-		self.base_sp = Stamina * 2
-		self.sp = self.base_sp
+		self.max_sp = Stamina * 2
+		self.sp = self.max_sp
+		self.hp_regen_counter = 0
+		self.sp_regen_counter = 0
 
 	@property
-	def max_hp(self):
+	def total_max_hp(self):
 		if self.owner and self.owner.equipment:
 			bonus = self.owner.equipment.max_hp_bonus
 		else:
 			bonus = 0
-		return self.base_max_hp + bonus
+		return self.max_hp + bonus
 
 	def get_strength_in_range(self):
 		if self.Strength < 5:
@@ -28,3 +30,8 @@ class Stats:
 			return 19
 		else:
 			return self.Strength
+
+	def restore_stamina(self, amount):
+		self.sp += amount
+		if self.sp > self.max_sp:
+			self.sp = self.max_sp

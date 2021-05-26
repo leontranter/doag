@@ -21,8 +21,10 @@ class Level:
 
 	def level_up(self):
 		if self.owner.stats and self.owner.fighter:
-			self.owner.stats.base_max_hp += 1
+			self.owner.stats.max_hp += 1
 			self.owner.stats.Endurance += 1
 			self.owner.fighter.heal(2)
+			self.owner.stats.max_sp += 2
+			self.owner.stats.sp += 2
 			if self.owner.caster:
 				self.owner.caster.max_mana += 1

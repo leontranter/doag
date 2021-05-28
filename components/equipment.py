@@ -10,19 +10,53 @@ class Equipment:
 	@property
 	def max_hp_bonus(self):
 		bonus = 0
-
 		if self.main_hand and self.main_hand.equippable:
 			bonus += self.main_hand.equippable.max_hp_bonus
-
 		if self.off_hand and self.off_hand.equippable:
 			bonus += self.off_hand.equippable.max_hp_bonus
-
 		if self.body and self.body.equippable:
 			bonus += self.body.equippable.max_hp_bonus
-
 		if self.ammunition and self.ammunition.equippable:
 			bonus += self.ammunition.equippable.max_hp_bonus
+		return bonus
 
+	@property
+	def hp_regen_bonus(self):
+		bonus = 0
+		if self.main_hand and self.main_hand.equippable:
+			bonus += self.main_hand.equippable.hp_regen_bonus
+		if self.off_hand and self.off_hand.equippable:
+			bonus += self.off_hand.equippable.hp_regen_bonus
+		if self.body and self.body.equippable:
+			bonus += self.body.equippable.hp_regen_bonus
+		if self.ammunition and self.ammunition.equippable:
+			bonus += self.ammunition.equippable.hp_regen_bonus
+		return bonus
+
+	@property
+	def sp_regen_bonus(self):
+		bonus = 0
+		if self.main_hand and self.main_hand.equippable:
+			bonus += self.main_hand.equippable.sp_regen_bonus
+		if self.off_hand and self.off_hand.equippable:
+			bonus += self.off_hand.equippable.sp_regen_bonus
+		if self.body and self.body.equippable:
+			bonus += self.body.equippable.sp_regen_bonus
+		if self.ammunition and self.ammunition.equippable:
+			bonus += self.ammunition.equippable.sp_regen_bonus
+		return bonus
+
+	@property
+	def mana_regen_bonus(self):
+		bonus = 0
+		if self.main_hand and self.main_hand.equippable:
+			bonus += self.main_hand.equippable.mana_regen_bonus
+		if self.off_hand and self.off_hand.equippable:
+			bonus += self.off_hand.equippable.mana_regen_bonus
+		if self.body and self.body.equippable:
+			bonus += self.body.equippable.mana_regen_bonus
+		if self.ammunition and self.ammunition.equippable:
+			bonus += self.ammunition.equippable.mana_regen_bonus
 		return bonus
 
 	@property

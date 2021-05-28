@@ -14,7 +14,9 @@ def inventory_menu(con, header, inventory_width, screen_width, screen_height, pl
 	
 	options = []
 	for item in player.inventory.items:
-		options.append(" " + get_display_name(player, item))
+		option_text = get_display_name(player, item)
+		option_text = mark_equipped(option_text, item, player)
+		options.append(" " + option_text)
 	
 	menu(con, header, options, inventory_width, screen_width, screen_height)
 
@@ -118,7 +120,7 @@ def character_screen(player, character_screen_width, character_screen_height, sc
 
 	libtcod.console_blit(window, 0, 0, character_screen_width, character_screen_height, 0, x, y, 1.0, 0.7)
 
-def mark_equipped(text, option, inventory, player):
+def mark_equipped(text, option, player):
 	if player.equipment.main_hand == option:
 		text += " - main hand"
 	if player.equipment.off_hand == option:

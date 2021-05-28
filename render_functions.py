@@ -72,7 +72,7 @@ def render_all(con, panel, entities, player, game_map, fov_map, fov_recompute, m
 		y += 1
 
 	render_bar(panel, 1, 1, bar_width, 'HP', player.stats.hp, player.stats.max_hp, libtcod.light_red, libtcod.darker_red)
-	render_bar(panel, 1, 3, bar_width, 'SP', player.stats.sp, player.stats.max_sp, libtcod.cyan, libtcod.darker_cyan)
+	render_bar(panel, 1, 3, bar_width, 'SP', player.stats.sp, player.stats.max_sp, libtcod.dark_amber, libtcod.darker_amber)
 	render_bar(panel, 1, 5, bar_width, 'Mana', player.caster.mana, player.caster.max_mana, libtcod.blue, libtcod.darker_blue)
 	libtcod.console_print_ex(panel, 1, 8, libtcod.BKGND_NONE, libtcod.LEFT, 'Dungeon level: {0}'.format(game_map.dungeon_level))
 	libtcod.console_print_ex(panel, 1, 8, libtcod.BKGND_NONE, libtcod.LEFT, f'GS: {game_state.current_game_state}')

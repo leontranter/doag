@@ -10,7 +10,7 @@ from components.ammunition import Ammunition
 import tcod as libtcod
 
 class Equippable:
-	def __init__(self, slot, DR_bonus=0, max_hp_bonus=0, two_handed=False, isShield=False, hit_modifier=0, physical_damage_modifier=0, is_metal=False):
+	def __init__(self, slot, DR_bonus=0, max_hp_bonus=0, two_handed=False, isShield=False, hit_modifier=0, physical_damage_modifier=0, hp_regen_bonus=0, sp_regen_bonus=0, mana_regen_bonus=0, is_metal=False):
 		self.slot = slot
 		self.DR_bonus = DR_bonus
 		self.max_hp_bonus = max_hp_bonus
@@ -18,6 +18,10 @@ class Equippable:
 		self.isShield = isShield
 		self.hit_modifier = hit_modifier
 		self.physical_damage_modifier = physical_damage_modifier
+		self.hp_regen_bonus = hp_regen_bonus
+		self.sp_regen_bonus = sp_regen_bonus
+		self.mana_regen_bonus = mana_regen_bonus
+		self.is_metal = is_metal
 
 def make_dropped_missile(missile_type, location):
 	missiles = {AmmunitionTypes.ARROWS: EquippableFactory.make_arrows, AmmunitionTypes.BOLTS: EquippableFactory.make_bolts}
@@ -39,8 +43,16 @@ class EquippableFactory:
 		mace_name = Name("Mace")
 		mace_melee_weapon = MeleeWeapon(WeaponTypes.MACE, WeaponCategories.MACE, melee_attack_type="swing", melee_damage=(1,6,2), melee_damage_type=DamageTypes.CRUSHING, min_strength=13)
 		mace_item = Item(9, 1)
-		mace_entity = Entity(x, y, '(', libtcod.orange, equippable=axe_equippable, melee_weapon=mace_melee_weapon, name=mace_name, item=mace_item)
+		mace_entity = Entity(x, y, '(', libtcod.orange, equippable=mace_equippable, melee_weapon=mace_melee_weapon, name=mace_name, item=mace_item)
 		return mace_entity
+
+	def make_staff(x=1, y=1):
+		staff_equippable = Equippable(EquipmentSlots.MAIN_HAND)
+		staff_name = Name("Mace")
+		staff_melee_weapon = MeleeWeapon(WeaponTypes.MACE, WeaponCategories.MACE, melee_attack_type="swing", melee_damage=(1,6,2), melee_damage_type=DamageTypes.CRUSHING, min_strength=13)
+		staff_item = Item(9, 1)
+		staff_entity = Entity(x, y, '(', libtcod.orange, equippable=staff_equippable, melee_weapon=staff_melee_weapon, name=staff_name, item=staff_item)
+		return mace_entity		
 
 	def make_dagger(x=1, y=1):
 		dagger_equippable = Equippable(EquipmentSlots.MAIN_HAND)

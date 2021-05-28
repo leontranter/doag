@@ -81,7 +81,7 @@ def get_weapon_skill_for_attack(attacker):
 			weapon_skill = weapon_skill_lookup(attacker.equipment.main_hand)
 			return attacker.skills.get_skill_check(weapon_skill)
 		else:
-			return attacker.skills.get_skill_check(SkillNames.UNARMED)
+			return attacker.skills.get_skill_check(SkillNames.STRIKING)
 	elif attacker.stats:
 		return attacker.stats.DX - 5
 	else:

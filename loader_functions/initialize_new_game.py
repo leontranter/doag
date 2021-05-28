@@ -87,20 +87,26 @@ def create_player(constants, player_class):
 	return player
 
 def set_stats(player_class):
-	stats_mapping = {0: [16, 14, 14, 10, 10, 16, 16], 1: [15, 14, 14, 15, 15, 15, 14], 2: [12, 14, 14, 18, 16, 9, 11]}
+	stats_mapping = {0: [16, 14, 14, 10, 10, 16, 16], 1: [15, 14, 14, 15, 15, 15, 14], 2: [12, 14, 12, 18, 16, 9, 11], 3: [13, 12, 13, 13, 16, 14, 12]}
 	p_str, p_pre, p_agi, p_int, p_wil, p_sta, p_end = stats_mapping[player_class]
 	player_stats = Stats(Strength=p_str, Precision=p_pre, Agility=p_agi, Intellect=p_int, Willpower=p_wil, Stamina=p_sta, Endurance=p_end)
 	return player_stats
 
 def set_spells(player_class, stats_component):
+	# TODO: Fix this!!!
 	caster_component = Caster(max_mana=stats_component.Willpower)
-	spell = make_firebolt_spell()
-	caster_component.spells.append(spell)
+	spell_mapping = {0: [], 1: [], 2: [make_firebolt_spell], 3: []}
+	for starting_spell in spell_mapping[player_class]:
+		spell = starting_spell()
+		caster_component.spells.append(spell)
 	return caster_component
 
 def set_skills(player_class):
 	skills_component = Skills()
-	skills_mapping = {0: [(SkillNames.SWORD, 1)], 1: [(SkillNames.SWORD, 1), (SkillNames.HOLY, 1)], 2: [(SkillNames.FIRE, 1), (SkillNames.STORM, 1)]}
+	skills_mapping = {0: [(SkillNames.SWORD, 2), (SkillNames.SURVIVAL, 1), (SkillNames.ATHLETICS, 1)],
+						1: [(SkillNames.SWORD, 1), (SkillNames.HOLY, 1), (SkillNames.SHIELD, 1)],
+						2: [(SkillNames.MATTER, 1), (SkillNames.STORM, 1), (SkillNames.FIRE, 1)],
+						3: [(SkillNames.HOLY, 2), (SkillNames.MACE, 1), (SkillNames.LIGHT, 1)]}
 	for character_skill in skills_mapping[player_class]:
 		skill_name, skill_level = character_skill
 		skills_component.set_skill_rank(skill_name, skill_level)
@@ -127,30 +133,29 @@ def equip_player(player, player_class):
 	if player_class == 0:
 		item = EquippableFactory.make_greatsword()
 		player.inventory.items.append(item)
-		item = EquippableFactory.make_shortbow()
-		player.inventory.items.append(item)
-		item = EquippableFactory.make_arrows(x, y, 10)
-		player.inventory.items.append(item)
+		player.equipment.main_hand = item
 		item2 = EquippableFactory.make_dagger()
 		player.inventory.items.append(item2)
-		player.equipment.main_hand = item2
 		item = EquippableFactory.make_leather_armor()
 		player.inventory.items.append(item)
 		player.equipment.body = item
 	elif player_class == 1:
 		item = EquippableFactory.make_longsword()
 		player.inventory.items.append(item)
+		player.equipment.main_hand = item
 		item = EquippableFactory.make_shield()
 		player.inventory.items.append(item)
+		player.equipment.off_hand = item
 		item = EquippableFactory.make_chain_armor()
 		player.inventory.items.append(item)
 		player.equipment.body = item
 	elif player_class == 2:
 		item = EquippableFactory.make_dagger()
 		player.inventory.items.append(item)
+		player.equipment.main_hand = item
 		item = EquippableFactory.make_small_shield()
 		player.inventory.items.append(item)
-		item = EquippableFactory.make_chain_armor()
+		item = EquippableFactory.make_padded_armor()
 		player.inventory.items.append(item)
 		player.equipment.body = item
 	potion1 = make_poison_potion()

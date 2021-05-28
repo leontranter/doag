@@ -16,7 +16,7 @@ def make_savage_strike():
 	return feat
 
 def make_standing_jump():
-	feat = Feat(FeatNames.STANDING_JUMP, "Standing Jump", SkillNames.JUMPING, 2, 3, perform_standing_jump, False, True, Message('Click a square to jump to, or right-click to cancel.', libtcod.light_cyan), 2, 1)
+	feat = Feat(FeatNames.STANDING_JUMP, "Standing Jump", SkillNames.ATHLETICS, 2, 3, perform_standing_jump, False, True, Message('Click a square to jump to, or right-click to cancel.', libtcod.light_cyan), 2, 1)
 	return feat
 
 def attempt_feat(entity, feat, **kwargs):

@@ -23,13 +23,29 @@ class Stats:
 			bonus = 0
 		return self.max_hp + bonus
 
-	def get_strength_in_range(self):
-		if self.Strength < 5:
-			return 5
-		if self.Strength > 19:
-			return 19
+	@property
+	def hp_regen_amount(self):
+		if self.owner and self.owner.equipment:
+			bonus = self.owner.equipment.hp_regen_bonus
 		else:
-			return self.Strength
+			bonus = 0
+		return self.Endurance / 100 + bonus
+
+	@property
+	def sp_regen_amount(self):
+		if self.owner and self.owner.equipment:
+			bonus = self.owner.equipment.sp_regen_bonus
+		else:
+			bonus = 0
+		return self.Stamina / 100 + bonus
+
+	@property
+	def mana_regen_amount(self):
+		if self.owner and self.owner.equipment:
+			bonus = self.owner.equipment.mana_regen_bonus
+		else:
+			bonus = 0
+		return self.Willpower / 100 + bonus
 
 	def restore_stamina(self, amount):
 		self.sp += amount

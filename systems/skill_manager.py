@@ -9,12 +9,16 @@ class SkillNames(Enum):
 	STAFF = auto()
 	BOW = auto()
 	CROSSBOW = auto()
-	UNARMED = auto()
+	STRIKING = auto()
 	ALCHEMY = auto()
 	HOLY = auto()
 	FIRE = auto()
-	JUMPING = auto()
+	ATHLETICS = auto()
 	STORM = auto()
+	LIGHT = auto()
+	SURVIVAL = auto()
+	MATTER = auto()
+	MIND = auto()
 
 def get_strength(entity):
 	if entity.stats:
@@ -52,13 +56,18 @@ skill_check_lookups = {
 	SkillNames.SWORD: (get_strength, get_precision, 4),
 	SkillNames.SHIELD: (get_agility, get_strength, 3),
 	SkillNames.DAGGER: (get_precision, get_agility, 2),
-	SkillNames.BOW: (get_precision, get_precision, 4),
-	SkillNames.CROSSBOW: (get_precision, get_precision, 3),
 	SkillNames.AXE: (get_strength, get_agility, 4),
 	SkillNames.MACE: (get_agility, get_strength, 4),
-	SkillNames.STAFF: (get_agility, get_agility, 4),
-	SkillNames.UNARMED: (get_agility, get_precision, 3),
+	SkillNames.STAFF: (get_agility, get_strength, 4),
+	SkillNames.BOW: (get_precision, get_precision, 4),
+	SkillNames.CROSSBOW: (get_precision, get_precision, 3),
+	SkillNames.STRIKING: (get_agility, get_strength, 3),
+	SkillNames.STAFF: (get_agility, get_agility, 4),	
 	SkillNames.ALCHEMY: (get_intellect, get_intellect, 7),
-	SkillNames.HOLY: (get_willpower, get_intellect, 8),
-	SkillNames.FIRE: (get_intellect, get_willpower, 8)
+	SkillNames.HOLY: (get_willpower, get_willpower, 8),
+	SkillNames.FIRE: (get_intellect, get_willpower, 8),
+	SkillNames.ATHLETICS: (get_agility, get_agility, 5),
+	SkillNames.STORM: (get_intellect, get_willpower, 8),
+	SkillNames.LIGHT: (get_intellect, get_willpower, 8),
+	SkillNames.SURVIVAL: (get_stamina, get_endurance, 4),
 }

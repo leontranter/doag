@@ -69,7 +69,8 @@ def bolt_spell(*args, **kwargs):
 	for entity in entities:
 		if entity.x == target_x and entity.y == target_y and entity.fighter:
 			damage = dn_dice_roll(damage_dice_num, damage_dice_type)
-			results.append({'message': Message(f'{entity.name.subject_name} is hit for {damage}.')})
+			verb = "are" if entity.name.true_name == "Player" else "is" 
+			results.append({'message': Message(f'{entity.name.subject_name} {verb} hit for {damage}.')})
 			results.extend(entity.fighter.take_damage(damage))
 	return results
 
@@ -81,33 +82,6 @@ def bless(*args, **kwargs):
 	bless_effect = Effect(name=EffectNames.BLESS, description="Blessed", turns_left=duration, hit_modifier=bonus, physical_damage_modifier=bonus)
 	add_effect(bless_effect, target)
 	results.append({'consumed': True, 'message': Message('You cast bless on the target.', libtcod.green)})
-	return results
-
-def cast_lightning(*args, **kwargs):
-	caster = args[0]
-	entities = kwargs.get('entities')
-	fov_map = kwargs.get('fov_map')
-	damage = kwargs.get('damage')
-	maximum_range = kwargs.get('maximum_range')
-
-	results = []
-
-	target = None
-	closest_distance = maximum_range + 1
-
-	for entity in entities:
-		if entity.fighter and entity != caster and libtcod.map_is_in_fov(fov_map, entity.x, entity.y):
-			distance = caster.distance_to(entity)
-		
-			if distance < closest_distance:
-				target = entity
-				closest_distance = distance
-
-	if target:
-		results.append({'consumed': True, 'target': target, 'message': Message('A lightning strikes the {0} with a loud thunder! The damage is {1}'.format(target.name, damage))})
-		results.extend(target.fighter.take_damage(damage))
-	else:
-		results.append({'consumed': False, 'target': None, 'message': Message('No enemy is close enough to strike.', libtcod.red)})
 	return results
 
 def cast_fireball(*args, **kwargs):

@@ -23,7 +23,7 @@ from components.inventory import Inventory
 from damage_types import DamageTypes
 from death_functions import kill_monster
 from loader_functions.constants import WeaponTypes, WeaponCategories, get_constants, AmmunitionTypes
-from loader_functions.initialize_new_game import get_game_variables, assign_potion_descriptions, assign_scroll_descriptions, populate_dlevels
+from loader_functions.initialize_new_game import get_game_variables, assign_potion_descriptions, assign_scroll_descriptions, populate_dlevels, create_player
 from loader_functions.data_loaders import save_game, load_game
 from systems.attack import weapon_skill_lookup, get_weapon_skill_for_attack, get_hit_modifier_from_status_effects
 from systems.effects_manager import add_effect, tick_down_effects, process_damage_over_time, EffectNames
@@ -224,8 +224,67 @@ class StatsTests(unittest.TestCase):
 		test_level.level_up()
 		self.assertTrue(test_stats.Endurance, 10)
 
-class DamageTests(unittest.TestCase):
+	def test_hp_regen_amount_works(self):
+		test_fighter = Fighter()
+		test_level = Level()
+		test_stats = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=10)
+		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", fighter=test_fighter, level=test_level, stats=test_stats)
+		self.assertEqual(test_entity.stats.hp_regen_amount, 0.1)
 
+	def test_hp_regen_bonus_works_with_equipment(self):
+		test_equipment = Equipment()
+		padded_armor_equippable = Equippable(EquipmentSlots.BODY, DR_bonus=1, hp_regen_bonus=0.1)
+		padded_armor_name = Name("Padded Armor")
+		padded_armor_entity = entity.Entity(1, 1, ')', libtcod.purple, equippable=padded_armor_equippable, name=padded_armor_name)
+		test_fighter = Fighter()
+		test_level = Level()
+		test_stats = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=10)
+		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", fighter=test_fighter, level=test_level, stats=test_stats, equipment=test_equipment)
+		test_equipment.body = padded_armor_entity
+		self.assertEqual(test_equipment.hp_regen_bonus, 0.1)
+		self.assertEqual(test_entity.stats.hp_regen_amount, 0.2)
+
+	def test_sp_regen_amount_works(self):
+		test_fighter = Fighter()
+		test_level = Level()
+		test_stats = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=10)
+		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", fighter=test_fighter, level=test_level, stats=test_stats)
+		self.assertEqual(test_entity.stats.sp_regen_amount, 0.1)
+
+	def test_sp_regen_bonus_works_with_equipment(self):
+		test_equipment = Equipment()
+		padded_armor_equippable = Equippable(EquipmentSlots.BODY, DR_bonus=1, sp_regen_bonus=0.1)
+		padded_armor_name = Name("Padded Armor")
+		padded_armor_entity = entity.Entity(1, 1, ')', libtcod.purple, equippable=padded_armor_equippable, name=padded_armor_name)
+		test_fighter = Fighter()
+		test_level = Level()
+		test_stats = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=10)
+		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", fighter=test_fighter, level=test_level, stats=test_stats, equipment=test_equipment)
+		test_equipment.body = padded_armor_entity
+		self.assertEqual(test_equipment.sp_regen_bonus, 0.1)
+		self.assertEqual(test_entity.stats.sp_regen_amount, 0.2)
+
+	def test_mana_regen_amount_works(self):
+		test_fighter = Fighter()
+		test_level = Level()
+		test_stats = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=10, Stamina=10, Endurance=10)
+		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", fighter=test_fighter, level=test_level, stats=test_stats)
+		self.assertEqual(test_entity.stats.mana_regen_amount, 0.1)
+
+	def test_mana_regen_bonus_works_with_equipment(self):
+		test_equipment = Equipment()
+		padded_armor_equippable = Equippable(EquipmentSlots.BODY, DR_bonus=1, mana_regen_bonus=0.1)
+		padded_armor_name = Name("Padded Armor")
+		padded_armor_entity = entity.Entity(1, 1, ')', libtcod.purple, equippable=padded_armor_equippable, name=padded_armor_name)
+		test_fighter = Fighter()
+		test_level = Level()
+		test_stats = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=10, Stamina=10, Endurance=10)
+		test_entity = entity.Entity(1, 1, 'A', libtcod.white, "Player", fighter=test_fighter, level=test_level, stats=test_stats, equipment=test_equipment)
+		test_equipment.body = padded_armor_entity
+		self.assertEqual(test_equipment.mana_regen_bonus, 0.1)
+		self.assertEqual(test_entity.stats.mana_regen_amount, 0.2)
+
+class DamageTests(unittest.TestCase):
 	def test_can_calculate_physical_damage_modifier_from_equipment(self):
 		test_equipment = Equipment()
 		padded_armor_equippable = Equippable(EquipmentSlots.BODY, DR_bonus=1, physical_damage_modifier=2)
@@ -275,7 +334,7 @@ class AttackTests(unittest.TestCase):
 	def test_can_lookup_unarmed_skill_if_no_weapon(self):
 		test_char = mocks.create_mockchar_12()
 		skill_num = get_weapon_skill_for_attack(test_char)
-		self.assertEqual(skill_num, 12)
+		self.assertEqual(skill_num, 13)
 
 	def test_can_get_equipment_attack_bonus(self):
 		test_equipment = Equipment()
@@ -663,6 +722,18 @@ class CharacterTests(unittest.TestCase):
 		constants = get_constants()
 		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants)
 		self.assertTrue(player.stats.Strength, 16)
+
+	def test_can_create_priest(self):
+		constants = get_constants()
+		test_priest = create_player(constants, 3)
+		# TODO: There must be a better way to test this
+		self.assertEqual(test_priest.stats.Strength, 13)
+
+	def test_can_create_priest(self):
+		constants = get_constants()
+		test_wizard = create_player(constants, 2)
+		# TODO: There must be a better way to test this
+		self.assertEqual(test_wizard.stats.Intellect, 18)	
 
 class EffectsTests(unittest.TestCase):
 

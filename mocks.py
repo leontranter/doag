@@ -171,6 +171,6 @@ def create_mockchar_12():
 	test_equipment_component = Equipment()
 	test_stats_component = Stats(Strength=14, Precision=11, Agility=13	, Intellect=10, Willpower=9, Stamina=10, Endurance=9)
 	test_entity = Entity(1, 1, 'A', libtcod.white, "Player", skills=test_skills_component, equipment=test_equipment_component, stats=test_stats_component)
-	test_skills_component.set_skill_rank(SkillNames.UNARMED, 1)
+	test_skills_component.set_skill_rank(SkillNames.STRIKING, 1)
 	test_skills_component.set_skill_rank(SkillNames.SHIELD, 1)
 	return test_entity

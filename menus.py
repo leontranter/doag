@@ -6,6 +6,7 @@ from components.consumable import get_carried_potions
 from systems.damage import get_damage_string
 from systems.attack import weapon_skill_lookup, get_weapon_skill_for_attack
 from equipment_slots import EquipmentSlots
+from loader_functions.constants import get_constants
 
 def inventory_menu(con, header, inventory_width, screen_width, screen_height, player=None):
 	# show a menu with each item of the inventory as an option
@@ -69,11 +70,13 @@ def main_menu(con, backgrond_image, screen_width, screen_height):
 	menu(con, '', options, 24, screen_width, screen_height)
 
 def character_class_menu(con, screen_width, screen_height):
+	constants = get_constants()
 	libtcod.console_set_default_foreground(0, libtcod.light_yellow)
 	libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height / 2) -4, libtcod.BKGND_NONE, libtcod.CENTER, 'TOMBS OF THE ANCIENT KINGS')
 	libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height /2) -3, libtcod.BKGND_NONE, libtcod.CENTER, 'By Leon Tranter')
-	options = ['a: Barbarian', 'b: Paladin', 'c: Wizard']	
-	menu(con, '', options, 24, screen_width, screen_height)
+	# TODO: This probably shouldn't be hard-coded here!!
+	character_classes = constants['character_classes']
+	menu(con, '', character_classes, 24, screen_width, screen_height)
 
 def skills_screen(player, character_screen_width, character_screen_height, screen_width, screen_height):
 	window = libtcod.console_new(character_screen_width, character_screen_height)

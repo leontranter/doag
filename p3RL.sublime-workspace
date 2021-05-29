@@ -4,16 +4,60 @@
 		"selected_items":
 		[
 			[
+				"play",
+				"player_class"
+			],
+			[
+				"stats",
+				"stats_component"
+			],
+			[
+				"player",
+				"player_performer"
+			],
+			[
+				"moving",
+				"moving_entity"
+			],
+			[
+				"ply",
+				"player_class"
+			],
+			[
+				"character",
+				"character_class"
+			],
+			[
+				"get_",
+				"get_character_class"
+			],
+			[
+				"bas",
+				"base_max_hp"
+			],
+			[
+				"action",
+				"action_free"
+			],
+			[
+				"pl",
+				"player_turn_result"
+			],
+			[
+				"targ",
+				"target_y"
+			],
+			[
+				"tile",
+				"tile_targeting"
+			],
+			[
 				"current",
 				"current_game_state"
 			],
 			[
 				"curr",
 				"current_game_state"
-			],
-			[
-				"ply",
-				"player_turn_results"
 			],
 			[
 				"mock",
@@ -34,10 +78,6 @@
 			[
 				"get",
 				"get_targetable_entities_in_range"
-			],
-			[
-				"targ",
-				"targetable_entity"
 			],
 			[
 				"test_pl",
@@ -148,10 +188,6 @@
 				"make_fireball_scroll"
 			],
 			[
-				"player",
-				"player_turn_result"
-			],
-			[
 				"weapon",
 				"weapon_category"
 			],
@@ -230,10 +266,6 @@
 			[
 				"test_",
 				"test_identified_component"
-			],
-			[
-				"get_",
-				"get_display_name"
 			],
 			[
 				"plate_",
@@ -482,48 +514,82 @@
 			[
 				"test_char",
 				"test_char_pd"
-			],
-			[
-				"Euipp",
-				"EquippableFactory"
-			],
-			[
-				"test_equip",
-				"test_equipment_component"
-			],
-			[
-				"test_equp",
-				"test_equipment_component"
-			],
-			[
-				"skill",
-				"skill_target"
-			],
-			[
-				"payer",
-				"player_turn_result"
-			],
-			[
-				"test_figh",
-				"test_fighter_component"
-			],
-			[
-				"diffi",
-				"difficulty_modifiers"
-			],
-			[
-				"fighter",
-				"fighter_component"
 			]
 		]
 	},
 	"buffers":
 	[
 		{
+			"file": "rltests.py",
+			"settings":
+			{
+				"buffer_size": 45227,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "mocks.py",
+			"settings":
+			{
+				"buffer_size": 9831,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "components/level.py",
+			"settings":
+			{
+				"buffer_size": 874,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "components/fighter.py",
+			"settings":
+			{
+				"buffer_size": 2763,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "Searching 77 files for \"TODO\"\n\nC:\\dev\\p3roguelike\\components\\ai.py:\n   45  		return results\n   46  \n   47: # TODO: clean this up, it should work similar to confused players - I think?\n   48  class ConfusedMonster:\n   49  	def __init__(self, previous_ai, number_of_turns=10):\n\nC:\\dev\\p3roguelike\\loader_functions\\initialize_new_game.py:\n   94  \n   95  def set_spells(player_class, stats_component):\n   96: 	# TODO: Fix this!!!\n   97  	caster_component = Caster(max_mana=stats_component.Willpower)\n   98  	spell_mapping = {0: [], 1: [make_bless_spell], 2: [make_lightning_bolt_spell], 3: [make_heal_spell]}\n   ..\n  114  \n  115  def set_feats(player_class):\n  116: 	# TODO: This could probably be reworked to dictionary lookup - not sure if it is worth it\n  117  	player_performer = Performer()\n  118  	if player_class == 0:\n\nC:\\dev\\p3roguelike\\magic_functions.py:\n   34  \n   35  	results = []\n   36: 	# TODO: this needs work - healing someone else will incorrectly show a message about you\n   37  	if entity.stats and entity.fighter:\n   38  		if entity.stats.hp == entity.stats.max_hp:\n\nC:\\dev\\p3roguelike\\menus.py:\n   73  	libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height / 2) -4, libtcod.BKGND_NONE, libtcod.CENTER, 'TOMBS OF THE ANCIENT KINGS')\n   74  	libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height /2) -3, libtcod.BKGND_NONE, libtcod.CENTER, 'By Leon Tranter')\n   75: 	# TODO: This probably shouldn't be hard-coded here!! \n   76  	options = ['Barbarian', 'Paladin', 'Wizard', 'Priest']	\n   77  	menu(con, '', options, 24, screen_width, screen_height)\n\nC:\\dev\\p3roguelike\\p3RL.sublime-workspace:\n  561  		},\n  562  		{\n  563: 			\"contents\": \"from game_messages import Message\\nfrom game_states import GameStates\\nfrom death_functions import handle_death\\nfrom components.equippable import make_dropped_missile\\nfrom death_functions import kill_player, kill_monster\\n\\ndef process_results(player_turn_results, game_state, entities, player, message_log, targets):\\n	for player_turn_result in player_turn_results:\\n		quit = player_turn_result.get('quit')\\n		message = player_turn_result.get('message')\\n		dead_entity = player_turn_result.get('dead')\\n		item_added = player_turn_result.get('item_added')\\n		item_consumed = player_turn_result.get('consumed')\\n		item_dropped = player_turn_result.get('item_dropped')\\n		targeting = player_turn_result.get('targeting')\\n		spell_targeting = player_turn_result.get('spell_targeting')\\n		feat_targeting = player_turn_result.get('feat_targeting')\\n		targeting_cancelled = player_turn_result.get('targeting_cancelled')\\n		equip = player_turn_result.get('equip')\\n		cast = player_turn_result.get('cast')\\n		missile_targeting = player_turn_result.get('missile_targeting')\\n		fired_weapon = player_turn_result.get(\\\"fired_weapon\\\")\\n		missile_dropped = player_turn_result.get(\\\"missile_dropped\\\")\\n		dropped_location = player_turn_result.get(\\\"dropped_location\\\") \\n		monster_drops = player_turn_result.get(\\\"monster_drops\\\")\\n		loaded = player_turn_result.get(\\\"loaded\\\")\\n\\n		if quit:\\n			return True\\n		if message:\\n			message_log.add_message(message)\\n		if dead_entity:\\n			message, game_state, entities = handle_death(entities, dead_entity, player, game_state)\\n			message_log.add_message(message)\\n		if item_added:\\n			entities.remove(item_added)\\n		# TODO: roll these three results into one?\\n		if targeting:\\n			game_state.previous_game_state = GameStates.PLAYERS_TURN\\n			game_state.current_game_state = GameStates.TARGETING\\n			targets.current_targeting_consumable = targeting\\n			message_log.add_message(targets.current_targeting_consumable.consumable.targeting_message)\\n		if spell_targeting:\\n			game_state.previous_game_state = GameStates.PLAYERS_TURN\\n			game_state.current_game_state = GameStates.TARGETING\\n			targets.current_targeting_spell = spell_targeting\\n			message_log.add_message(targets.current_targeting_spell.targeting_message)\\n		if feat_targeting:\\n			game_state.previous_game_state = GameStates.PLAYERS_TURN\\n			game_state.current_game_state = GameStates.TARGETING\\n			targets.current_targeting_feat = feat_targeting\\n			message_log.add_message(targets.current_targeting_feat.targeting_message)\\n		if missile_targeting:\\n			game_state.previous_game_state = GameStates.PLAYERS_TURN\\n			game_state.current_game_state = GameStates.TARGETING\\n			targets.current_targeting_weapon = True\\n			message_log.add_message(Message(\\\"Choose a target for your missile attack...\\\"))\\n		if missile_dropped:\\n			missile_entity = make_dropped_missile(missile_dropped, dropped_location)\\n			entities.append(missile_entity)\\n		if item_dropped:\\n			entities.append(item_dropped)\\n		if equip:\\n			equip_results = player.equipment.toggle_equip(equip)\\n			for equip_result in equip_results:\\n				equipped = equip_result.get('equipped')\\n				dequipped = equip_result.get('dequipped')\\n				fail_equip = equip_result.get('fail_equip')\\n				if equipped:\\n					message_log.add_message(Message('You equipped the {0}.'.format(equipped.name.true_name)))\\n				if dequipped:\\n					message_log.add_message(Message('You dequipped the {0}.'.format(dequipped.name.true_name)))\\n				if fail_equip:\\n					message_log.add_message(Message(fail_equip))\\n			pass\\n		if targeting_cancelled:\\n			game_state.current_game_state = previous_game_state\\n			message_log.add_message(Message('Targeting cancelled'))\\n\\n	return game_state, entities, player, targets\\n\\ndef process_ai_results(enemy_turn_results, acting_entity, entities, player, message_log, game_state):\\n	for enemy_turn_result in enemy_turn_results:\\n		message = enemy_turn_result.get('message')\\n		dead_entity = enemy_turn_result.get('dead')\\n		missile_dropped = enemy_turn_result.get('missile_dropped')\\n		dropped_location = enemy_turn_result.get('dropped_location')\\n		equips = enemy_turn_result.get(\\\"equips\\\")\\n		\\n		if message:\\n			message_log.add_message(message)\\n		if missile_dropped:\\n			missile_entity = make_dropped_missile(missile_dropped, dropped_location)\\n			entities.append(missile_entity)\\n		if equips:\\n			acting_entity.equipment.toggle_equip(equips)\\n		if dead_entity:\\n			if dead_entity == player:\\n				message, game_state = kill_player(dead_entity, game_state)\\n				print(f\\\"gs is {game_state.current_game_state}\\\")\\n			else:\\n				message = kill_monster(dead_entity)\\n			message_log.add_message(message)\\n			if game_state == GameStates.PLAYER_DEAD:\\n				break\\n\\n	return entities, game_state, message_log	\",\n  564  			\"file\": \"systems/results_process_system.py\",\n  565  			\"file_size\": 4746,\n  ...\n  612  		},\n  613  		{\n  614: 			\"contents\": \"Searching 76 files for \\\"pick up the\\\"\\n\\nC:\\\\dev\\\\p3roguelike\\\\components\\\\inventory.py:\\n   24  			results.append({\\n   25  				'item_added': item,\\n   26: 				'message': Message('You pick up the {0}!'.format(temp_display_name), libtcod.yellow)\\n   27  			})\\n   28  			for current_item in self.items:\\n\\n1 match in 1 file\\n\\n\\nSearching 76 files for \\\"if targeting\\\"\\n\\nC:\\\\dev\\\\p3roguelike\\\\p3RL.sublime-workspace:\\n  561  		},\\n  562  		{\\n  563: 			\\\"contents\\\": \\\"from game_messages import Message\\\\nfrom game_states import GameStates\\\\nfrom death_functions import handle_death\\\\nfrom components.equippable import make_dropped_missile\\\\nfrom death_functions import kill_player, kill_monster\\\\n\\\\ndef process_results(player_turn_results, game_state, entities, player, message_log, targets):\\\\n	for player_turn_result in player_turn_results:\\\\n		quit = player_turn_result.get('quit')\\\\n		message = player_turn_result.get('message')\\\\n		dead_entity = player_turn_result.get('dead')\\\\n		item_added = player_turn_result.get('item_added')\\\\n		item_consumed = player_turn_result.get('consumed')\\\\n		item_dropped = player_turn_result.get('item_dropped')\\\\n		targeting = player_turn_result.get('targeting')\\\\n		spell_targeting = player_turn_result.get('spell_targeting')\\\\n		feat_targeting = player_turn_result.get('feat_targeting')\\\\n		targeting_cancelled = player_turn_result.get('targeting_cancelled')\\\\n		equip = player_turn_result.get('equip')\\\\n		cast = player_turn_result.get('cast')\\\\n		missile_targeting = player_turn_result.get('missile_targeting')\\\\n		fired_weapon = player_turn_result.get(\\\\\\\"fired_weapon\\\\\\\")\\\\n		missile_dropped = player_turn_result.get(\\\\\\\"missile_dropped\\\\\\\")\\\\n		dropped_location = player_turn_result.get(\\\\\\\"dropped_location\\\\\\\") \\\\n		monster_drops = player_turn_result.get(\\\\\\\"monster_drops\\\\\\\")\\\\n		loaded = player_turn_result.get(\\\\\\\"loaded\\\\\\\")\\\\n\\\\n		if quit:\\\\n			return True\\\\n		if message:\\\\n			message_log.add_message(message)\\\\n		if dead_entity:\\\\n			message, game_state, entities = handle_death(entities, dead_entity, player, game_state)\\\\n			message_log.add_message(message)\\\\n		if item_added:\\\\n			entities.remove(item_added)\\\\n		# TODO: roll these three results into one?\\\\n		if targeting:\\\\n			game_state.previous_game_state = GameStates.PLAYERS_TURN\\\\n			game_state.current_game_state = GameStates.TARGETING\\\\n			targets.current_targeting_consumable = targeting\\\\n			message_log.add_message(targets.current_targeting_consumable.consumable.targeting_message)\\\\n		if spell_targeting:\\\\n			game_state.previous_game_state = GameStates.PLAYERS_TURN\\\\n			game_state.current_game_state = GameStates.TARGETING\\\\n			targets.current_targeting_spell = spell_targeting\\\\n			message_log.add_message(targets.current_targeting_spell.targeting_message)\\\\n		if feat_targeting:\\\\n			game_state.previous_game_state = GameStates.PLAYERS_TURN\\\\n			game_state.current_game_state = GameStates.TARGETING\\\\n			targets.current_targeting_feat = feat_targeting\\\\n			message_log.add_message(targets.current_targeting_feat.targeting_message)\\\\n		if missile_targeting:\\\\n			game_state.previous_game_state = GameStates.PLAYERS_TURN\\\\n			game_state.current_game_state = GameStates.TARGETING\\\\n			targets.current_targeting_weapon = True\\\\n			message_log.add_message(Message(\\\\\\\"Choose a target for your missile attack...\\\\\\\"))\\\\n		if missile_dropped:\\\\n			missile_entity = make_dropped_missile(missile_dropped, dropped_location)\\\\n			entities.append(missile_entity)\\\\n		if item_dropped:\\\\n			entities.append(item_dropped)\\\\n		if equip:\\\\n			equip_results = player.equipment.toggle_equip(equip)\\\\n			for equip_result in equip_results:\\\\n				equipped = equip_result.get('equipped')\\\\n				dequipped = equip_result.get('dequipped')\\\\n				fail_equip = equip_result.get('fail_equip')\\\\n				if equipped:\\\\n					message_log.add_message(Message('You equipped the {0}.'.format(equipped.name.true_name)))\\\\n				if dequipped:\\\\n					message_log.add_message(Message('You dequipped the {0}.'.format(dequipped.name.true_name)))\\\\n				if fail_equip:\\\\n					message_log.add_message(Message(fail_equip))\\\\n			pass\\\\n		if targeting_cancelled:\\\\n			game_state.current_game_state = previous_game_state\\\\n			message_log.add_message(Message('Targeting cancelled'))\\\\n\\\\n	return game_state, entities, player, targets\\\\n\\\\ndef process_ai_results(enemy_turn_results, acting_entity, entities, player, message_log, game_state):\\\\n	for enemy_turn_result in enemy_turn_results:\\\\n		message = enemy_turn_result.get('message')\\\\n		dead_entity = enemy_turn_result.get('dead')\\\\n		missile_dropped = enemy_turn_result.get('missile_dropped')\\\\n		dropped_location = enemy_turn_result.get('dropped_location')\\\\n		equips = enemy_turn_result.get(\\\\\\\"equips\\\\\\\")\\\\n		\\\\n		if message:\\\\n			message_log.add_message(message)\\\\n		if missile_dropped:\\\\n			missile_entity = make_dropped_missile(missile_dropped, dropped_location)\\\\n			entities.append(missile_entity)\\\\n		if equips:\\\\n			acting_entity.equipment.toggle_equip(equips)\\\\n		if dead_entity:\\\\n			if dead_entity == player:\\\\n				message, game_state = kill_player(dead_entity, game_state)\\\\n				print(f\\\\\\\"gs is {game_state.current_game_state}\\\\\\\")\\\\n			else:\\\\n				message = kill_monster(dead_entity)\\\\n			message_log.add_message(message)\\\\n			if game_state == GameStates.PLAYER_DEAD:\\\\n				break\\\\n\\\\n	return entities, game_state, message_log	\\\",\\n  564  			\\\"file\\\": \\\"systems/results_process_system.py\\\",\\n  565  			\\\"file_size\\\": 4746,\\n\\nC:\\\\dev\\\\p3roguelike\\\\systems\\\\results_process_system.py:\\n   36  			entities.remove(item_added)\\n   37  		# TODO: roll these three results into one?\\n   38: 		if targeting:\\n   39  			game_state.previous_game_state = GameStates.PLAYERS_TURN\\n   40  			game_state.current_game_state = GameStates.TARGETING\\n   ..\\n   74  					message_log.add_message(Message(fail_equip))\\n   75  			pass\\n   76: 		if targeting_cancelled:\\n   77  			game_state.current_game_state = previous_game_state\\n   78  			message_log.add_message(Message('Targeting cancelled'))\\n\\n4 matches across 2 files\\n\\n\\nSearching 76 files for \\\"there are no valid\\\"\\n\\nC:\\\\dev\\\\p3roguelike\\\\systems\\\\feat_system.py:\\n   52  				break\\n   53  		else:\\n   54: 			results.append({'message': Message('There are no valid targets there.')})\\n   55  			return results\\n   56  		kwargs = {**feat.function_kwargs, **kwargs}\\n\\n1 match in 1 file\\n\\n\\nSearching 76 files for \\\"feat_targeting\\\"\\n\\nC:\\\\dev\\\\p3roguelike\\\\p3RL.sublime-workspace:\\n  561  		},\\n  562  		{\\n  563: 			\\\"contents\\\": \\\"from game_messages import Message\\\\nfrom game_states import GameStates\\\\nfrom death_functions import handle_death\\\\nfrom components.equippable import make_dropped_missile\\\\nfrom death_functions import kill_player, kill_monster\\\\n\\\\ndef process_results(player_turn_results, game_state, entities, player, message_log, targets):\\\\n	for player_turn_result in player_turn_results:\\\\n		quit = player_turn_result.get('quit')\\\\n		message = player_turn_result.get('message')\\\\n		dead_entity = player_turn_result.get('dead')\\\\n		item_added = player_turn_result.get('item_added')\\\\n		item_consumed = player_turn_result.get('consumed')\\\\n		item_dropped = player_turn_result.get('item_dropped')\\\\n		targeting = player_turn_result.get('targeting')\\\\n		spell_targeting = player_turn_result.get('spell_targeting')\\\\n		feat_targeting = player_turn_result.get('feat_targeting')\\\\n		targeting_cancelled = player_turn_result.get('targeting_cancelled')\\\\n		equip = player_turn_result.get('equip')\\\\n		cast = player_turn_result.get('cast')\\\\n		missile_targeting = player_turn_result.get('missile_targeting')\\\\n		fired_weapon = player_turn_result.get(\\\\\\\"fired_weapon\\\\\\\")\\\\n		missile_dropped = player_turn_result.get(\\\\\\\"missile_dropped\\\\\\\")\\\\n		dropped_location = player_turn_result.get(\\\\\\\"dropped_location\\\\\\\") \\\\n		monster_drops = player_turn_result.get(\\\\\\\"monster_drops\\\\\\\")\\\\n		loaded = player_turn_result.get(\\\\\\\"loaded\\\\\\\")\\\\n\\\\n		if quit:\\\\n			return True\\\\n		if message:\\\\n			message_log.add_message(message)\\\\n		if dead_entity:\\\\n			message, game_state, entities = handle_death(entities, dead_entity, player, game_state)\\\\n			message_log.add_message(message)\\\\n		if item_added:\\\\n			entities.remove(item_added)\\\\n		# TODO: roll these three results into one?\\\\n		if targeting:\\\\n			game_state.previous_game_state = GameStates.PLAYERS_TURN\\\\n			game_state.current_game_state = GameStates.TARGETING\\\\n			targets.current_targeting_consumable = targeting\\\\n			message_log.add_message(targets.current_targeting_consumable.consumable.targeting_message)\\\\n		if spell_targeting:\\\\n			game_state.previous_game_state = GameStates.PLAYERS_TURN\\\\n			game_state.current_game_state = GameStates.TARGETING\\\\n			targets.current_targeting_spell = spell_targeting\\\\n			message_log.add_message(targets.current_targeting_spell.targeting_message)\\\\n		if feat_targeting:\\\\n			game_state.previous_game_state = GameStates.PLAYERS_TURN\\\\n			game_state.current_game_state = GameStates.TARGETING\\\\n			targets.current_targeting_feat = feat_targeting\\\\n			message_log.add_message(targets.current_targeting_feat.targeting_message)\\\\n		if missile_targeting:\\\\n			game_state.previous_game_state = GameStates.PLAYERS_TURN\\\\n			game_state.current_game_state = GameStates.TARGETING\\\\n			targets.current_targeting_weapon = True\\\\n			message_log.add_message(Message(\\\\\\\"Choose a target for your missile attack...\\\\\\\"))\\\\n		if missile_dropped:\\\\n			missile_entity = make_dropped_missile(missile_dropped, dropped_location)\\\\n			entities.append(missile_entity)\\\\n		if item_dropped:\\\\n			entities.append(item_dropped)\\\\n		if equip:\\\\n			equip_results = player.equipment.toggle_equip(equip)\\\\n			for equip_result in equip_results:\\\\n				equipped = equip_result.get('equipped')\\\\n				dequipped = equip_result.get('dequipped')\\\\n				fail_equip = equip_result.get('fail_equip')\\\\n				if equipped:\\\\n					message_log.add_message(Message('You equipped the {0}.'.format(equipped.name.true_name)))\\\\n				if dequipped:\\\\n					message_log.add_message(Message('You dequipped the {0}.'.format(dequipped.name.true_name)))\\\\n				if fail_equip:\\\\n					message_log.add_message(Message(fail_equip))\\\\n			pass\\\\n		if targeting_cancelled:\\\\n			game_state.current_game_state = previous_game_state\\\\n			message_log.add_message(Message('Targeting cancelled'))\\\\n\\\\n	return game_state, entities, player, targets\\\\n\\\\ndef process_ai_results(enemy_turn_results, acting_entity, entities, player, message_log, game_state):\\\\n	for enemy_turn_result in enemy_turn_results:\\\\n		message = enemy_turn_result.get('message')\\\\n		dead_entity = enemy_turn_result.get('dead')\\\\n		missile_dropped = enemy_turn_result.get('missile_dropped')\\\\n		dropped_location = enemy_turn_result.get('dropped_location')\\\\n		equips = enemy_turn_result.get(\\\\\\\"equips\\\\\\\")\\\\n		\\\\n		if message:\\\\n			message_log.add_message(message)\\\\n		if missile_dropped:\\\\n			missile_entity = make_dropped_missile(missile_dropped, dropped_location)\\\\n			entities.append(missile_entity)\\\\n		if equips:\\\\n			acting_entity.equipment.toggle_equip(equips)\\\\n		if dead_entity:\\\\n			if dead_entity == player:\\\\n				message, game_state = kill_player(dead_entity, game_state)\\\\n				print(f\\\\\\\"gs is {game_state.current_game_state}\\\\\\\")\\\\n			else:\\\\n				message = kill_monster(dead_entity)\\\\n			message_log.add_message(message)\\\\n			if game_state == GameStates.PLAYER_DEAD:\\\\n				break\\\\n\\\\n	return entities, game_state, message_log	\\\",\\n  564  			\\\"file\\\": \\\"systems/results_process_system.py\\\",\\n  565  			\\\"file_size\\\": 4746,\\n\\nC:\\\\dev\\\\p3roguelike\\\\systems\\\\feat_system.py:\\n   41  	\\n   42  	elif not (target_x or target_y):\\n   43: 		results.append({'feat_targeting': feat})\\n   44  	\\n   45  	elif int(distance(entity, target_x, target_y)) > feat.feat_range:\\n\\nC:\\\\dev\\\\p3roguelike\\\\systems\\\\results_process_system.py:\\n   15  		targeting = player_turn_result.get('targeting')\\n   16  		spell_targeting = player_turn_result.get('spell_targeting')\\n   17: 		feat_targeting = player_turn_result.get('feat_targeting')\\n   18  		targeting_cancelled = player_turn_result.get('targeting_cancelled')\\n   19  		equip = player_turn_result.get('equip')\\n   ..\\n   46  			targets.current_targeting_spell = spell_targeting\\n   47  			message_log.add_message(targets.current_targeting_spell.targeting_message)\\n   48: 		if feat_targeting:\\n   49  			game_state.previous_game_state = GameStates.PLAYERS_TURN\\n   50  			game_state.current_game_state = GameStates.TARGETING\\n   51: 			targets.current_targeting_feat = feat_targeting\\n   52  			message_log.add_message(targets.current_targeting_feat.targeting_message)\\n   53  		if missile_targeting:\\n\\n9 matches across 3 files\\n\",\n  615  			\"settings\":\n  616  			{\n  ...\n 1053  			\"ENEMY_TURN\",\n 1054  			\"spell_func\",\n 1055: 			\"TODO\",\n 1056  			\"cast(\",\n 1057: 			\"todo\",\n 1058  			\"Effect(\",\n 1059  			\"turns_left\",\n ....\n 1067  			\"EffectNames\",\n 1068  			\"effect\",\n 1069: 			\"TODO\",\n 1070  			\"item-added\",\n 1071  			\"inventoryt\",\n 1072: 			\"TODO\",\n 1073  			\"print(\",\n 1074: 			\"TODO\",\n 1075  			\"get_equipped\",\n 1076  			\"equipment\",\n 1077  			\"show_equipment_sc\",\n 1078: 			\"TODO\",\n 1079  			\"make_dropped\",\n 1080  			\"make_dropp\",\n 1081: 			\"TODO\",\n 1082  			\"missile_dropped\",\n 1083  			\"currently\",\n ....\n 1094  			\"missile_damage_b\",\n 1095  			\"weaponcateg\",\n 1096: 			\"TODO\",\n 1097  			\"exit\",\n 1098  			\"potion_index\",\n ....\n 1115  			\"damage_mess\",\n 1116  			\"weapon\",\n 1117: 			\"TODO\",\n 1118  			\"get_current_melee\",\n 1119  			\"damage\",\n ....\n 1131  			\"d6_d6_dice_roll\",\n 1132  			\"dice_roll\",\n 1133: 			\"TODO\",\n 1134  			\"heal(\",\n 1135  			\"roll\",\n 1136  			\"dice\",\n 1137: 			\"TODO\",\n 1138  			\"print(\",\n 1139  			\"Searching\",\n\nC:\\dev\\p3roguelike\\rltests.py:\n  353  \n  354  	def test_can_perform_attack_with_feat_bonuses(self):\n  355: 		#TODO: Make this testable somehow!\n  356  		pass\n  357  \n  ...\n  417  class DeathTests(unittest.TestCase):\n  418  	def test_killing_a_monster_gives_xp(self):\n  419: 		# TODO: write this test\n  420  		test_char = mocks.create_mockchar_11()\n  421  		test_monster = monsters.make_orc(1, 1)\n  ...\n  727  		constants = get_constants()\n  728  		test_priest = create_player(constants, 3)\n  729: 		# TODO: There must be a better way to test this\n  730  		self.assertEqual(test_priest.stats.Strength, 13)\n  731  \n  ...\n  733  		constants = get_constants()\n  734  		test_wizard = create_player(constants, 2)\n  735: 		# TODO: There must be a better way to test this\n  736  		self.assertEqual(test_wizard.stats.Intellect, 18)	\n  737  \n\nC:\\dev\\p3roguelike\\systems\\damage.py:\n    9  		dice_number, dice_type, modifier = (1,3,0)\n   10  		damage_type = DamageTypes.CRUSHING\n   11: 	# something in main hand but it's not a melee weapon, e.g. a bow - TODO: make this better\n   12  	elif entity.equipment.main_hand and not entity.equipment.main_hand.melee_weapon:\n   13  		dice_number, dice_type, modifier = (1,3,0)\n\nC:\\dev\\p3roguelike\\systems\\feat_system.py:\n    9  \n   10  def add_feat(player, feat):\n   11: 	# TODO: Is this required? Do I need any more logic here?\n   12  	player.performer.feat_list.append(feat)\n   13  \n\nC:\\dev\\p3roguelike\\systems\\name_system.py:\n    2  \n    3  def get_display_name(player, named_entity):\n    4: 	# TODO: fix this - pretty terrible! need to refactor items completely (urgh)\n    5  	if named_entity.consumable:\n    6  		if named_entity.consumable.consumable_type == ConsumableTypes.POTION:\n\nC:\\dev\\p3roguelike\\systems\\results_process_system.py:\n   41  			entities.remove(item_added)\n   42  			action_free = False	\n   43: 		# TODO: roll these three results into one?\n   44  		if targeting:\n   45  			game_state.previous_game_state = GameStates.PLAYERS_TURN\n   ..\n   69  			action_free = False\n   70  		if failed_cast:\n   71: 			# TODO: fix this - action_free = False\n   72  			game_state.current_game_state = GameStates.PLAYERS_TURN\n   73  			action_free = False\n\nC:\\dev\\p3roguelike\\systems\\spell_system.py:\n   33  	else:\n   34  		# we have coordinates, so get a valid target entity in range - assume if it is a fighter, it is a target \n   35: 		spell_range = kwargs.get('spell_range') or 5 # TODO - pretty random... and should be a constant, not a magic number\n   36  		target_x, target_y = kwargs.get('target_x'), kwargs.get('target_y')\n   37  		if distance(entity, target_x, target_y) > spell_range:\n\nC:\\dev\\p3roguelike\\systems\\time_system.py:\n    5  	results.extend(effects_manager.process_damage_over_time(entity))\n    6  	effects_manager.tick_down_effects(entity)	\n    7: 	# TODO: move this somewhere else? Maybe in engine?? e.g. we shouldn't do this if time effects have just killed someone... \n    8: 	# TODO: change the regen from hardcoded to something else, probably based on stamina?\n    9  	regen_hp(entity, 0.2)\n   10  	regen_mana(entity, 0.2)\n   ..\n   12  	return results\n   13  \n   14: # TODO: fix this! hp regen should be in stats, not fighter - heal should be moved out too\n   15  def regen_hp(entity, amount):\n   16  	if entity.stats:\n\n33 matches across 12 files\n\n\nSearching 77 files for \"heal(\"\n\nC:\\dev\\p3roguelike\\components\\fighter.py:\n   29  		return results\n   30  \n   31: 	def heal(self, amount):\n   32  		self.owner.stats.hp += amount\n   33  		if self.owner.stats.hp >= self.owner.stats.max_hp:\n\nC:\\dev\\p3roguelike\\components\\level.py:\n   24  			self.owner.stats.max_hp += 1\n   25  			self.owner.stats.Endurance += 1\n   26: 			self.owner.fighter.heal(2)\n   27  			self.owner.stats.max_sp += 2\n   28  			self.owner.stats.sp += 2\n\nC:\\dev\\p3roguelike\\magic_functions.py:\n   29  	return spell	\n   30  \n   31: def heal(*args, **kwargs):\n   32  	entity = args[0]\n   33  	amount = kwargs.get('amount')\n   ..\n   39  			results.append({'consumed': False, 'message': Message(f'{subject} {verb} already at full health.', libtcod.yellow)})\n   40  		else:\n   41: 			entity.fighter.heal(amount)\n   42  			results.append({'consumed': True, 'message': Message('Your wounds start to feel better!', libtcod.green)})	\n   43  	else:\n\nC:\\dev\\p3roguelike\\p3RL.sublime-workspace:\n 1132  			\"dice_roll\",\n 1133  			\"TODO\",\n 1134: 			\"heal(\",\n 1135  			\"roll\",\n 1136  			\"dice\",\n\nC:\\dev\\p3roguelike\\rltests.py:\n   72  \n   73  class SpellTests(unittest.TestCase):\n   74: 	def test_can_learn_heal(self):\n   75  		test_caster = Caster(spells=[], max_mana=50)\n   76  		test_entity = entity.Entity(1, 1, 'A', libtcod.white, \"Player\", caster=test_caster)\n\nC:\\dev\\p3roguelike\\systems\\time_system.py:\n   18  		if entity.stats.hp_regen_counter >= 1:\n   19  			entity.stats.hp_regen_counter -= 1\n   20: 			entity.fighter.heal(1)\n   21  \n   22  def regen_mana(entity, amount):\n\n7 matches across 6 files\n",
+			"settings":
+			{
+				"buffer_size": 25183,
+				"line_ending": "Windows",
+				"name": "Find Results",
+				"scratch": true
+			}
+		},
+		{
+			"file": "components/stats.py",
+			"settings":
+			{
+				"buffer_size": 1403,
+				"line_ending": "Windows"
+			}
+		},
+		{
 			"file": "loader_functions/constants.py",
 			"settings":
 			{
-				"buffer_size": 2585,
+				"buffer_size": 2550,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "components/equippable.py",
+			"settings":
+			{
+				"buffer_size": 9486,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "components/equipment.py",
+			"settings":
+			{
+				"buffer_size": 6474,
 				"line_ending": "Windows"
 			}
 		},
@@ -531,108 +597,7 @@
 			"file": "loader_functions/initialize_new_game.py",
 			"settings":
 			{
-				"buffer_size": 5307,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "entity.py",
-			"settings":
-			{
-				"buffer_size": 2145,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "engine.py",
-			"settings":
-			{
-				"buffer_size": 5762,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "systems/input_process_system.py",
-			"settings":
-			{
-				"buffer_size": 8703,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"contents": "from game_messages import Message\nfrom game_states import GameStates\nfrom death_functions import handle_death\nfrom components.equippable import make_dropped_missile\nfrom death_functions import kill_player, kill_monster\n\ndef process_results(player_turn_results, game_state, entities, player, message_log, targets):\n	for player_turn_result in player_turn_results:\n		quit = player_turn_result.get('quit')\n		message = player_turn_result.get('message')\n		dead_entity = player_turn_result.get('dead')\n		item_added = player_turn_result.get('item_added')\n		item_consumed = player_turn_result.get('consumed')\n		item_dropped = player_turn_result.get('item_dropped')\n		targeting = player_turn_result.get('targeting')\n		spell_targeting = player_turn_result.get('spell_targeting')\n		feat_targeting = player_turn_result.get('feat_targeting')\n		targeting_cancelled = player_turn_result.get('targeting_cancelled')\n		equip = player_turn_result.get('equip')\n		cast = player_turn_result.get('cast')\n		missile_targeting = player_turn_result.get('missile_targeting')\n		fired_weapon = player_turn_result.get(\"fired_weapon\")\n		missile_dropped = player_turn_result.get(\"missile_dropped\")\n		dropped_location = player_turn_result.get(\"dropped_location\") \n		monster_drops = player_turn_result.get(\"monster_drops\")\n		loaded = player_turn_result.get(\"loaded\")\n\n		if quit:\n			return True\n		if message:\n			message_log.add_message(message)\n		if dead_entity:\n			message, game_state, entities = handle_death(entities, dead_entity, player, game_state)\n			message_log.add_message(message)\n		if item_added:\n			entities.remove(item_added)\n		# TODO: roll these three results into one?\n		if targeting:\n			game_state.previous_game_state = GameStates.PLAYERS_TURN\n			game_state.current_game_state = GameStates.TARGETING\n			targets.current_targeting_consumable = targeting\n			message_log.add_message(targets.current_targeting_consumable.consumable.targeting_message)\n		if spell_targeting:\n			game_state.previous_game_state = GameStates.PLAYERS_TURN\n			game_state.current_game_state = GameStates.TARGETING\n			targets.current_targeting_spell = spell_targeting\n			message_log.add_message(targets.current_targeting_spell.targeting_message)\n		if feat_targeting:\n			game_state.previous_game_state = GameStates.PLAYERS_TURN\n			game_state.current_game_state = GameStates.TARGETING\n			targets.current_targeting_feat = feat_targeting\n			message_log.add_message(targets.current_targeting_feat.targeting_message)\n		if missile_targeting:\n			game_state.previous_game_state = GameStates.PLAYERS_TURN\n			game_state.current_game_state = GameStates.TARGETING\n			targets.current_targeting_weapon = True\n			message_log.add_message(Message(\"Choose a target for your missile attack...\"))\n		if missile_dropped:\n			missile_entity = make_dropped_missile(missile_dropped, dropped_location)\n			entities.append(missile_entity)\n		if item_dropped:\n			entities.append(item_dropped)\n		if equip:\n			equip_results = player.equipment.toggle_equip(equip)\n			for equip_result in equip_results:\n				equipped = equip_result.get('equipped')\n				dequipped = equip_result.get('dequipped')\n				fail_equip = equip_result.get('fail_equip')\n				if equipped:\n					message_log.add_message(Message('You equipped the {0}.'.format(equipped.name.true_name)))\n				if dequipped:\n					message_log.add_message(Message('You dequipped the {0}.'.format(dequipped.name.true_name)))\n				if fail_equip:\n					message_log.add_message(Message(fail_equip))\n			pass\n		if targeting_cancelled:\n			game_state.current_game_state = previous_game_state\n			message_log.add_message(Message('Targeting cancelled'))\n\n	return game_state, entities, player, targets\n\ndef process_ai_results(enemy_turn_results, acting_entity, entities, player, message_log, game_state):\n	for enemy_turn_result in enemy_turn_results:\n		message = enemy_turn_result.get('message')\n		dead_entity = enemy_turn_result.get('dead')\n		missile_dropped = enemy_turn_result.get('missile_dropped')\n		dropped_location = enemy_turn_result.get('dropped_location')\n		equips = enemy_turn_result.get(\"equips\")\n		\n		if message:\n			message_log.add_message(message)\n		if missile_dropped:\n			missile_entity = make_dropped_missile(missile_dropped, dropped_location)\n			entities.append(missile_entity)\n		if equips:\n			acting_entity.equipment.toggle_equip(equips)\n		if dead_entity:\n			if dead_entity == player:\n				message, game_state = kill_player(dead_entity, game_state)\n				print(f\"gs is {game_state.current_game_state}\")\n			else:\n				message = kill_monster(dead_entity)\n			message_log.add_message(message)\n			if game_state == GameStates.PLAYER_DEAD:\n				break\n\n	return entities, game_state, message_log	",
-			"file": "systems/results_process_system.py",
-			"file_size": 4746,
-			"file_write_time": 132443892629695126,
-			"settings":
-			{
-				"buffer_size": 4641,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "map_objects/game_map.py",
-			"settings":
-			{
-				"buffer_size": 7704,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "input_handlers.py",
-			"settings":
-			{
-				"buffer_size": 5150,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "game_states.py",
-			"settings":
-			{
-				"buffer_size": 332,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "menus.py",
-			"settings":
-			{
-				"buffer_size": 7519,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "render_functions.py",
-			"settings":
-			{
-				"buffer_size": 6305,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"contents": "Searching 76 files for \"pick up the\"\n\nC:\\dev\\p3roguelike\\components\\inventory.py:\n   24  			results.append({\n   25  				'item_added': item,\n   26: 				'message': Message('You pick up the {0}!'.format(temp_display_name), libtcod.yellow)\n   27  			})\n   28  			for current_item in self.items:\n\n1 match in 1 file\n\n\nSearching 76 files for \"if targeting\"\n\nC:\\dev\\p3roguelike\\p3RL.sublime-workspace:\n  561  		},\n  562  		{\n  563: 			\"contents\": \"from game_messages import Message\\nfrom game_states import GameStates\\nfrom death_functions import handle_death\\nfrom components.equippable import make_dropped_missile\\nfrom death_functions import kill_player, kill_monster\\n\\ndef process_results(player_turn_results, game_state, entities, player, message_log, targets):\\n	for player_turn_result in player_turn_results:\\n		quit = player_turn_result.get('quit')\\n		message = player_turn_result.get('message')\\n		dead_entity = player_turn_result.get('dead')\\n		item_added = player_turn_result.get('item_added')\\n		item_consumed = player_turn_result.get('consumed')\\n		item_dropped = player_turn_result.get('item_dropped')\\n		targeting = player_turn_result.get('targeting')\\n		spell_targeting = player_turn_result.get('spell_targeting')\\n		feat_targeting = player_turn_result.get('feat_targeting')\\n		targeting_cancelled = player_turn_result.get('targeting_cancelled')\\n		equip = player_turn_result.get('equip')\\n		cast = player_turn_result.get('cast')\\n		missile_targeting = player_turn_result.get('missile_targeting')\\n		fired_weapon = player_turn_result.get(\\\"fired_weapon\\\")\\n		missile_dropped = player_turn_result.get(\\\"missile_dropped\\\")\\n		dropped_location = player_turn_result.get(\\\"dropped_location\\\") \\n		monster_drops = player_turn_result.get(\\\"monster_drops\\\")\\n		loaded = player_turn_result.get(\\\"loaded\\\")\\n\\n		if quit:\\n			return True\\n		if message:\\n			message_log.add_message(message)\\n		if dead_entity:\\n			message, game_state, entities = handle_death(entities, dead_entity, player, game_state)\\n			message_log.add_message(message)\\n		if item_added:\\n			entities.remove(item_added)\\n		# TODO: roll these three results into one?\\n		if targeting:\\n			game_state.previous_game_state = GameStates.PLAYERS_TURN\\n			game_state.current_game_state = GameStates.TARGETING\\n			targets.current_targeting_consumable = targeting\\n			message_log.add_message(targets.current_targeting_consumable.consumable.targeting_message)\\n		if spell_targeting:\\n			game_state.previous_game_state = GameStates.PLAYERS_TURN\\n			game_state.current_game_state = GameStates.TARGETING\\n			targets.current_targeting_spell = spell_targeting\\n			message_log.add_message(targets.current_targeting_spell.targeting_message)\\n		if feat_targeting:\\n			game_state.previous_game_state = GameStates.PLAYERS_TURN\\n			game_state.current_game_state = GameStates.TARGETING\\n			targets.current_targeting_feat = feat_targeting\\n			message_log.add_message(targets.current_targeting_feat.targeting_message)\\n		if missile_targeting:\\n			game_state.previous_game_state = GameStates.PLAYERS_TURN\\n			game_state.current_game_state = GameStates.TARGETING\\n			targets.current_targeting_weapon = True\\n			message_log.add_message(Message(\\\"Choose a target for your missile attack...\\\"))\\n		if missile_dropped:\\n			missile_entity = make_dropped_missile(missile_dropped, dropped_location)\\n			entities.append(missile_entity)\\n		if item_dropped:\\n			entities.append(item_dropped)\\n		if equip:\\n			equip_results = player.equipment.toggle_equip(equip)\\n			for equip_result in equip_results:\\n				equipped = equip_result.get('equipped')\\n				dequipped = equip_result.get('dequipped')\\n				fail_equip = equip_result.get('fail_equip')\\n				if equipped:\\n					message_log.add_message(Message('You equipped the {0}.'.format(equipped.name.true_name)))\\n				if dequipped:\\n					message_log.add_message(Message('You dequipped the {0}.'.format(dequipped.name.true_name)))\\n				if fail_equip:\\n					message_log.add_message(Message(fail_equip))\\n			pass\\n		if targeting_cancelled:\\n			game_state.current_game_state = previous_game_state\\n			message_log.add_message(Message('Targeting cancelled'))\\n\\n	return game_state, entities, player, targets\\n\\ndef process_ai_results(enemy_turn_results, acting_entity, entities, player, message_log, game_state):\\n	for enemy_turn_result in enemy_turn_results:\\n		message = enemy_turn_result.get('message')\\n		dead_entity = enemy_turn_result.get('dead')\\n		missile_dropped = enemy_turn_result.get('missile_dropped')\\n		dropped_location = enemy_turn_result.get('dropped_location')\\n		equips = enemy_turn_result.get(\\\"equips\\\")\\n		\\n		if message:\\n			message_log.add_message(message)\\n		if missile_dropped:\\n			missile_entity = make_dropped_missile(missile_dropped, dropped_location)\\n			entities.append(missile_entity)\\n		if equips:\\n			acting_entity.equipment.toggle_equip(equips)\\n		if dead_entity:\\n			if dead_entity == player:\\n				message, game_state = kill_player(dead_entity, game_state)\\n				print(f\\\"gs is {game_state.current_game_state}\\\")\\n			else:\\n				message = kill_monster(dead_entity)\\n			message_log.add_message(message)\\n			if game_state == GameStates.PLAYER_DEAD:\\n				break\\n\\n	return entities, game_state, message_log	\",\n  564  			\"file\": \"systems/results_process_system.py\",\n  565  			\"file_size\": 4746,\n\nC:\\dev\\p3roguelike\\systems\\results_process_system.py:\n   36  			entities.remove(item_added)\n   37  		# TODO: roll these three results into one?\n   38: 		if targeting:\n   39  			game_state.previous_game_state = GameStates.PLAYERS_TURN\n   40  			game_state.current_game_state = GameStates.TARGETING\n   ..\n   74  					message_log.add_message(Message(fail_equip))\n   75  			pass\n   76: 		if targeting_cancelled:\n   77  			game_state.current_game_state = previous_game_state\n   78  			message_log.add_message(Message('Targeting cancelled'))\n\n4 matches across 2 files\n\n\nSearching 76 files for \"there are no valid\"\n\nC:\\dev\\p3roguelike\\systems\\feat_system.py:\n   52  				break\n   53  		else:\n   54: 			results.append({'message': Message('There are no valid targets there.')})\n   55  			return results\n   56  		kwargs = {**feat.function_kwargs, **kwargs}\n\n1 match in 1 file\n\n\nSearching 76 files for \"feat_targeting\"\n\nC:\\dev\\p3roguelike\\p3RL.sublime-workspace:\n  561  		},\n  562  		{\n  563: 			\"contents\": \"from game_messages import Message\\nfrom game_states import GameStates\\nfrom death_functions import handle_death\\nfrom components.equippable import make_dropped_missile\\nfrom death_functions import kill_player, kill_monster\\n\\ndef process_results(player_turn_results, game_state, entities, player, message_log, targets):\\n	for player_turn_result in player_turn_results:\\n		quit = player_turn_result.get('quit')\\n		message = player_turn_result.get('message')\\n		dead_entity = player_turn_result.get('dead')\\n		item_added = player_turn_result.get('item_added')\\n		item_consumed = player_turn_result.get('consumed')\\n		item_dropped = player_turn_result.get('item_dropped')\\n		targeting = player_turn_result.get('targeting')\\n		spell_targeting = player_turn_result.get('spell_targeting')\\n		feat_targeting = player_turn_result.get('feat_targeting')\\n		targeting_cancelled = player_turn_result.get('targeting_cancelled')\\n		equip = player_turn_result.get('equip')\\n		cast = player_turn_result.get('cast')\\n		missile_targeting = player_turn_result.get('missile_targeting')\\n		fired_weapon = player_turn_result.get(\\\"fired_weapon\\\")\\n		missile_dropped = player_turn_result.get(\\\"missile_dropped\\\")\\n		dropped_location = player_turn_result.get(\\\"dropped_location\\\") \\n		monster_drops = player_turn_result.get(\\\"monster_drops\\\")\\n		loaded = player_turn_result.get(\\\"loaded\\\")\\n\\n		if quit:\\n			return True\\n		if message:\\n			message_log.add_message(message)\\n		if dead_entity:\\n			message, game_state, entities = handle_death(entities, dead_entity, player, game_state)\\n			message_log.add_message(message)\\n		if item_added:\\n			entities.remove(item_added)\\n		# TODO: roll these three results into one?\\n		if targeting:\\n			game_state.previous_game_state = GameStates.PLAYERS_TURN\\n			game_state.current_game_state = GameStates.TARGETING\\n			targets.current_targeting_consumable = targeting\\n			message_log.add_message(targets.current_targeting_consumable.consumable.targeting_message)\\n		if spell_targeting:\\n			game_state.previous_game_state = GameStates.PLAYERS_TURN\\n			game_state.current_game_state = GameStates.TARGETING\\n			targets.current_targeting_spell = spell_targeting\\n			message_log.add_message(targets.current_targeting_spell.targeting_message)\\n		if feat_targeting:\\n			game_state.previous_game_state = GameStates.PLAYERS_TURN\\n			game_state.current_game_state = GameStates.TARGETING\\n			targets.current_targeting_feat = feat_targeting\\n			message_log.add_message(targets.current_targeting_feat.targeting_message)\\n		if missile_targeting:\\n			game_state.previous_game_state = GameStates.PLAYERS_TURN\\n			game_state.current_game_state = GameStates.TARGETING\\n			targets.current_targeting_weapon = True\\n			message_log.add_message(Message(\\\"Choose a target for your missile attack...\\\"))\\n		if missile_dropped:\\n			missile_entity = make_dropped_missile(missile_dropped, dropped_location)\\n			entities.append(missile_entity)\\n		if item_dropped:\\n			entities.append(item_dropped)\\n		if equip:\\n			equip_results = player.equipment.toggle_equip(equip)\\n			for equip_result in equip_results:\\n				equipped = equip_result.get('equipped')\\n				dequipped = equip_result.get('dequipped')\\n				fail_equip = equip_result.get('fail_equip')\\n				if equipped:\\n					message_log.add_message(Message('You equipped the {0}.'.format(equipped.name.true_name)))\\n				if dequipped:\\n					message_log.add_message(Message('You dequipped the {0}.'.format(dequipped.name.true_name)))\\n				if fail_equip:\\n					message_log.add_message(Message(fail_equip))\\n			pass\\n		if targeting_cancelled:\\n			game_state.current_game_state = previous_game_state\\n			message_log.add_message(Message('Targeting cancelled'))\\n\\n	return game_state, entities, player, targets\\n\\ndef process_ai_results(enemy_turn_results, acting_entity, entities, player, message_log, game_state):\\n	for enemy_turn_result in enemy_turn_results:\\n		message = enemy_turn_result.get('message')\\n		dead_entity = enemy_turn_result.get('dead')\\n		missile_dropped = enemy_turn_result.get('missile_dropped')\\n		dropped_location = enemy_turn_result.get('dropped_location')\\n		equips = enemy_turn_result.get(\\\"equips\\\")\\n		\\n		if message:\\n			message_log.add_message(message)\\n		if missile_dropped:\\n			missile_entity = make_dropped_missile(missile_dropped, dropped_location)\\n			entities.append(missile_entity)\\n		if equips:\\n			acting_entity.equipment.toggle_equip(equips)\\n		if dead_entity:\\n			if dead_entity == player:\\n				message, game_state = kill_player(dead_entity, game_state)\\n				print(f\\\"gs is {game_state.current_game_state}\\\")\\n			else:\\n				message = kill_monster(dead_entity)\\n			message_log.add_message(message)\\n			if game_state == GameStates.PLAYER_DEAD:\\n				break\\n\\n	return entities, game_state, message_log	\",\n  564  			\"file\": \"systems/results_process_system.py\",\n  565  			\"file_size\": 4746,\n\nC:\\dev\\p3roguelike\\systems\\feat_system.py:\n   41  	\n   42  	elif not (target_x or target_y):\n   43: 		results.append({'feat_targeting': feat})\n   44  	\n   45  	elif int(distance(entity, target_x, target_y)) > feat.feat_range:\n\nC:\\dev\\p3roguelike\\systems\\results_process_system.py:\n   15  		targeting = player_turn_result.get('targeting')\n   16  		spell_targeting = player_turn_result.get('spell_targeting')\n   17: 		feat_targeting = player_turn_result.get('feat_targeting')\n   18  		targeting_cancelled = player_turn_result.get('targeting_cancelled')\n   19  		equip = player_turn_result.get('equip')\n   ..\n   46  			targets.current_targeting_spell = spell_targeting\n   47  			message_log.add_message(targets.current_targeting_spell.targeting_message)\n   48: 		if feat_targeting:\n   49  			game_state.previous_game_state = GameStates.PLAYERS_TURN\n   50  			game_state.current_game_state = GameStates.TARGETING\n   51: 			targets.current_targeting_feat = feat_targeting\n   52  			message_log.add_message(targets.current_targeting_feat.targeting_message)\n   53  		if missile_targeting:\n\n9 matches across 3 files\n",
-			"settings":
-			{
-				"buffer_size": 12247,
-				"line_ending": "Windows",
-				"name": "Find Results",
-				"scratch": true
-			}
-		},
-		{
-			"file": "death_functions.py",
-			"settings":
-			{
-				"buffer_size": 1312,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "systems/move_system.py",
-			"settings":
-			{
-				"buffer_size": 3938,
+				"buffer_size": 7378,
 				"line_ending": "Windows"
 			}
 		},
@@ -645,34 +610,98 @@
 			}
 		},
 		{
-			"file": "systems/attack.py",
+			"file": "menus.py",
 			"settings":
 			{
-				"buffer_size": 4838,
+				"buffer_size": 8907,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "components/fighter.py",
+			"file": "render_functions.py",
 			"settings":
 			{
-				"buffer_size": 2765,
+				"buffer_size": 6675,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "components/equipment.py",
+			"file": "systems/time_system.py",
 			"settings":
 			{
-				"buffer_size": 5068,
+				"buffer_size": 1207,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "components/equippable.py",
+			"file": "systems/effects_manager.py",
 			"settings":
 			{
-				"buffer_size": 8776,
+				"buffer_size": 1379,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "monsters.py",
+			"settings":
+			{
+				"buffer_size": 3649,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "character.py",
+			"settings":
+			{
+				"buffer_size": 530,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "engine.py",
+			"settings":
+			{
+				"buffer_size": 5811,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "systems/input_process_system.py",
+			"settings":
+			{
+				"buffer_size": 8075,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "systems/results_process_system.py",
+			"settings":
+			{
+				"buffer_size": 5240,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "death_functions.py",
+			"settings":
+			{
+				"buffer_size": 1303,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "input_handlers.py",
+			"settings":
+			{
+				"buffer_size": 5657,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "systems/move_system.py",
+			"settings":
+			{
+				"buffer_size": 4080,
 				"line_ending": "Windows"
 			}
 		},
@@ -681,14 +710,6 @@
 			"settings":
 			{
 				"buffer_size": 2180,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "mocks.py",
-			"settings":
-			{
-				"buffer_size": 9735,
 				"line_ending": "Windows"
 			}
 		},
@@ -704,15 +725,7 @@
 			"file": "components/caster.py",
 			"settings":
 			{
-				"buffer_size": 153,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "rltests.py",
-			"settings":
-			{
-				"buffer_size": 39972,
+				"buffer_size": 302,
 				"line_ending": "Windows"
 			}
 		},
@@ -720,7 +733,7 @@
 			"file": "systems/spell_system.py",
 			"settings":
 			{
-				"buffer_size": 2505,
+				"buffer_size": 2601,
 				"line_ending": "Windows"
 			}
 		},
@@ -728,7 +741,7 @@
 			"file": "systems/skill_manager.py",
 			"settings":
 			{
-				"buffer_size": 1694,
+				"buffer_size": 2068,
 				"line_ending": "Windows"
 			}
 		},
@@ -736,7 +749,15 @@
 			"file": "components/skills.py",
 			"settings":
 			{
-				"buffer_size": 736,
+				"buffer_size": 724,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "systems/attack.py",
+			"settings":
+			{
+				"buffer_size": 4839,
 				"line_ending": "Windows"
 			}
 		},
@@ -744,7 +765,7 @@
 			"file": "systems/feat_system.py",
 			"settings":
 			{
-				"buffer_size": 3403,
+				"buffer_size": 4732,
 				"line_ending": "Windows"
 			}
 		},
@@ -752,7 +773,7 @@
 			"file": "feats.py",
 			"settings":
 			{
-				"buffer_size": 541,
+				"buffer_size": 697,
 				"line_ending": "Windows"
 			}
 		},
@@ -765,26 +786,10 @@
 			}
 		},
 		{
-			"file": "targeting.py",
-			"settings":
-			{
-				"buffer_size": 321,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "systems/pickup_system.py",
-			"settings":
-			{
-				"buffer_size": 386,
-				"line_ending": "Windows"
-			}
-		},
-		{
 			"file": "components/inventory.py",
 			"settings":
 			{
-				"buffer_size": 3490,
+				"buffer_size": 3471,
 				"line_ending": "Windows"
 			}
 		},
@@ -792,31 +797,7 @@
 			"file": "generators.py",
 			"settings":
 			{
-				"buffer_size": 1008,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "item_factory.py",
-			"settings":
-			{
-				"buffer_size": 4312,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "item_functions.py",
-			"settings":
-			{
-				"buffer_size": 7176,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "monsters.py",
-			"settings":
-			{
-				"buffer_size": 3649,
+				"buffer_size": 938,
 				"line_ending": "Windows"
 			}
 		},
@@ -825,6 +806,38 @@
 			"settings":
 			{
 				"buffer_size": 104,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "item_factory.py",
+			"settings":
+			{
+				"buffer_size": 3859,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "magic_functions.py",
+			"settings":
+			{
+				"buffer_size": 6668,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "components/name.py",
+			"settings":
+			{
+				"buffer_size": 321,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "random_utils.py",
+			"settings":
+			{
+				"buffer_size": 903,
 				"line_ending": "Windows"
 			}
 		},
@@ -861,21 +874,32 @@
 	},
 	"file_history":
 	[
-		"/C/dev/p3roguelike/components/stats.py",
+		"/C/dev/p3roguelike/.git/COMMIT_EDITMSG",
+		"/C/dev/p3roguelike/systems/attack.py",
+		"/C/dev/p3roguelike/render_functions.py",
+		"/C/dev/p3roguelike/targeting.py",
+		"/C/dev/p3roguelike/systems/pickup_system.py",
+		"/C/dev/p3roguelike/monsters.py",
+		"/C/dev/p3roguelike/entity.py",
+		"/C/dev/p3roguelike/game_states.py",
+		"/C/dev/p3roguelike/death_functions.py",
+		"/C/dev/p3roguelike/components/ai.py",
 		"/C/dev/p3roguelike/game_state.py",
+		"/C/dev/p3roguelike/map_objects/game_map.py",
+		"/C/dev/p3roguelike/mocks.py",
+		"/C/dev/p3roguelike/feats.py",
+		"/C/dev/p3roguelike/components/stats.py",
 		"/C/dev/p3roguelike/p3RL.sublime-workspace",
 		"/C/dev/p3roguelike/systems/damage.py",
 		"/C/Users/Leon/Documents/steem",
 		"/C/dev/p3roguelike/systems/effects_manager.py",
 		"/C/dev/p3roguelike/components/effects.py",
-		"/C/dev/p3roguelike/.git/COMMIT_EDITMSG",
 		"/C/dev/p3roguelike/components/meleeweapon.py",
 		"/C/dev/p3roguelike/components/missileweapon.py",
 		"/C/dev/p3roguelike/components/equipment.py",
 		"/C/dev/p3roguelike/components/equippable.py",
 		"/C/dev/p3roguelike/attack_types.py",
 		"/C/dev/p3roguelike/components/identified.py",
-		"/C/dev/p3roguelike/death_functions.py",
 		"/C/dev/p3roguelike/components/ammunition.py",
 		"/C/dev/p3roguelike/equipment_slots.py",
 		"/C/dev/p3roguelike/systems/name_system.py",
@@ -890,41 +914,33 @@
 		"/C/dev/microblog/app/__init__.py",
 		"/C/dev/microblog/config.py",
 		"/C/dev/microblog/app/forms.py",
-		"/C/dev/p3roguelike/map_objects/game_map.py",
 		"/C/dev/p3roguelike/systems/skill_manager.py",
 		"/C/dev/str.py",
 		"/C/dev/p3roguelike - Copy/systems/move_system.py",
 		"/C/dev/ClonedRL/atrl-master/main.py",
 		"/C/dev/p3roguelike/damage_types.py",
 		"/C/dev/p3roguelike/spells.py",
-		"/C/dev/p3roguelike/game_states.py",
 		"/C/dev/p3roguelike/components/name.py",
 		"/C/dev/p3rl-copy/components/fighter.py",
 		"/C/dev/p3roguelike - Copy/systems/input_process_system.py",
 		"/C/dev/p3rl-copy/systems/results_process_system.py",
 		"/C/dev/p3roguelike-base/engine.py",
 		"/C/dev/ClonedRL/atrl-master/game/loader_functions/tiles.py",
-		"/C/dev/p3roguelike/components/ai.py",
 		"/C/dev/ClonedRL/atrl-master/game/render_functions.py",
 		"/C/dev/ClonedRL/atrl-master/game/death_functions.py",
 		"/C/dev/ClonedRL/atrl-master/game/entity.py",
 		"/C/dev/ClonedRL/atrl-master/game/map_objects/game_map.py",
 		"/C/dev/ClonedRL/atrl-master/game/loader_functions/initialize_new_game.py",
-		"/C/dev/p3roguelike/systems/pickup_system.py",
 		"/C/dev/p3roguelike/input_process_system.py",
 		"/C/dev/p3roguelike/systems/pickup_system",
 		"/C/dev/p3roguelike/systems/move_system.py",
 		"/C/dev/p3roguelike/components/inventory.py",
 		"/C/dev/ClonedRL/atrl-master/game/menus.py",
 		"/C/dev/p3roguelike/components/consumable.py",
-		"/C/dev/p3roguelike/mocks.py",
-		"/C/dev/p3roguelike/render_functions.py",
 		"/C/dev/p3roguelike/loader_functions/tile_codes.py",
 		"/C/dev/jsrl/jsrl.html",
 		"/C/dev/p3roguelike/main.py",
-		"/C/dev/p3roguelike/systems/attack.py",
 		"/C/dev/p3roguelike/potion_test.py",
-		"/C/dev/p3roguelike/entity.py",
 		"/C/dev/p3roguelike/systems/time_system.py",
 		"/C/dev/p3roguelike/components/defender.py",
 		"/C/dev/p3roguelike/components/skills.py",
@@ -985,10 +1001,7 @@
 		"/C/workspace/RLtdl/render_functions.py",
 		"/C/workspace/RLtdl/components/ai.py",
 		"/C/workspace/RLtdl/components/fighter.py",
-		"/C/workspace/RLtdl/map_utils.py",
-		"/C/Users/Leon/Documents/Suncorp",
-		"/C/workspace/RLtdl/entity.py",
-		"/C/workspace/RLtdl/game_states.py"
+		"/C/workspace/RLtdl/map_utils.py"
 	],
 	"find":
 	{
@@ -1011,6 +1024,106 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"heal(",
+			"TODO",
+			"fighter.current_targeting_weapon",
+			"current_targeting_spell",
+			"spell_targeting",
+			"spell_target",
+			"current_targeting_weapon",
+			"TODO",
+			"cast_lightn",
+			"is hit for",
+			"make_firebo",
+			"get_skill_check",
+			"get_weapon_sk",
+			"skill_check_l",
+			"character",
+			"is not None",
+			"staff",
+			"mark_equip",
+			"get_str",
+			"base_max",
+			"print(",
+			"player",
+			"level",
+			"death_func",
+			"process_entity_turn",
+			"character_scr",
+			"scroll_ty",
+			"character_screen(",
+			"get_equip",
+			"mark_eq",
+			"unspent",
+			"unsp",
+			"level",
+			"self.own",
+			"dead_ent",
+			"dead",
+			"dea",
+			"handle_dea",
+			"dead_entity",
+			"kill_monster(",
+			"kill_mon",
+			"kill_monster",
+			"kill_m",
+			"kill_mons",
+			"take",
+			"take_stairs",
+			"level",
+			"lightning",
+			"lightning_scroll",
+			"cast_lightning",
+			"there is no valid target there",
+			"there!!!",
+			"there is no valid",
+			"game_state =",
+			"holy",
+			"storm",
+			"lightning_bolt",
+			"lightning_bolt_spell",
+			"lightning",
+			"cast_lightning",
+			"lightning",
+			"get_equipped_it",
+			"get_game_v",
+			"sword",
+			"start_equi",
+			"exit",
+			"name",
+			"player",
+			"performed",
+			"perform",
+			"performed",
+			"item_cons",
+			"game_state.current_g",
+			"spell_targ",
+			"spell_tar",
+			"loaded",
+			"attempt_move",
+			"attempt_move_e",
+			"game_state",
+			"item_added",
+			"game_state",
+			"game_st",
+			"cannot_get",
+			"heal",
+			"poison",
+			"healing",
+			"heal",
+			"get_ch",
+			"main_menu",
+			"you pick up the",
+			"wait",
+			"message",
+			"you pick up the",
+			"finishing t",
+			"spells_index",
+			"spells_screen",
+			"you fail to cast",
+			"item_functions",
+			"damage_dice",
+			"feat",
 			"feat_targeting",
 			"there are no valid",
 			"if targeting",
@@ -1038,107 +1151,7 @@
 			"handle",
 			"xp=",
 			"xp",
-			"print",
-			"used action via",
-			"perform",
-			"perform(",
-			"performed",
-			"current_targeting_fe",
-			"perform(",
-			"feat_perform_re",
-			"stamina",
-			"feat",
-			"spell_targeting",
-			"spells_menu",
-			"ENEMY_TURN",
-			"spell_func",
-			"TODO",
-			"cast(",
-			"todo",
-			"Effect(",
-			"turns_left",
-			"poison",
-			"assign_po",
-			"make_ble",
-			")\n",
-			"POISON",
-			"effects",
-			"confusion",
-			"EffectNames",
-			"effect",
-			"TODO",
-			"item-added",
-			"inventoryt",
-			"TODO",
-			"print(",
-			"TODO",
-			"get_equipped",
-			"equipment",
-			"show_equipment_sc",
-			"TODO",
-			"make_dropped",
-			"make_dropp",
-			"TODO",
-			"missile_dropped",
-			"currently",
-			"attack_miss",
-			"print(",
-			"load(",
-			"load",
-			"\"s\"",
-			"of stuff",
-			"ammunition",
-			"arrows",
-			"get_weapon_sk",
-			"quanti",
-			"missile_damage_b",
-			"weaponcateg",
-			"TODO",
-			"exit",
-			"potion_index",
-			"potion_ind",
-			"POTION_SC",
-			"print(",
-			"currently_targeting_cons",
-			"spell_tar",
-			"spell_t",
-			"targeting_item",
-			"spell_targeting",
-			"action_free = False",
-			"game_state = GameStates.PLAYERS_TURN",
-			"game_state =",
-			"fire_weapon",
-			"fired_weapon",
-			"self",
-			"get_current_missile",
-			"self",
-			"damage_mess",
-			"weapon",
-			"TODO",
-			"get_current_melee",
-			"damage",
-			"missile",
-			"missile_dam",
-			"get_basic",
-			"resolve_h",
-			"resolve_hit",
-			"get_current_mel",
-			"get_current_m",
-			"melee_damage_bonus",
-			"dice_roll",
-			"dice",
-			"dice_r",
-			"d6_d6_dice_roll",
-			"dice_roll",
-			"TODO",
-			"heal(",
-			"roll",
-			"dice",
-			"TODO",
-			"print(",
-			"Searching",
-			"print(",
-			"damage_modif"
+			"print"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1219,23 +1232,23 @@
 	"groups":
 	[
 		{
-			"selected": 27,
+			"selected": 37,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "loader_functions/constants.py",
+					"file": "rltests.py",
 					"settings":
 					{
-						"buffer_size": 2585,
+						"buffer_size": 45227,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2361,
-								2361
+								17291,
+								17291
 							]
 						],
 						"settings":
@@ -1244,187 +1257,25 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 420.0,
+						"translation.y": 6891.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "loader_functions/initialize_new_game.py",
+					"file": "mocks.py",
 					"settings":
 					{
-						"buffer_size": 5307,
+						"buffer_size": 9831,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								454,
-								454
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 396.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "entity.py",
-					"settings":
-					{
-						"buffer_size": 2145,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1971,
-								1971
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 112.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "engine.py",
-					"settings":
-					{
-						"buffer_size": 5762,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								5585,
-								5585
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 1890.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "systems/input_process_system.py",
-					"settings":
-					{
-						"buffer_size": 8703,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								6595,
-								6595
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 2799.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "systems/results_process_system.py",
-					"settings":
-					{
-						"buffer_size": 4641,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								4641,
-								4641
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 728.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "map_objects/game_map.py",
-					"settings":
-					{
-						"buffer_size": 7704,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								6734,
-								6734
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 330.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 7,
-					"file": "input_handlers.py",
-					"settings":
-					{
-						"buffer_size": 5150,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1061,
-								1061
+								489,
+								491
 							]
 						],
 						"settings":
@@ -1439,19 +1290,353 @@
 					"type": "text"
 				},
 				{
-					"buffer": 8,
-					"file": "game_states.py",
+					"buffer": 2,
+					"file": "components/level.py",
 					"settings":
 					{
-						"buffer_size": 332,
+						"buffer_size": 874,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								332,
-								332
+								813,
+								813
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "components/fighter.py",
+					"settings":
+					{
+						"buffer_size": 2763,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								614,
+								614
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"settings":
+					{
+						"buffer_size": 25183,
+						"regions":
+						{
+							"match":
+							{
+								"flags": 112,
+								"regions":
+								[
+									[
+										109,
+										113
+									],
+									[
+										408,
+										412
+									],
+									[
+										665,
+										669
+									],
+									[
+										901,
+										905
+									],
+									[
+										1416,
+										1420
+									],
+									[
+										3337,
+										3341
+									],
+									[
+										8766,
+										8770
+									],
+									[
+										12168,
+										12172
+									],
+									[
+										14814,
+										14818
+									],
+									[
+										19349,
+										19353
+									],
+									[
+										19386,
+										19390
+									],
+									[
+										19500,
+										19504
+									],
+									[
+										19566,
+										19570
+									],
+									[
+										19604,
+										19608
+									],
+									[
+										19702,
+										19706
+									],
+									[
+										19770,
+										19774
+									],
+									[
+										19901,
+										19905
+									],
+									[
+										20014,
+										20018
+									],
+									[
+										20141,
+										20145
+									],
+									[
+										20214,
+										20218
+									],
+									[
+										20375,
+										20379
+									],
+									[
+										20543,
+										20547
+									],
+									[
+										20766,
+										20770
+									],
+									[
+										20983,
+										20987
+									],
+									[
+										21307,
+										21311
+									],
+									[
+										21568,
+										21572
+									],
+									[
+										21792,
+										21796
+									],
+									[
+										22117,
+										22121
+									],
+									[
+										22321,
+										22325
+									],
+									[
+										22684,
+										22688
+									],
+									[
+										23072,
+										23076
+									],
+									[
+										23203,
+										23207
+									],
+									[
+										23395,
+										23399
+									],
+									[
+										23693,
+										23698
+									],
+									[
+										23963,
+										23968
+									],
+									[
+										24126,
+										24131
+									],
+									[
+										24385,
+										24390
+									],
+									[
+										24626,
+										24631
+									],
+									[
+										24781,
+										24786
+									],
+									[
+										25102,
+										25107
+									]
+								],
+								"scope": ""
+							}
+						},
+						"selection":
+						[
+							[
+								23575,
+								23575
+							]
+						],
+						"settings":
+						{
+							"detect_indentation": false,
+							"output_tag": 2,
+							"result_base_dir": "",
+							"result_file_regex": "^([A-Za-z\\\\/<].*):$",
+							"result_line_regex": "^ +([0-9]+):",
+							"scroll_past_end": true,
+							"syntax": "Packages/Default/Find Results.hidden-tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 7128.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "components/stats.py",
+					"settings":
+					{
+						"buffer_size": 1403,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1279,
+								1279
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 264.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "loader_functions/constants.py",
+					"settings":
+					{
+						"buffer_size": 2550,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								801,
+								801
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 198.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "components/equippable.py",
+					"settings":
+					{
+						"buffer_size": 9486,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2268,
+								2268
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 462.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "components/equipment.py",
+					"settings":
+					{
+						"buffer_size": 6474,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2087,
+								2087
 							]
 						],
 						"settings":
@@ -1467,18 +1652,18 @@
 				},
 				{
 					"buffer": 9,
-					"file": "menus.py",
+					"file": "loader_functions/initialize_new_game.py",
 					"settings":
 					{
-						"buffer_size": 7519,
+						"buffer_size": 7378,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								5495,
-								5495
+								5474,
+								5474
 							]
 						],
 						"settings":
@@ -1487,193 +1672,13 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 714.0,
+						"translation.y": 2310.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 10,
-					"file": "render_functions.py",
-					"settings":
-					{
-						"buffer_size": 6305,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								5541,
-								5541
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 1716.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 11,
-					"settings":
-					{
-						"buffer_size": 12247,
-						"regions":
-						{
-							"match":
-							{
-								"flags": 112,
-								"regions":
-								[
-									[
-										175,
-										186
-									],
-									[
-										2135,
-										2147
-									],
-									[
-										3985,
-										3997
-									],
-									[
-										5444,
-										5456
-									],
-									[
-										5675,
-										5687
-									],
-									[
-										6021,
-										6039
-									],
-									[
-										7074,
-										7088
-									],
-									[
-										7115,
-										7129
-									],
-									[
-										8543,
-										8557
-									],
-									[
-										8714,
-										8728
-									],
-									[
-										11258,
-										11272
-									],
-									[
-										11555,
-										11569
-									],
-									[
-										11596,
-										11610
-									],
-									[
-										11902,
-										11916
-									],
-									[
-										12091,
-										12105
-									]
-								],
-								"scope": ""
-							}
-						},
-						"selection":
-						[
-							[
-								10720,
-								10720
-							]
-						],
-						"settings":
-						{
-							"detect_indentation": false,
-							"output_tag": 4,
-							"result_base_dir": "",
-							"result_file_regex": "^([A-Za-z\\\\/<].*):$",
-							"result_line_regex": "^ +([0-9]+):",
-							"scroll_past_end": true,
-							"syntax": "Packages/Default/Find Results.hidden-tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 2600.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 12,
-					"file": "death_functions.py",
-					"settings":
-					{
-						"buffer_size": 1312,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								974,
-								974
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 13,
-					"file": "systems/move_system.py",
-					"settings":
-					{
-						"buffer_size": 3938,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								439,
-								439
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 1362.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 14,
 					"file": "components/ai.py",
 					"settings":
 					{
@@ -1684,8 +1689,89 @@
 						"selection":
 						[
 							[
-								1945,
-								1945
+								1867,
+								1867
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 726.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "menus.py",
+					"settings":
+					{
+						"buffer_size": 8907,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3623,
+								3623
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1149.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 12,
+					"file": "render_functions.py",
+					"settings":
+					{
+						"buffer_size": 6675,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3436,
+								3436
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1171.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 13,
+					"file": "systems/time_system.py",
+					"settings":
+					{
+						"buffer_size": 1207,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								425,
+								425
 							]
 						],
 						"settings":
@@ -1700,65 +1786,11 @@
 					"type": "text"
 				},
 				{
-					"buffer": 15,
-					"file": "systems/attack.py",
+					"buffer": 14,
+					"file": "systems/effects_manager.py",
 					"settings":
 					{
-						"buffer_size": 4838,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								480,
-								480
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 66.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 16,
-					"file": "components/fighter.py",
-					"settings":
-					{
-						"buffer_size": 2765,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1089,
-								1089
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 198.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 17,
-					"file": "components/equipment.py",
-					"settings":
-					{
-						"buffer_size": 5068,
+						"buffer_size": 1379,
 						"regions":
 						{
 						},
@@ -1775,25 +1807,25 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 2046.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 18,
-					"file": "components/equippable.py",
+					"buffer": 15,
+					"file": "monsters.py",
 					"settings":
 					{
-						"buffer_size": 8776,
+						"buffer_size": 3649,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								8534,
-								8534
+								2567,
+								2567
 							]
 						],
 						"settings":
@@ -1802,13 +1834,201 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 2660.0,
+						"translation.y": 394.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 16,
+					"file": "character.py",
+					"settings":
+					{
+						"buffer_size": 530,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								508,
+								508
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 17,
+					"file": "engine.py",
+					"settings":
+					{
+						"buffer_size": 5811,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1676,
+								1676
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 726.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 18,
+					"file": "systems/input_process_system.py",
+					"settings":
+					{
+						"buffer_size": 8075,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4859,
+								4868
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1831.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 19,
+					"file": "systems/results_process_system.py",
+					"settings":
+					{
+						"buffer_size": 5240,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 20,
+					"file": "death_functions.py",
+					"settings":
+					{
+						"buffer_size": 1303,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1124,
+								1124
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 21,
+					"file": "input_handlers.py",
+					"settings":
+					{
+						"buffer_size": 5657,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5657,
+								5657
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 928.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 22,
+					"file": "systems/move_system.py",
+					"settings":
+					{
+						"buffer_size": 4080,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								424,
+								424
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 23,
 					"file": "components/defender.py",
 					"settings":
 					{
@@ -1835,34 +2055,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 20,
-					"file": "mocks.py",
-					"settings":
-					{
-						"buffer_size": 9735,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								9042,
-								9042
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 37.0,
-						"translation.y": 2826.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 21,
+					"buffer": 24,
 					"file": "spells.py",
 					"settings":
 					{
@@ -1888,100 +2081,19 @@
 					"type": "text"
 				},
 				{
-					"buffer": 22,
+					"buffer": 25,
 					"file": "components/caster.py",
 					"settings":
 					{
-						"buffer_size": 153,
+						"buffer_size": 302,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								23,
-								23
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 14.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 23,
-					"file": "rltests.py",
-					"settings":
-					{
-						"buffer_size": 39972,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								7398,
-								7398
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 2442.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 24,
-					"file": "systems/spell_system.py",
-					"settings":
-					{
-						"buffer_size": 2505,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								194,
-								194
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 462.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 25,
-					"file": "systems/skill_manager.py",
-					"settings":
-					{
-						"buffer_size": 1694,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
+								294,
+								294
 							]
 						],
 						"settings":
@@ -1997,18 +2109,45 @@
 				},
 				{
 					"buffer": 26,
-					"file": "components/skills.py",
+					"file": "systems/spell_system.py",
 					"settings":
 					{
-						"buffer_size": 736,
+						"buffer_size": 2601,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								80,
-								80
+								834,
+								834
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 924.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 27,
+					"file": "systems/skill_manager.py",
+					"settings":
+					{
+						"buffer_size": 2068,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								350,
+								350
 							]
 						],
 						"settings":
@@ -2023,46 +2162,19 @@
 					"type": "text"
 				},
 				{
-					"buffer": 27,
-					"file": "systems/feat_system.py",
-					"settings":
-					{
-						"buffer_size": 3403,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1861,
-								1861
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 636.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
 					"buffer": 28,
-					"file": "feats.py",
+					"file": "components/skills.py",
 					"settings":
 					{
-						"buffer_size": 541,
+						"buffer_size": 724,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								135,
-								135
+								53,
+								53
 							]
 						],
 						"settings":
@@ -2078,6 +2190,87 @@
 				},
 				{
 					"buffer": 29,
+					"file": "systems/attack.py",
+					"settings":
+					{
+						"buffer_size": 4839,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4258,
+								4258
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1391.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 30,
+					"file": "systems/feat_system.py",
+					"settings":
+					{
+						"buffer_size": 4732,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								790,
+								790
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 31,
+					"file": "feats.py",
+					"settings":
+					{
+						"buffer_size": 697,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								484,
+								484
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 32,
 					"file": "components/performer.py",
 					"settings":
 					{
@@ -2103,104 +2296,25 @@
 					"type": "text"
 				},
 				{
-					"buffer": 30,
-					"file": "targeting.py",
-					"settings":
-					{
-						"buffer_size": 321,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								196,
-								196
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 31,
-					"file": "systems/pickup_system.py",
-					"settings":
-					{
-						"buffer_size": 386,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								33,
-								33
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 32,
+					"buffer": 33,
 					"file": "components/inventory.py",
 					"settings":
 					{
-						"buffer_size": 3490,
+						"buffer_size": 3471,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								771,
-								771
+								136,
+								136
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/Python/Python.tmLanguage",
 							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 33,
-					"file": "generators.py",
-					"settings":
-					{
-						"buffer_size": 1008,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								446,
-								446
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -2210,24 +2324,23 @@
 				},
 				{
 					"buffer": 34,
-					"file": "item_factory.py",
+					"file": "generators.py",
 					"settings":
 					{
-						"buffer_size": 4312,
+						"buffer_size": 938,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								888,
-								888
+								178,
+								178
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"translate_tabs_to_spaces": false
+							"syntax": "Packages/Python/Python.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -2237,61 +2350,6 @@
 				},
 				{
 					"buffer": 35,
-					"file": "item_functions.py",
-					"settings":
-					{
-						"buffer_size": 7176,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2325,
-								2325
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 1320.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 36,
-					"file": "monsters.py",
-					"settings":
-					{
-						"buffer_size": 3649,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2507,
-								2507
-							]
-						],
-						"settings":
-						{
-							"auto_name": "",
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 168.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 37,
 					"file": "components/item.py",
 					"settings":
 					{
@@ -2318,7 +2376,114 @@
 					"type": "text"
 				},
 				{
+					"buffer": 36,
+					"file": "item_factory.py",
+					"settings":
+					{
+						"buffer_size": 3859,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								92,
+								92
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 37,
+					"file": "magic_functions.py",
+					"settings":
+					{
+						"buffer_size": 6668,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								776,
+								776
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 132.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
 					"buffer": 38,
+					"file": "components/name.py",
+					"settings":
+					{
+						"buffer_size": 321,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 39,
+					"file": "random_utils.py",
+					"settings":
+					{
+						"buffer_size": 903,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								903,
+								903
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 330.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 40,
 					"file": ".gitignore",
 					"settings":
 					{

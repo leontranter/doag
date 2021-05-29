@@ -729,7 +729,7 @@ class CharacterTests(unittest.TestCase):
 		# TODO: There must be a better way to test this
 		self.assertEqual(test_priest.stats.Strength, 13)
 
-	def test_can_create_priest(self):
+	def test_can_create_wizard(self):
 		constants = get_constants()
 		test_wizard = create_player(constants, 2)
 		# TODO: There must be a better way to test this

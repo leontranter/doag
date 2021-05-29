@@ -12,10 +12,6 @@ class Fighter:
 		self.base_DR = base_DR
 		self.xp_reward = xp_reward
 		self.effect_list = []
-		# TODO: fix this up
-		self.current_targeting_weapon = None
-		self.current_targeting_spell = None
-		self.current_targeting_consumable = None
 
 	@property
 	def DR(self):

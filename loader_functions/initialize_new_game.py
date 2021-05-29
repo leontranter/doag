@@ -21,7 +21,7 @@ from components.name import Name
 from components.identified import Identified
 from random import shuffle
 from game_state import GameState
-from magic_functions import make_firebolt_spell
+from magic_functions import *
 from item_factory import make_healing_potion, make_poison_potion, make_fireball_book, make_confusion_scroll, make_bless_book, make_fireball_scroll, make_confusion_potion
 from systems.skill_manager import SkillNames
 
@@ -93,9 +93,8 @@ def set_stats(player_class):
 	return player_stats
 
 def set_spells(player_class, stats_component):
-	# TODO: Fix this!!!
 	caster_component = Caster(max_mana=stats_component.Willpower)
-	spell_mapping = {0: [], 1: [], 2: [make_firebolt_spell], 3: []}
+	spell_mapping = {0: [], 1: [make_bless_spell], 2: [make_lightning_bolt_spell], 3: [make_heal_spell]}
 	for starting_spell in spell_mapping[player_class]:
 		spell = starting_spell()
 		caster_component.spells.append(spell)
@@ -113,51 +112,32 @@ def set_skills(player_class):
 	return skills_component
 
 def set_feats(player_class):
-	# TODO: This could probably be reworked to dictionary lookup - not sure if it is worth it
 	player_performer = Performer()
-	if player_class == 0:
-		feat1 = make_savage_strike()
-		player_performer.feat_list.append(feat1)
-		feat2 = make_standing_jump()
-		player_performer.feat_list.append(feat2)
-	elif player_class == 1:
-		feat1 = make_standing_jump()
-		player_performer.feat_list.append(feat1)
-	elif player_class == 2:
-		feat1 = make_savage_strike()
-		player_performer.feat_list.append(feat1)
+	feats_mapping = {0: [make_savage_strike, make_standing_jump],
+						1: [make_savage_strike],
+						2: [],
+						3: []}
+	for character_feat in feats_mapping[player_class]:
+		feat = character_feat()
+		player_performer.feat_list.append(feat)
 	return player_performer
 
 def equip_player(player, player_class):
-	x, y = 1, 1
-	if player_class == 0:
-		item = EquippableFactory.make_greatsword()
+	weapon_mapping = {0: EquippableFactory.make_greatsword, 1: EquippableFactory.make_longsword, 2: EquippableFactory.make_dagger, 3: EquippableFactory.make_mace}
+	item = weapon_mapping[player_class]()
+	player.inventory.items.append(item)
+	player.equipment.main_hand = item
+	armor_mapping = {0: EquippableFactory.make_leather_armor, 1: EquippableFactory.make_chain_armor, 2: EquippableFactory.make_padded_armor, 3: EquippableFactory.make_chain_armor}
+	item = armor_mapping[player_class]()
+	player.inventory.items.append(item)
+	player.equipment.body = item
+	off_hand_mapping = {1: EquippableFactory.make_shield, 3: EquippableFactory.make_shield}
+	item = off_hand_mapping.get(player_class)()
+	if item is not None:
 		player.inventory.items.append(item)
-		player.equipment.main_hand = item
-		item2 = EquippableFactory.make_dagger()
-		player.inventory.items.append(item2)
-		item = EquippableFactory.make_leather_armor()
-		player.inventory.items.append(item)
-		player.equipment.body = item
-	elif player_class == 1:
-		item = EquippableFactory.make_longsword()
-		player.inventory.items.append(item)
-		player.equipment.main_hand = item
-		item = EquippableFactory.make_shield()
-		player.inventory.items.append(item)
+		print(item.name.true_name)
 		player.equipment.off_hand = item
-		item = EquippableFactory.make_chain_armor()
-		player.inventory.items.append(item)
-		player.equipment.body = item
-	elif player_class == 2:
-		item = EquippableFactory.make_dagger()
-		player.inventory.items.append(item)
-		player.equipment.main_hand = item
-		item = EquippableFactory.make_small_shield()
-		player.inventory.items.append(item)
-		item = EquippableFactory.make_padded_armor()
-		player.inventory.items.append(item)
-		player.equipment.body = item
+
 	potion1 = make_poison_potion()
 	player.inventory.items.append(potion1)
 	potion2 = make_poison_potion()

@@ -13,7 +13,7 @@ def make_fireball_spell():
 	return spell
 
 def make_heal_spell():
-	spell = Spell("Heal", 5, SkillNames.HOLY, heal, targeting=None, targeting_message=None, amount=10)
+	spell = Spell("Heal", 5, SkillNames.HOLY, heal, targeting=True, targeting_message=Message('Left-click a target to heal, or right-click to cancel'), amount=10)
 	return spell
 
 def make_bless_spell():
@@ -31,12 +31,12 @@ def make_firebolt_spell():
 def heal(*args, **kwargs):
 	entity = args[0]
 	amount = kwargs.get('amount')
-
 	results = []
-	# TODO: this needs work - healing someone else will incorrectly show a message about you
 	if entity.stats and entity.fighter:
 		if entity.stats.hp == entity.stats.max_hp:
-			results.append({'consumed': False, 'message': Message('You are already at full health.', libtcod.yellow)})
+			subject = "You" if entity.name.true_name == "Player" else entity.name.true_name
+			verb = "are" if entity.name.true_name == "Player" else "is"
+			results.append({'consumed': False, 'message': Message(f'{subject} {verb} already at full health.', libtcod.yellow)})
 		else:
 			entity.fighter.heal(amount)
 			results.append({'consumed': True, 'message': Message('Your wounds start to feel better!', libtcod.green)})	

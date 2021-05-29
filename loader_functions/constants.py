@@ -36,6 +36,8 @@ def get_constants():
 	scroll_descriptions = ["dusty scroll", "faded scroll"]
 	scroll_types = ['Confusion Scroll', 'Fireball Scroll']
 
+	character_classes = ["Barbarian", "Paladin", "Wizard", "Priest"]
+
 	colors = {
 		'dark_wall': libtcod.Color(0, 0, 100),
 		'dark_ground': libtcod.Color(50, 50, 150),
@@ -68,6 +70,7 @@ def get_constants():
 		'potion_types': potion_types,
 		'scroll_descriptions': scroll_descriptions,
 		'scroll_types': scroll_types,
+		'character_classes': character_classes,
 		'max_dlevels': max_dlevels
 	}
 

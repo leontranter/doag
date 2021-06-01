@@ -37,6 +37,7 @@ def get_constants():
 	scroll_types = ['Confusion Scroll', 'Fireball Scroll']
 
 	character_classes = ["Barbarian", "Paladin", "Wizard", "Priest"]
+	character_races = ["Dwarf", "Elf", "Fairy", "Moleperson", "Lizardkin", "Gnome", "Ogre", "Dark elf", "Iron dwarf", "Wildling"]
 
 	colors = {
 		'dark_wall': libtcod.Color(0, 0, 100),
@@ -71,6 +72,7 @@ def get_constants():
 		'scroll_descriptions': scroll_descriptions,
 		'scroll_types': scroll_types,
 		'character_classes': character_classes,
+		'character_races': character_races,
 		'max_dlevels': max_dlevels
 	}
 

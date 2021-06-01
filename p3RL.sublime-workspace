@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"get_char",
+				"get_character_race"
+			],
+			[
 				"play",
 				"player_class"
 			],
@@ -510,62 +514,19 @@
 			[
 				"weapon_",
 				"weapon_skill_num"
-			],
-			[
-				"test_char",
-				"test_char_pd"
 			]
 		]
 	},
 	"buffers":
 	[
 		{
+			"contents": "import unittest\nimport map_objects.tile\nimport entity\nimport tcod as libtcod\nfrom equipment_slots import EquipmentSlots\nimport map_objects.rectangle as rectangle\nfrom components.fighter import Fighter\nfrom components.caster import Caster\nfrom components.equipment import Equipment\nfrom components.equippable import Equippable, EquippableFactory, make_dropped_missile\nfrom components.skills import Skills\nfrom components.stats import Stats\nfrom components.defender import Defender\nfrom components.meleeweapon import MeleeWeapon\nfrom components.item import Item\nfrom components.name import Name\nfrom components.level import Level\nfrom components.identified import Identified\nfrom components.effects import Effect\nfrom components.performer import Performer\nfrom components.consumable import ConsumableTypes, get_carried_potions\nfrom components.inventory import Inventory\nfrom damage_types import DamageTypes\nfrom death_functions import kill_monster\nfrom loader_functions.constants import WeaponTypes, WeaponCategories, get_constants, AmmunitionTypes\nfrom loader_functions.initialize_new_game import get_game_variables, assign_potion_descriptions, assign_scroll_descriptions, populate_dlevels, create_player\nfrom loader_functions.data_loaders import save_game, load_game\nfrom systems.attack import weapon_skill_lookup, get_weapon_skill_for_attack, get_hit_modifier_from_status_effects\nfrom systems.effects_manager import add_effect, tick_down_effects, process_damage_over_time, EffectNames\nfrom systems.name_system import get_display_name\nfrom systems.damage import get_physical_damage_modifier_from_status_effects, get_physical_damage_modifier_from_equipment, apply_physical_damage_modifiers, get_damage_string, get_current_missile_damage, get_current_melee_damage\nfrom systems.attack import get_hit_modifier_from_status_effects, get_hit_modifier_from_equipment, attack\nfrom systems.spell_system import learn_spell, cast, get_spell_target\nfrom systems.skill_manager import SkillNames, get_intellect, get_willpower\nfrom systems.move_system import distance_to\nfrom systems.pickup_system import pickup_item\nfrom systems.feat_system import get_targetable_entities_in_range\nfrom magic_functions import heal, learn_spell_from_book, make_bless_spell\nfrom fov_functions import initialize_fov\nfrom render_functions import get_names_under_mouse\nfrom item_factory import make_healing_potion, make_fireball_scroll, make_confusion_scroll, make_fireball_book, make_heal_book, make_bless_book, make_poison_potion, make_confusion_potion\nfrom components.equippable import EquippableFactory\nimport monsters\nimport mocks\nfrom menus import menu\nimport menu_options\nfrom attack_types import AttackTypes\nfrom menus import get_equipped_items\n\nclass EntityTests(unittest.TestCase):\n	def test_can_make_entity(self):\n		test_entity = entity.Entity(1, 1, 'A', libtcod.white, \"Player\")\n		self.assertEqual(test_entity.x, 1)\n\n	def test_can_make_entity_with_fighter(self):\n		test_fighter = Fighter(xp_reward=10)\n		test_entity = entity.Entity(1, 1, 'A', libtcod.white, \"Player\", fighter=test_fighter)\n		self.assertEqual(test_entity.fighter, test_fighter)\n\n	def test_can_make_entity_with_caster(self):\n		test_caster = Caster(spells=[], max_mana=20)\n		test_entity = entity.Entity(1, 1, 'A', libtcod.white, \"Player\", caster=test_caster)\n		self.assertEqual(test_entity.caster, test_caster)\n		self.assertEqual(test_entity.caster.mana, 20)\n		self.assertEqual(test_entity.caster.max_mana, 20)\n\n	def test_can_make_entity_with_caster_who_knows_spells(self):\n		test_caster = Caster(spells=[], max_mana=50)\n		test_entity = entity.Entity(1, 1, 'A', libtcod.white, \"Player\", caster=test_caster)\n		learn_spell(test_entity, 'fireball')\n		self.assertEqual(test_caster.spells[0].name, \"Fireball\")\n\nclass SpellTests(unittest.TestCase):\n	def test_can_learn_heal(self):\n		test_caster = Caster(spells=[], max_mana=50)\n		test_entity = entity.Entity(1, 1, 'A', libtcod.white, \"Player\", caster=test_caster)\n		learn_spell(test_entity, 'heal')\n		self.assertEqual(test_caster.spells[0].name, \"Heal\")\n\n	def test_can_learn_bless(self):\n		test_caster = Caster(spells=[], max_mana=50)\n		test_entity = entity.Entity(1, 1, 'A', libtcod.white, \"Player\", caster=test_caster)\n		learn_spell(test_entity, 'bless')\n		self.assertEqual(test_caster.spells[0].name, \"Bless\")\n\n	def test_can_learn_bless_from_book(self):\n		test_caster = Caster(spells=[], max_mana=50)\n		test_entity = entity.Entity(1, 1, 'A', libtcod.white, \"Player\", caster=test_caster)\n		learn_spell_from_book(test_entity, spell_name='bless')\n		self.assertEqual(test_caster.spells[0].name, \"Bless\")\n\n	def test_can_learn_multiple_spells(self):\n		test_caster = Caster(spells=[], max_mana=50)\n		test_entity = entity.Entity(1, 1, 'A', libtcod.white, \"Player\", caster=test_caster)\n		learn_spell(test_entity, 'heal')\n		learn_spell(test_entity, 'fireball')\n		self.assertEqual(test_caster.spells[0].name, \"Heal\")\n		self.assertEqual(test_caster.spells[1].name, \"Fireball\")\n\n	def test_can_cast_bless_spell_with_high_skill(self):\n		test_caster = Caster(spells=[], max_mana=50)\n		test_fighter = Fighter(xp_reward=100)\n		test_stats = Stats()\n		test_skills = Skills()\n		test_skills.set_skill_rank(SkillNames.HOLY, 8)\n		test_entity = entity.Entity(1, 1, 'A', libtcod.white, \"Player\", caster=test_caster, fighter=test_fighter, skills=test_skills, stats=test_stats)\n		entities = []\n		entities.append(test_entity)\n		spell = make_bless_spell()\n		results = cast(test_entity, spell, target_x=1, target_y=1, entities=entities)\n		self.assertTrue(len(results), 1)\n		self.assertEqual(len(test_entity.fighter.effect_list), 1)\n		self.assertEqual(test_entity.fighter.effect_list[0].name, EffectNames.BLESS)\n		self.assertEqual(test_entity.fighter.effect_list[0].turns_left, 25)\n		self.assertEqual(get_hit_modifier_from_status_effects(test_entity), 1)\n		self.assertEqual(get_physical_damage_modifier_from_status_effects(test_entity), 1)\n\n	def test_cannot_cast_bless_spell_with_no_skill(self):\n		test_caster = Caster(spells=[], max_mana=50)\n		test_fighter = Fighter(xp_reward=100)\n		test_stats = Stats(Strength=1, Precision=1, Agility=1, Intellect=1, Willpower=1, Stamina=1, Endurance=1)\n		test_skills = Skills()\n		test_entity = entity.Entity(1, 1, 'A', libtcod.white, \"Player\", caster=test_caster, fighter=test_fighter, skills=test_skills, stats=test_stats)\n		entities = []\n		entities.append(test_entity)\n		spell = make_bless_spell()\n		results = cast(test_entity, spell, target_x=1, target_y=1, entities=entities)\n		self.assertTrue(len(results), 1)\n		self.assertEqual(len(test_entity.fighter.effect_list), 0)\n\n	def test_can_get_spell_target(self):\n		constants = get_constants()\n		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants)\n		fov_map = initialize_fov(game_map)\n		test_monster = mocks.create_mockchar_11()\n		test_monster.x, test_monster.y = 2, 2\n		entities = [player, test_monster]\n		self.assertEqual(get_spell_target(player, 2, 2, entities, fov_map), test_monster)\n\n	def test_cannot_get_spell_target_out_of_range(self):\n		constants = get_constants()\n		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants)\n		fov_map = initialize_fov(game_map)\n		test_monster = mocks.create_mockchar_11()\n		test_monster.x, test_monster.y = 10, 10\n		entities = [player, test_monster]\n		self.assertEqual(get_spell_target(player, 2, 2, entities, fov_map), None)\n\nclass EquipmentTests(unittest.TestCase):\n	def test_can_equip_main_hand(self):\n		test_equipment = Equipment()\n		test_player_entity = entity.Entity(1, 1, 'A', libtcod.white, \"Player\", equipment=test_equipment)\n		test_item_entity = EquippableFactory.make_longsword()\n		test_equipment.toggle_equip(test_item_entity)\n		self.assertEqual(test_player_entity.equipment.main_hand.equippable, test_item_entity.equippable)\n\n	def test_can_create_equipment_component(self):\n		test_equipment = Equipment()\n		test_entity = entity.Entity(1, 1, 'A', libtcod.white, \"Player\", equipment=test_equipment)\n		self.assertEqual(test_entity.equipment.main_hand, None)\n		self.assertEqual(test_entity.equipment.off_hand, None)\n		self.assertEqual(test_entity.equipment.body, None)\n		self.assertEqual(test_entity.equipment.ammunition, None)\n\n	def test_can_get_equipped_items(self):\n		test_equipment = Equipment()\n		test_char = entity.Entity(1, 1, 'A', libtcod.white, \"Player\", equipment=test_equipment)\n		self.assertEqual(len(get_equipped_items(test_char)), 4)\n\nclass SkillsTests(unittest.TestCase):\n	def test_can_create_and_link_skills_component(self):\n		test_skillset = Skills()\n		test_entity = entity.Entity(1, 1, 'A', libtcod.white, \"Player\", skills=test_skillset)\n		self.assertEqual(test_entity.skills, test_skillset)\n	 \n	def test_can_create_sword_skill(self):\n		test_skillset = Skills()\n		test_skillset.set_skill_rank(\"sword\", 1)\n		self.assertEqual(test_skillset.skills[\"sword\"], 1)\n\n	def test_can_update_sword_skill(self):\n		test_skillset = Skills()\n		test_skillset.set_skill_rank(\"sword\", 1)\n		test_skillset.set_skill_rank(\"sword\", 3)\n		self.assertEqual(test_skillset.skills[\"sword\"], 3)\n\n	def test_can_get_skill(self):\n		test_skillset = Skills()\n		test_stats = Stats()\n		test_entity = entity.Entity(1, 1, 'A', libtcod.white, \"Player\", stats=test_stats, skills=test_skillset)\n		test_skillset.set_skill_rank(SkillNames.SWORD, 1)\n		skill_test = test_skillset.get_skill_check(SkillNames.SWORD)\n		self.assertEqual(skill_test, 10)\n	\n	def test_can_get_default(self):\n		test_skillset = Skills()\n		test_stats = Stats()\n		test_entity = entity.Entity(1, 1, 'A', libtcod.white, \"Player\", stats=test_stats, skills=test_skillset)\n		skill_test = test_skillset.get_skill_check(SkillNames.SWORD)\n		self.assertEqual(skill_test, 6)\n\nclass StatsTests(unittest.TestCase):\n	def test_can_create_entity_with_stats(self):\n		test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)\n		test_entity = entity.Entity(1, 1, 'A', libtcod.white, \"Player\", stats=test_stats_component)\n		self.assertEqual(test_entity.stats, test_stats_component)\n\n	def test_can_calculate_hp(self):\n		test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)\n		test_entity = entity.Entity(1, 1, 'A', libtcod.white, \"Player\", stats=test_stats_component)\n		self.assertEqual(test_entity.stats.max_hp, 19)\n		self.assertEqual(test_entity.stats.hp, 19)\n\n	def test_can_go_up_a_level(self):\n		test_fighter = Fighter()\n		test_level = Level()\n		test_stats = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)\n		test_entity = entity.Entity(1, 1, 'A', libtcod.white, \"Player\", fighter=test_fighter, level=test_level, stats=test_stats)\n		self.assertTrue(test_level.current_level, 1)\n		self.assertFalse(test_level.add_xp(1))\n		self.assertTrue(test_stats.Endurance, 9)\n		self.assertTrue(test_level.add_xp(200))\n		self.assertTrue(test_level.current_level, 2)\n		test_level.level_up()\n		self.assertTrue(test_stats.Endurance, 10)\n\n	def test_hp_regen_amount_works(self):\n		test_fighter = Fighter()\n		test_level = Level()\n		test_stats = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=10)\n		test_entity = entity.Entity(1, 1, 'A', libtcod.white, \"Player\", fighter=test_fighter, level=test_level, stats=test_stats)\n		self.assertEqual(test_entity.stats.hp_regen_amount, 0.1)\n\n	def test_hp_regen_bonus_works_with_equipment(self):\n		test_equipment = Equipment()\n		padded_armor_equippable = Equippable(EquipmentSlots.BODY, DR_bonus=1, hp_regen_bonus=0.1)\n		padded_armor_name = Name(\"Padded Armor\")\n		padded_armor_entity = entity.Entity(1, 1, ')', libtcod.purple, equippable=padded_armor_equippable, name=padded_armor_name)\n		test_fighter = Fighter()\n		test_level = Level()\n		test_stats = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=10)\n		test_entity = entity.Entity(1, 1, 'A', libtcod.white, \"Player\", fighter=test_fighter, level=test_level, stats=test_stats, equipment=test_equipment)\n		test_equipment.body = padded_armor_entity\n		self.assertEqual(test_equipment.hp_regen_bonus, 0.1)\n		self.assertEqual(test_entity.stats.hp_regen_amount, 0.2)\n\n	def test_sp_regen_amount_works(self):\n		test_fighter = Fighter()\n		test_level = Level()\n		test_stats = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=10)\n		test_entity = entity.Entity(1, 1, 'A', libtcod.white, \"Player\", fighter=test_fighter, level=test_level, stats=test_stats)\n		self.assertEqual(test_entity.stats.sp_regen_amount, 0.1)\n\n	def test_sp_regen_bonus_works_with_equipment(self):\n		test_equipment = Equipment()\n		padded_armor_equippable = Equippable(EquipmentSlots.BODY, DR_bonus=1, sp_regen_bonus=0.1)\n		padded_armor_name = Name(\"Padded Armor\")\n		padded_armor_entity = entity.Entity(1, 1, ')', libtcod.purple, equippable=padded_armor_equippable, name=padded_armor_name)\n		test_fighter = Fighter()\n		test_level = Level()\n		test_stats = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=10)\n		test_entity = entity.Entity(1, 1, 'A', libtcod.white, \"Player\", fighter=test_fighter, level=test_level, stats=test_stats, equipment=test_equipment)\n		test_equipment.body = padded_armor_entity\n		self.assertEqual(test_equipment.sp_regen_bonus, 0.1)\n		self.assertEqual(test_entity.stats.sp_regen_amount, 0.2)\n\n	def test_mana_regen_amount_works(self):\n		test_fighter = Fighter()\n		test_level = Level()\n		test_stats = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=10, Stamina=10, Endurance=10)\n		test_entity = entity.Entity(1, 1, 'A', libtcod.white, \"Player\", fighter=test_fighter, level=test_level, stats=test_stats)\n		self.assertEqual(test_entity.stats.mana_regen_amount, 0.1)\n\n	def test_mana_regen_bonus_works_with_equipment(self):\n		test_equipment = Equipment()\n		padded_armor_equippable = Equippable(EquipmentSlots.BODY, DR_bonus=1, mana_regen_bonus=0.1)\n		padded_armor_name = Name(\"Padded Armor\")\n		padded_armor_entity = entity.Entity(1, 1, ')', libtcod.purple, equippable=padded_armor_equippable, name=padded_armor_name)\n		test_fighter = Fighter()\n		test_level = Level()\n		test_stats = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=10, Stamina=10, Endurance=10)\n		test_entity = entity.Entity(1, 1, 'A', libtcod.white, \"Player\", fighter=test_fighter, level=test_level, stats=test_stats, equipment=test_equipment)\n		test_equipment.body = padded_armor_entity\n		self.assertEqual(test_equipment.mana_regen_bonus, 0.1)\n		self.assertEqual(test_entity.stats.mana_regen_amount, 0.2)\n\nclass DamageTests(unittest.TestCase):\n	def test_can_calculate_physical_damage_modifier_from_equipment(self):\n		test_equipment = Equipment()\n		padded_armor_equippable = Equippable(EquipmentSlots.BODY, DR_bonus=1, physical_damage_modifier=2)\n		padded_armor_name = Name(\"Padded Armor\")\n		padded_armor_entity = entity.Entity(1, 1, ')', libtcod.purple, equippable=padded_armor_equippable, name=padded_armor_name)\n		test_entity = entity.Entity(1, 1, 'A', libtcod.white, \"Player\", equipment=test_equipment)\n		test_equipment.body = padded_armor_entity\n		self.assertEqual(get_physical_damage_modifier_from_equipment(test_entity), 2)\n\n	def test_can_calculate_damage_bonus_from_effects(self):\n		test_caster = Caster(spells=[], max_mana=50)\n		test_entity = entity.Entity(1, 1, 'A', libtcod.white, \"Player\", caster=test_caster)\n		learn_spell(test_entity, 'bless')\n\n	def test_can_apply_damage_modifiers(self):\n		test_equipment = Equipment()\n		test_fighter = Fighter(xp_reward=100)\n		padded_armor_equippable = Equippable(EquipmentSlots.BODY, DR_bonus=1, physical_damage_modifier=2)\n		padded_armor_name = Name(\"Padded Armor\")\n		padded_armor_entity = entity.Entity(1, 1, ')', libtcod.purple, equippable=padded_armor_equippable, name=padded_armor_name)\n		test_entity = entity.Entity(1, 1, 'A', libtcod.white, \"Player\", equipment=test_equipment, fighter=test_fighter)\n		test_equipment.body = padded_armor_entity\n		modifier = 0\n		modifier += apply_physical_damage_modifiers(modifier, test_entity)\n		self.assertEqual(modifier, 2)\n\n	def test_can_get_damage_string(self):\n		test_stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)\n		test_fighter_component = Fighter(xp_reward=10)\n		test_equipment = Equipment()\n		test_entity = entity.Entity(1, 1, 'A', libtcod.white, \"Player\", stats=test_stats_component, fighter=test_fighter_component, equipment=test_equipment)\n		self.assertTrue(\"d\" in get_damage_string(test_entity))\n\nclass AttackTests(unittest.TestCase):\n	def test_can_lookup_weapon_skill(self):\n		test_weapon = EquippableFactory.make_longsword()\n		self.assertEqual(weapon_skill_lookup(test_weapon), SkillNames.SWORD)\n		test_weapon2 = EquippableFactory.make_greatsword()\n		self.assertEqual(weapon_skill_lookup(test_weapon2), SkillNames.SWORD)\n\n	def test_can_lookup_correct_weapon_skill(self):\n		test_char = mocks.create_mockchar_3()\n		weapon = test_char.equipment.main_hand\n		skill_num = get_weapon_skill_for_attack(test_char)\n		self.assertEqual(skill_num, 10)\n\n	def test_can_lookup_unarmed_skill_if_no_weapon(self):\n		test_char = mocks.create_mockchar_12()\n		skill_num = get_weapon_skill_for_attack(test_char)\n		self.assertEqual(skill_num, 13)\n\n	def test_can_get_equipment_attack_bonus(self):\n		test_equipment = Equipment()\n		padded_armor_equippable = Equippable(EquipmentSlots.BODY, DR_bonus=1, hit_modifier=2)\n		padded_armor_name = Name(\"Padded Armor\")\n		padded_armor_entity = entity.Entity(1, 1, ')', libtcod.purple, equippable=padded_armor_equippable, name=padded_armor_name)\n		test_entity = entity.Entity(1, 1, 'A', libtcod.white, \"Player\", equipment=test_equipment)\n		test_equipment.body = padded_armor_entity\n		self.assertEqual(get_hit_modifier_from_equipment(test_entity), 2)\n\n	def test_can_perform_melee_attack(self):\n		test_char = mocks.create_mockchar_3()\n		test_enemy = mocks.create_mockchar_3()\n		results = attack(test_char, test_enemy, AttackTypes.MELEE)\n		self.assertNotEqual(len(results), 0)\n\n	def test_can_perform_attack_with_feat_bonuses(self):\n		#TODO: Make this testable somehow!\n		pass\n\nclass DefenderTests(unittest.TestCase):\n	def test_can_create_defender(self):\n		test_defender_component = Defender()\n		test_entity = entity.Entity(1, 1, 'A', libtcod.white, \"Player\", defender=test_defender_component)\n		self.assertEqual(test_entity.defender, test_defender_component)\n\n	def test_can_get_correct_parry(self):\n		test_char = mocks.create_mockchar_3()\n		self.assertEqual(test_char.defender.get_parry(), 5)\n\n	def test_can_get_correct_block(self):\n		test_char = mocks.create_mockchar_5()\n		self.assertEqual(test_char.defender.get_block(), 5)\n\n	def test_can_get_correct_evade(self):\n		test_char = mocks.create_mockchar_2()\n		self.assertEqual(test_char.defender.get_evade(), 5)\n\n	def test_defender_can_provide_a_defense(self):\n		test_char = mocks.create_mockchar_2()\n		defense_num = test_char.defender.get_best_melee_defense()\n		self.assertNotEqual(defense_num, 0)\n\n	def test_defender_can_choose_best_melee_defense_without_shield(self):\n		test_char = mocks.create_mockchar_3()\n		results = test_char.defender.get_best_melee_defense()\n		self.assertEqual(results[0], \"parry\")\n		self.assertEqual(results[1], 5)\n\n	#def test_defender_can_choose_best_melee_defense_with_shield_and_low_shield_skill(self):\n	#	test_char = mocks.create_mockchar_5()\n	#	results = test_char.defender.get_best_melee_defense()\n	#	self.assertEqual(results[0], \"parry\")\n	#	self.assertEqual(results[1], 6)		\n\n	def test_defender_can_choose_best_melee_defense_with_shield_and_high_shield_skill(self):\n		test_char = mocks.create_mockchar_6()\n		results = test_char.defender.get_best_melee_defense()\n		self.assertEqual(test_char.skills.get_skill_check(SkillNames.SHIELD), 10)\n		self.assertEqual(results[0], \"block\")\n		self.assertEqual(results[1], 5)\n\n	def test_defender_can_choose_best_missile_defense(self):\n		test_char = mocks.create_mockchar_1()\n		results = test_char.defender.get_best_missile_defense()\n		self.assertEqual(results[0], \"evade\")\n		self.assertEqual(results[1], 5)\n\n	def test_defender_can_choose_best_missile_defense_but_not_a_parry(self):\n		test_char = mocks.create_mockchar_5()\n		results = test_char.defender.get_best_missile_defense()\n		self.assertNotEqual(results[0], \"parry\")\n\n	def test_defender_can_choose_best_missile_defense_with_shield(self):\n		test_char = mocks.create_mockchar_11()\n		results = test_char.defender.get_best_missile_defense()\n		self.assertEqual(results[0], \"block\")\n		self.assertEqual(results[1], 7)\n\nclass DeathTests(unittest.TestCase):\n	def test_killing_a_monster_gives_xp(self):\n		# TODO: write this test\n		test_char = mocks.create_mockchar_11()\n		test_monster = monsters.make_orc(1, 1)\n		self.assertEqual(test_char.level.current_xp, 0)\n		message = message, test_char = kill_monster(test_monster, test_char)\n		self.assertGreater(test_char.level.current_xp, 0)\n\nclass DeathDropTests(unittest.TestCase):\n	def test_monster_has_items(self):\n		test_monster = monsters.make_kobold(1, 1)\n		self.assertNotEqual(len(test_monster.inventory.items), 0)\n\n	def test_kobold_drops_all_items(self):\n		test_monster = monsters.make_kobold(1, 1)\n		entities = []\n		entities = test_monster.inventory.drop_on_death(entities, test_monster)\n		self.assertEqual(len(entities), 3)\n\n	def test_orc_drops_all_items(self):\n		test_monster = monsters.make_orc(1, 1)\n		entities = []\n		entities = test_monster.inventory.drop_on_death(entities, test_monster)\n		self.assertEqual(len(entities), 2)\n\nclass DroppedMissileTests(unittest.TestCase):\n	def test_can_drop_missile(self):\n		test_monster = monsters.make_kobold(1, 1)\n		entities = []\n		entities.append(make_dropped_missile(AmmunitionTypes.ARROWS, (1,1)))\n		self.assertEqual(len(entities), 1)\n\n	def test_can_drop_missile_at_correct_location(self):\n		test_monster = monsters.make_kobold(1, 1)\n		entities = []\n		entities.append(make_dropped_missile(AmmunitionTypes.ARROWS, (1,1)))\n		self.assertEqual(entities[0].x, 1)\n		self.assertEqual(entities[0].y, 1)\n		self.assertEqual(entities[0].name.true_name, \"Arrow\")\n\nclass MissileWeaponTests(unittest.TestCase):\n	def test_can_create_arrows(self):\n		test_arrows = EquippableFactory.make_arrows(1, 1, 10)\n		self.assertEqual(test_arrows.item.quantity, 10)\n\n	def test_can_equip_missile_weapon(self):\n		test_char = mocks.create_mockchar_1()\n		test_bow = EquippableFactory.make_shortbow()\n		test_char.equipment.toggle_equip(test_bow)\n		self.assertEqual(test_char.equipment.main_hand, test_bow)\n		self.assertNotEqual(test_char.equipment.main_hand.missile_weapon.missile_damage, None)\n\n	def test_can_load_missile_weapon(self):\n		test_char = mocks.create_mockchar_10()\n		test_char.fighter.load_missile_weapon()\n		self.assertEqual(test_char.equipment.main_hand.missile_weapon.loaded, True)\n\n	def test_cannot_load_missile_weapon_without_ammunition(self):\n		test_char = mocks.create_mockchar_9()\n		results = test_char.fighter.load_missile_weapon()\n		self.assertEqual(results[0].get(\"loaded\"), None)\n\n	def test_can_get_missile_weapon_damage(self):\n		test_char = mocks.create_mockchar_1()\n		test_bow = EquippableFactory.make_shortbow()\n		test_char.equipment.toggle_equip(test_bow)\n		self.assertEqual(get_current_missile_damage(test_char), (1,6,0, DamageTypes.PIERCING))\n\n	def test_can_check_if_has_ammunition(self):\n		test_char = mocks.create_mockchar_10()\n		self.assertEqual(test_char.equipment.has_ammunition(), True)\n\n	def test_has_ammunition_returns_false_if_no_arrows(self):\n		test_char = mocks.create_mockchar_9()\n		self.assertEqual(test_char.equipment.has_ammunition(), False)		\n\nclass MeleeWeaponTests(unittest.TestCase):\n	def test_can_create_melee_weapon_component(self):\n		test_component = MeleeWeapon(WeaponTypes.AXE, WeaponCategories.AXE, \"swing\", 1, DamageTypes.CRUSHING)\n		self.assertEqual(test_component.weapon_type, WeaponTypes.AXE)\n\n	def test_has_melee_weapon(self):\n		test_char = mocks.create_mockchar_5()\n		self.assertEqual(test_char.equipment.has_melee_weapon(), True)\n	\n	def test_can_get_current_melee_damage(self):\n		test_char = mocks.create_mockchar_5()\n		self.assertEqual(get_current_melee_damage(test_char), (1,6,0, DamageTypes.SLASHING))	\n\n\nclass NameTests(unittest.TestCase):\n	def test_can_make_name_with_display(self):\n		test_name = Name(\"foo\")\n		test_entity = entity.Entity(1, 1, 'A', libtcod.white, name=test_name)\n		self.assertEqual(test_name.true_name, \"foo\")\n\n	def test_can_make_name_with_true_name(self):\n		test_name = Name(true_name=\"bar\")\n		self.assertEqual(test_name.true_name, \"bar\")\n\n	def test_can_make_entity_with_names(self):\n		test_name_component = Name(true_name=\"true\")\n		test_entity = entity.Entity(1, 1, 'A', libtcod.white, name=test_name_component)\n		self.assertEqual(test_entity.name.true_name, \"true\")\n\n#class ItemTests(unittest.TestCase):\n#	def test_can_create_item(self):\n#		test_item_component = Item(use_function=None, targeting=False, targeting_message=None)\n#		test_entity = entity.Entity(1, 1, 'A', libtcod.white, \"Test\", item=test_item_component)\n#		self.assertEqual(test_item_component, test_entity.item)\n\n#	def test_can_create_healing_potion(self):\n#		test_item = ItemFactory.makeHealingPotion()\n#		self.assertEqual(test_item.name, \"Healing Potion\")\n\nclass GetGameVariablesTests(unittest.TestCase):\n	def test_can_create_player(self):\n		constants = get_constants()\n		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants)\n		self.assertEqual(player.name.true_name, \"Player\")\n\n	def test_can_create_entities(self):\n		constants = get_constants()\n		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants)\n		self.assertEqual(isinstance(entities, list), True)\n\n	def test_can_create_game_map(self):\n		constants = get_constants()\n		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants)\n		self.assertNotEqual(game_map, None)\n\n	def test_can_create_message_log(self):\n		constants = get_constants()\n		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants)\n		self.assertNotEqual(message_log, None)	\n\n	def test_can_create_game_state(self):\n		constants = get_constants()\n		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants)\n		self.assertNotEqual(game_state, None)\n\n	def test_can_create_dlevels(self):\n		constants = get_constants()\n		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants)\n		self.assertNotEqual(dlevels, None)\n\n	def test_can_populate_dlevels(self):\n		constants = get_constants()\n		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants)\n		dlevels = populate_dlevels(entities, game_map, 6)\n		self.assertTrue(1 in dlevels.keys())\n		self.assertTrue(6 in dlevels.keys())\n		self.assertTrue(7 not in dlevels.keys())\n\n#class MenuTests(unittest.TestCase):\n#	def can_create_main_menu(self):\n#		constants = get_constants()\n#		options = build_text_menu(['Play a new game', 'Continue a game', 'Quit'])\n#		con = libtcod.console_new(constants['screen_width'], constants['screen_height'])\n##		main_menu(con, main_menu_background_image, constants['screen_width'], constants['screen_height'])\n\nclass ItemNamesTests(unittest.TestCase):\n	def test_player_has_lists_of_identified_items(self):\n		dummy_links = {}\n		identified_component = Identified(dummy_links)\n		self.assertTrue(isinstance(identified_component.identified_potions, list), True)\n		self.assertTrue(isinstance(identified_component.identified_scrolls, list), True)\n		self.assertTrue(isinstance(identified_component.potion_links, dict), True)\n\n	def test_game_has_list_of_potion_names(self):\n		constants = get_constants()\n		self.assertNotEqual(len(constants['potion_descriptions']), 0)\n\n	def test_game_has_list_of_scroll_names(self):\n		constants = get_constants()\n		self.assertNotEqual(len(constants['scroll_descriptions']), 0)\n\n	def test_game_has_list_of_potion_types(self):\n		constants = get_constants()\n		self.assertNotEqual(len(constants['potion_types']), 0)\n\n	def test_game_has_list_of_scroll_types(self):\n		constants = get_constants()\n		self.assertNotEqual(len(constants['scroll_types']), 0)	\n\n	def test_same_number_of_potion_names_and_types(self):\n		constants = get_constants()\n		self.assertEqual(len(constants['potion_descriptions']), len(constants['potion_types']))\n\n	def test_same_number_of_scroll_names_and_types(self):\n		constants = get_constants()\n		self.assertEqual(len(constants['scroll_descriptions']), len(constants['scroll_types']))	\n\n	def test_can_assign_a_potion_name_to_a_type(self):\n		constants = get_constants()\n		potion_description_links = assign_potion_descriptions(constants['potion_descriptions'], constants['potion_types'])\n		self.assertNotEqual(len(potion_description_links), 0)\n\n	def test_can_assign_a_scroll_name_to_a_type(self):\n		constants = get_constants()\n		scroll_description_links = assign_scroll_descriptions(constants['scroll_descriptions'], constants['scroll_types'])\n		self.assertNotEqual(len(scroll_description_links), 0)\n\n	def test_player_has_potion_links(self):\n		constants = get_constants()\n		potion_description_links = assign_potion_descriptions(constants['potion_descriptions'], constants['potion_types'])\n		test_identified_component = Identified(potion_description_links)\n		test_entity = entity.Entity(1, 1, 'A', libtcod.white, identified=test_identified_component)\n		self.assertEqual(isinstance(test_entity.identified.potion_links, dict), True)\n\n	def test_player_has_scroll_links(self):\n		constants = get_constants()\n		scroll_description_links = assign_scroll_descriptions(constants['scroll_descriptions'], constants['scroll_types'])\n		potion_description_links = assign_potion_descriptions(constants['potion_descriptions'], constants['potion_types'])\n		test_identified_component = Identified(potion_description_links, scroll_description_links)\n		test_entity = entity.Entity(1, 1, 'A', libtcod.white, identified=test_identified_component)\n		self.assertEqual(isinstance(test_entity.identified.scroll_links, dict), True)\n\n	def test_identified_potion_has_correct_display_name(self):\n		constants = get_constants()\n		potion_description_links = assign_potion_descriptions(constants['potion_descriptions'], constants['potion_types'])\n		test_identified_component = Identified(potion_description_links)\n		test_identified_component.identified_potions.append(\"Healing Potion\")\n		test_player = entity.Entity(1, 1, 'A', libtcod.white, identified=test_identified_component)\n		test_potion = make_healing_potion()\n		self.assertEqual(test_potion.name.true_name, \"Healing Potion\")\n		self.assertTrue(\"Healing Potion\" in test_player.identified.identified_potions)\n		self.assertEqual(get_display_name(test_player, test_potion), \"Healing Potion\")\n\n	def test_unidentified_potion_has_correct_display_name(self):\n		constants = get_constants()\n		potion_description_links = assign_potion_descriptions(constants['potion_descriptions'], constants['potion_types'])\n		test_identified_component = Identified(potion_description_links)\n		test_player = entity.Entity(1, 1, 'A', libtcod.white, identified=test_identified_component)\n		test_potion = make_healing_potion()\n		self.assertEqual(test_potion.consumable.consumable_type, ConsumableTypes.POTION)\n		self.assertEqual(test_potion.name.true_name, \"Healing Potion\")\n		self.assertEqual(get_display_name(test_player, test_potion), potion_description_links[test_potion.name.true_name])\n\n	def test_identified_scroll_has_correct_display_name(self):\n		constants = get_constants()\n		scroll_description_links = assign_scroll_descriptions(constants['scroll_descriptions'], constants['scroll_types'])\n		potion_description_links = assign_potion_descriptions(constants['potion_descriptions'], constants['potion_types'])\n		test_identified_component = Identified(potion_description_links, scroll_description_links)\n		test_identified_component.identified_scrolls.append(\"Confusion Scroll\")\n		test_player = entity.Entity(1, 1, 'A', libtcod.white, identified=test_identified_component)\n		test_scroll = make_confusion_scroll()\n		self.assertEqual(test_scroll.name.true_name, \"Confusion Scroll\")\n		self.assertTrue(\"Confusion Scroll\" in test_player.identified.identified_scrolls)\n		self.assertEqual(get_display_name(test_player, test_scroll), \"Confusion Scroll\")\n\n	def test_unidentified_scroll_has_correct_display_name(self):\n		constants = get_constants()\n		potion_description_links = assign_potion_descriptions(constants['potion_descriptions'], constants['potion_types'])\n		scroll_description_links = assign_scroll_descriptions(constants['scroll_descriptions'], constants['scroll_types'])\n		test_identified_component = Identified(potion_description_links, scroll_description_links)\n		test_player = entity.Entity(1, 1, 'A', libtcod.white, identified=test_identified_component)\n		test_scroll = make_confusion_scroll()\n		self.assertEqual(test_scroll.consumable.consumable_type, ConsumableTypes.SCROLL)\n		self.assertEqual(test_scroll.name.true_name, \"Confusion Scroll\")\n		self.assertEqual(get_display_name(test_player, test_scroll), scroll_description_links[test_scroll.name.true_name])\n\n	def test_using_an_unidentified_scroll_identifies_it(self):\n		constants = get_constants()\n		potion_description_links = assign_potion_descriptions(constants['potion_descriptions'], constants['potion_types'])\n		scroll_description_links = assign_scroll_descriptions(constants['scroll_descriptions'], constants['scroll_types'])\n		test_identified_component = Identified(potion_description_links, scroll_description_links)\n		test_inventory = Inventory(10)\n		test_player = entity.Entity(1, 1, 'A', libtcod.white, identified=test_identified_component, inventory=test_inventory)\n		test_scroll = make_confusion_scroll()\n		self.assertEqual(len(test_identified_component.identified_scrolls), 0)\n		test_inventory.use(test_scroll)\n		self.assertEqual(len(test_identified_component.identified_scrolls), 1)\n		#self.assertTrue('onfusion' in test_identified_component.identified_scrolls)\n\nclass BasicGameTests(unittest.TestCase):\n	def test_can_create_new_game(self):\n		constants = get_constants()\n		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants)\n		self.assertEqual(isinstance(entities, list), True)\n\n	def test_can_save_game(self):\n		constants = get_constants()\n		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants)\n		self.assertEqual(save_game(player, entities, game_map, message_log, game_state, dlevels), True)\n\n	def test_can_load_game(self):\n		constants = get_constants()\n		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants)\n		save_game(player, entities, game_map, message_log, game_state, dlevels)\n		player, entities, game_map, message_log, game_state, dlevels = load_game()\n		self.assertEqual(isinstance(entities, list), True)		\n\n	def test_game_starts_with_turn_count(self):\n		constants = get_constants()\n		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants)\n		self.assertEqual(game_state.game_turn, 0)\n\nclass CharacterTests(unittest.TestCase):\n	def test_can_create_character_with_stats(self):\n		constants = get_constants()\n		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants)\n		self.assertTrue(player.stats)\n	def test_can_create_character_with_correct_stats(self):\n		constants = get_constants()\n		player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants)\n		self.assertTrue(player.stats.Strength, 16)\n\n	def test_can_create_priest(self):\n		constants = get_constants()\n		test_priest = create_player(constants, 3)\n		# TODO: There must be a better way to test this\n		self.assertEqual(test_priest.stats.Strength, 13)\n\n	def test_can_create_wizard(self):\n		constants = get_constants()\n		test_wizard = create_player(constants, 2)\n		# TODO: There must be a better way to test this\n		self.assertEqual(test_wizard.stats.Intellect, 18)	\n\n	def test_can_get_character_race(self):\n		race = get_character_race(con, constants)\n		\n\nclass EffectsTests(unittest.TestCase):\n\n	def test_effects_manager_can_add_effect(self):\n		test_fighter = Fighter(xp_reward=100)\n		test_entity = entity.Entity(1, 1, 'A', libtcod.white, fighter=test_fighter)\n		test_effect = Effect(name=EffectNames.POISON, description=\"Poisoned\", turns_left=5, damage_per_turn=3)\n		self.assertEqual(add_effect(test_effect, test_entity), \"appended\")\n		self.assertEqual(len(test_fighter.effect_list), 1)\n\n	def test_effects_stack_properly(self):\n		test_fighter = Fighter(xp_reward=100)\n		test_entity = entity.Entity(1, 1, 'A', libtcod.white, fighter=test_fighter)\n		test_effect = Effect(name=EffectNames.POISON, description=\"Poisoned\", turns_left=5, damage_per_turn=3)\n		add_effect(test_effect, test_entity)\n		test_effect_2 = Effect(name=EffectNames.POISON, description=\"Poisoned\", turns_left=3, damage_per_turn=3)\n		self.assertEqual(add_effect(test_effect_2, test_entity), \"extended\")\n		self.assertEqual(test_fighter.effect_list[0].turns_left, 8)\n\n	def test_effects_tick_down(self):\n		test_fighter = Fighter(xp_reward=100)\n		test_entity = entity.Entity(1, 1, 'A', libtcod.white, fighter=test_fighter)\n		test_effect = Effect(name=EffectNames.POISON, description=\"Poisoned\", turns_left=5, damage_per_turn=3)\n		add_effect(test_effect, test_entity)\n		tick_down_effects(test_entity)\n		self.assertEqual(test_effect.turns_left, 4)\n\n	def test_effects_disappear_when_done(self):\n		test_fighter = Fighter(xp_reward=100)\n		test_entity = entity.Entity(1, 1, 'A', libtcod.white, fighter=test_fighter)\n		test_effect = Effect(name=EffectNames.POISON, description=\"Poisoned\", turns_left=5, damage_per_turn=3)\n		add_effect(test_effect, test_entity)\n		self.assertEqual(len(test_entity.fighter.effect_list), 1)\n		for _ in range(5):\n			tick_down_effects(test_entity)\n		self.assertEqual(len(test_entity.fighter.effect_list), 0)\n\n	def test_damage_over_time_effects_work(self):\n		fighter_component = Fighter(xp_reward=100)\n		stats_component = Stats(Strength=9, Precision=11, Agility=12, Intellect=10, Willpower=9, Stamina=10, Endurance=9)\n		test_entity = entity.Entity(1, 1, 'A', libtcod.white, stats=stats_component, fighter=fighter_component)\n		test_effect = Effect(name=EffectNames.POISON, description=\"Poisoned\", turns_left=5, damage_per_turn=3)\n		add_effect(test_effect, test_entity)\n		process_damage_over_time(test_entity)\n		self.assertEqual(test_entity.stats.hp, 16)\n\n	def test_can_calculate_hit_bonus_from_effects(self):\n		test_fighter = Fighter(xp_reward=100)\n		test_entity = entity.Entity(1, 1, 'A', libtcod.white, fighter=test_fighter)\n		test_effect = Effect(name=EffectNames.POISON, description=\"Poisoned\", turns_left=5, damage_per_turn=3)\n		add_effect(test_effect, test_entity)\n		self.assertEqual(get_hit_modifier_from_status_effects(test_entity), 0)\n		test_effect_2 = Effect(name=EffectNames.BLESS, description=\"Blessed\", turns_left=5, hit_modifier=3)\n		add_effect(test_effect_2, test_entity)\n		self.assertEqual(get_hit_modifier_from_status_effects(test_entity), 3)\n\n	def test_can_calculate_damage_bonus_from_effects(self):\n		test_fighter = Fighter(xp_reward=100)\n		test_entity = entity.Entity(1, 1, 'A', libtcod.white, fighter=test_fighter)\n		self.assertEqual(get_physical_damage_modifier_from_status_effects(test_entity), 0)\n		test_effect = Effect(name=EffectNames.BLESS, description=\"Blessed\", turns_left=5, physical_damage_modifier=3)\n		add_effect(test_effect, test_entity)\n		self.assertEqual(get_physical_damage_modifier_from_status_effects(test_entity), 3)\n\n	def test_can_apply_a_confuse_effect(self):\n		test_player = mocks.create_mockchar_3()\n		test_effect = Effect(name=EffectNames.CONFUSION, description=\"Confused\", turns_left=5)\n		add_effect(test_effect, test_player)\n		self.assertEqual(test_player.fighter.effect_list[0].name, EffectNames.CONFUSION)\n\n\nclass UseTests(unittest.TestCase):\n	def test_can_use_healing_potion(self):\n		test_potion = make_healing_potion()\n		test_inventory = Inventory(10)\n		test_player_entity = entity.Entity(1, 1, 'A', libtcod.white, \"Player\", inventory=test_inventory)\n		results = test_inventory.use(test_potion)\n		self.assertEqual(len(results), 1)\n\n	def test_can_identify_a_potion(self):\n		test_char = mocks.create_mockchar_1()\n		self.assertEqual(len(test_char.identified.identified_potions), 0)\n		test_potion = make_healing_potion()\n		results = test_char.inventory.use(test_potion)\n		self.assertEqual(len(test_char.identified.identified_potions), 1)\n\n	def test_can_use_confusion_potion(self):\n		test_potion = make_confusion_potion()\n		test_inventory = Inventory(10)\n		test_inventory.items.append(test_potion)\n		test_player_entity = entity.Entity(1, 1, 'A', libtcod.white, \"Player\", inventory=test_inventory)\n		test_inventory.use(test_potion)\n		#self.assertEqual(results[0].get('consumed'), True)\n\nclass MoveTests(unittest.TestCase):\n	def test_can_calculate_distance_to(self):\n		test_entity_1 = entity.Entity(1, 1, 'A', libtcod.white)\n		test_entity_2 = entity.Entity(4, 5, 'A', libtcod.white)\n		self.assertEqual(distance_to(test_entity_1, test_entity_2), 5)\n\nclass BookTests(unittest.TestCase):\n	def test_can_make_and_hold_bless_book(self):\n		test_book = make_bless_book()\n		test_inventory = Inventory(10)\n		test_entity = entity.Entity(1, 1, 'A', libtcod.white, inventory=test_inventory)\n		test_inventory.add_item(test_book)\n		self.assertTrue(len(test_inventory.items) == 1)\n		self.assertEqual(test_inventory.items[0].name.true_name, \"Bless spellbook\")\n\nclass PotionMenuTests(unittest.TestCase):\n	def test_can_produce_list_of_potions_for_menu(self):\n		test_potion = make_healing_potion()\n		test_potion2 = make_poison_potion()\n		test_inventory = Inventory(10)\n		test_inventory.items.append(test_potion)\n		test_inventory.items.append(test_potion2)\n		test_player = entity.Entity(1, 1, 'A', libtcod.white, inventory=test_inventory)\n		potions = get_carried_potions(test_player)\n		self.assertEqual(len(potions), 2)\n\n	def test_can_quaff_potion(self):\n		test_potion = make_healing_potion()\n		test_potion2 = make_poison_potion()\n		test_inventory = Inventory(10)\n		test_inventory.items.append(test_potion)\n		test_inventory.items.append(test_potion2)\n		test_player = entity.Entity(1, 1, 'A', libtcod.white, inventory=test_inventory)\n		potions = get_carried_potions(test_player)\n		used_potion = potions[0]\n		player_turn_results = []\n		player_turn_results.extend(test_player.inventory.use(used_potion))\n		self.assertNotEqual(player_turn_results, 0)\n\nclass PickupTests(unittest.TestCase):\n	def test_can_pickup_item(self):\n		test_bow = EquippableFactory.make_shortbow()\n		test_inventory = Inventory(10)\n		test_player = entity.Entity(1, 1, 'A', libtcod.white, inventory=test_inventory)\n		entities = []\n		entities.append(test_player)\n		entities.append(test_bow)\n		player_turn_results = []\n		player_turn_results.extend(pickup_item(test_player, entities))\n		self.assertTrue('item_added' in player_turn_results[0])\n\n	def test_picking_up_can_stack_quantity(self):\n		test_inventory = Inventory(10)\n		test_player = entity.Entity(1, 1, 'A', libtcod.white, inventory=test_inventory)\n		self.assertEqual(len(test_player.inventory.items), 0)\n		test_arrows = EquippableFactory.make_arrows(1, 1, 5)\n		test_player.inventory.items.append(test_arrows)\n		self.assertEqual(test_player.inventory.items[0].item.quantity, 5)\n		self.assertEqual(len(test_player.inventory.items), 1)\n		test_arrows_2 = EquippableFactory.make_arrows(1,1, 2)\n		test_player.inventory.add_item(test_arrows_2)\n		self.assertEqual(len(test_player.inventory.items), 1)\n		self.assertEqual(test_player.inventory.items[0].item.quantity, 7)\n\nclass FeatTests(unittest.TestCase):\n	def test_can_get_current_feats(self):\n		test_performer = Performer()\n		test_player = entity.Entity(1, 1, 'A', libtcod.white, performer=test_performer)\n		self.assertEqual(len(test_player.performer.feat_list), 0)\n\n	def test_can_get_targetable_entities(self):\n		test_player_fighter = Fighter()\n		test_player = entity.Entity(1, 1, 'A', libtcod.white, fighter=test_player_fighter)\n		fighter_component = Fighter()\n		test_monster = entity.Entity(1, 0, 'B', libtcod.white, fighter=fighter_component)\n		entities = [test_player, test_monster]\n		self.assertEqual(len(get_targetable_entities_in_range(test_player, 5, entities)), 1)\n\n	def test_can_get_available_feats(self):\n		pass\n\n	def test_can_learn_unlocked_feat(self):\n		pass\n\n	def test_cannot_learn_locked_feat(self):\n		pass\n\nclass DRTests(unittest.TestCase):\n	def test_can_get_base_DR(self):\n		test_equipment = Equipment()\n		test_fighter = Fighter()\n		test_player = test_player = entity.Entity(1, 1, 'A', libtcod.white, fighter=test_fighter, equipment=test_equipment)\n		self.assertEqual(test_player.fighter.DR, 0)\n		test_fighter2 = Fighter(base_DR=2)\n		test_player2 = entity.Entity(1, 1, 'A', libtcod.white, fighter=test_fighter2, equipment=test_equipment)\n		self.assertEqual(test_player2.fighter.DR, 2)\n\n	def test_can_get_DR_from_equipment(self):\n		test_equipment = Equipment()\n		test_fighter = Fighter()\n		test_player = test_player = entity.Entity(1, 1, 'A', libtcod.white, fighter=test_fighter, equipment=test_equipment)\n		self.assertEqual(test_player.fighter.DR, 0)\n		test_armor = EquippableFactory.make_padded_armor()\n		test_equipment.body = test_armor\n		self.assertEqual(test_player.fighter.DR, 1)\n\n\nif __name__ == \"__main__\":\n	unittest.main()\n",
 			"file": "rltests.py",
+			"file_size": 46166,
+			"file_write_time": 132667332511770138,
 			"settings":
 			{
-				"buffer_size": 45227,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "mocks.py",
-			"settings":
-			{
-				"buffer_size": 9831,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "components/level.py",
-			"settings":
-			{
-				"buffer_size": 874,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "components/fighter.py",
-			"settings":
-			{
-				"buffer_size": 2763,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"contents": "Searching 77 files for \"TODO\"\n\nC:\\dev\\p3roguelike\\components\\ai.py:\n   45  		return results\n   46  \n   47: # TODO: clean this up, it should work similar to confused players - I think?\n   48  class ConfusedMonster:\n   49  	def __init__(self, previous_ai, number_of_turns=10):\n\nC:\\dev\\p3roguelike\\loader_functions\\initialize_new_game.py:\n   94  \n   95  def set_spells(player_class, stats_component):\n   96: 	# TODO: Fix this!!!\n   97  	caster_component = Caster(max_mana=stats_component.Willpower)\n   98  	spell_mapping = {0: [], 1: [make_bless_spell], 2: [make_lightning_bolt_spell], 3: [make_heal_spell]}\n   ..\n  114  \n  115  def set_feats(player_class):\n  116: 	# TODO: This could probably be reworked to dictionary lookup - not sure if it is worth it\n  117  	player_performer = Performer()\n  118  	if player_class == 0:\n\nC:\\dev\\p3roguelike\\magic_functions.py:\n   34  \n   35  	results = []\n   36: 	# TODO: this needs work - healing someone else will incorrectly show a message about you\n   37  	if entity.stats and entity.fighter:\n   38  		if entity.stats.hp == entity.stats.max_hp:\n\nC:\\dev\\p3roguelike\\menus.py:\n   73  	libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height / 2) -4, libtcod.BKGND_NONE, libtcod.CENTER, 'TOMBS OF THE ANCIENT KINGS')\n   74  	libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height /2) -3, libtcod.BKGND_NONE, libtcod.CENTER, 'By Leon Tranter')\n   75: 	# TODO: This probably shouldn't be hard-coded here!! \n   76  	options = ['Barbarian', 'Paladin', 'Wizard', 'Priest']	\n   77  	menu(con, '', options, 24, screen_width, screen_height)\n\nC:\\dev\\p3roguelike\\p3RL.sublime-workspace:\n  561  		},\n  562  		{\n  563: 			\"contents\": \"from game_messages import Message\\nfrom game_states import GameStates\\nfrom death_functions import handle_death\\nfrom components.equippable import make_dropped_missile\\nfrom death_functions import kill_player, kill_monster\\n\\ndef process_results(player_turn_results, game_state, entities, player, message_log, targets):\\n	for player_turn_result in player_turn_results:\\n		quit = player_turn_result.get('quit')\\n		message = player_turn_result.get('message')\\n		dead_entity = player_turn_result.get('dead')\\n		item_added = player_turn_result.get('item_added')\\n		item_consumed = player_turn_result.get('consumed')\\n		item_dropped = player_turn_result.get('item_dropped')\\n		targeting = player_turn_result.get('targeting')\\n		spell_targeting = player_turn_result.get('spell_targeting')\\n		feat_targeting = player_turn_result.get('feat_targeting')\\n		targeting_cancelled = player_turn_result.get('targeting_cancelled')\\n		equip = player_turn_result.get('equip')\\n		cast = player_turn_result.get('cast')\\n		missile_targeting = player_turn_result.get('missile_targeting')\\n		fired_weapon = player_turn_result.get(\\\"fired_weapon\\\")\\n		missile_dropped = player_turn_result.get(\\\"missile_dropped\\\")\\n		dropped_location = player_turn_result.get(\\\"dropped_location\\\") \\n		monster_drops = player_turn_result.get(\\\"monster_drops\\\")\\n		loaded = player_turn_result.get(\\\"loaded\\\")\\n\\n		if quit:\\n			return True\\n		if message:\\n			message_log.add_message(message)\\n		if dead_entity:\\n			message, game_state, entities = handle_death(entities, dead_entity, player, game_state)\\n			message_log.add_message(message)\\n		if item_added:\\n			entities.remove(item_added)\\n		# TODO: roll these three results into one?\\n		if targeting:\\n			game_state.previous_game_state = GameStates.PLAYERS_TURN\\n			game_state.current_game_state = GameStates.TARGETING\\n			targets.current_targeting_consumable = targeting\\n			message_log.add_message(targets.current_targeting_consumable.consumable.targeting_message)\\n		if spell_targeting:\\n			game_state.previous_game_state = GameStates.PLAYERS_TURN\\n			game_state.current_game_state = GameStates.TARGETING\\n			targets.current_targeting_spell = spell_targeting\\n			message_log.add_message(targets.current_targeting_spell.targeting_message)\\n		if feat_targeting:\\n			game_state.previous_game_state = GameStates.PLAYERS_TURN\\n			game_state.current_game_state = GameStates.TARGETING\\n			targets.current_targeting_feat = feat_targeting\\n			message_log.add_message(targets.current_targeting_feat.targeting_message)\\n		if missile_targeting:\\n			game_state.previous_game_state = GameStates.PLAYERS_TURN\\n			game_state.current_game_state = GameStates.TARGETING\\n			targets.current_targeting_weapon = True\\n			message_log.add_message(Message(\\\"Choose a target for your missile attack...\\\"))\\n		if missile_dropped:\\n			missile_entity = make_dropped_missile(missile_dropped, dropped_location)\\n			entities.append(missile_entity)\\n		if item_dropped:\\n			entities.append(item_dropped)\\n		if equip:\\n			equip_results = player.equipment.toggle_equip(equip)\\n			for equip_result in equip_results:\\n				equipped = equip_result.get('equipped')\\n				dequipped = equip_result.get('dequipped')\\n				fail_equip = equip_result.get('fail_equip')\\n				if equipped:\\n					message_log.add_message(Message('You equipped the {0}.'.format(equipped.name.true_name)))\\n				if dequipped:\\n					message_log.add_message(Message('You dequipped the {0}.'.format(dequipped.name.true_name)))\\n				if fail_equip:\\n					message_log.add_message(Message(fail_equip))\\n			pass\\n		if targeting_cancelled:\\n			game_state.current_game_state = previous_game_state\\n			message_log.add_message(Message('Targeting cancelled'))\\n\\n	return game_state, entities, player, targets\\n\\ndef process_ai_results(enemy_turn_results, acting_entity, entities, player, message_log, game_state):\\n	for enemy_turn_result in enemy_turn_results:\\n		message = enemy_turn_result.get('message')\\n		dead_entity = enemy_turn_result.get('dead')\\n		missile_dropped = enemy_turn_result.get('missile_dropped')\\n		dropped_location = enemy_turn_result.get('dropped_location')\\n		equips = enemy_turn_result.get(\\\"equips\\\")\\n		\\n		if message:\\n			message_log.add_message(message)\\n		if missile_dropped:\\n			missile_entity = make_dropped_missile(missile_dropped, dropped_location)\\n			entities.append(missile_entity)\\n		if equips:\\n			acting_entity.equipment.toggle_equip(equips)\\n		if dead_entity:\\n			if dead_entity == player:\\n				message, game_state = kill_player(dead_entity, game_state)\\n				print(f\\\"gs is {game_state.current_game_state}\\\")\\n			else:\\n				message = kill_monster(dead_entity)\\n			message_log.add_message(message)\\n			if game_state == GameStates.PLAYER_DEAD:\\n				break\\n\\n	return entities, game_state, message_log	\",\n  564  			\"file\": \"systems/results_process_system.py\",\n  565  			\"file_size\": 4746,\n  ...\n  612  		},\n  613  		{\n  614: 			\"contents\": \"Searching 76 files for \\\"pick up the\\\"\\n\\nC:\\\\dev\\\\p3roguelike\\\\components\\\\inventory.py:\\n   24  			results.append({\\n   25  				'item_added': item,\\n   26: 				'message': Message('You pick up the {0}!'.format(temp_display_name), libtcod.yellow)\\n   27  			})\\n   28  			for current_item in self.items:\\n\\n1 match in 1 file\\n\\n\\nSearching 76 files for \\\"if targeting\\\"\\n\\nC:\\\\dev\\\\p3roguelike\\\\p3RL.sublime-workspace:\\n  561  		},\\n  562  		{\\n  563: 			\\\"contents\\\": \\\"from game_messages import Message\\\\nfrom game_states import GameStates\\\\nfrom death_functions import handle_death\\\\nfrom components.equippable import make_dropped_missile\\\\nfrom death_functions import kill_player, kill_monster\\\\n\\\\ndef process_results(player_turn_results, game_state, entities, player, message_log, targets):\\\\n	for player_turn_result in player_turn_results:\\\\n		quit = player_turn_result.get('quit')\\\\n		message = player_turn_result.get('message')\\\\n		dead_entity = player_turn_result.get('dead')\\\\n		item_added = player_turn_result.get('item_added')\\\\n		item_consumed = player_turn_result.get('consumed')\\\\n		item_dropped = player_turn_result.get('item_dropped')\\\\n		targeting = player_turn_result.get('targeting')\\\\n		spell_targeting = player_turn_result.get('spell_targeting')\\\\n		feat_targeting = player_turn_result.get('feat_targeting')\\\\n		targeting_cancelled = player_turn_result.get('targeting_cancelled')\\\\n		equip = player_turn_result.get('equip')\\\\n		cast = player_turn_result.get('cast')\\\\n		missile_targeting = player_turn_result.get('missile_targeting')\\\\n		fired_weapon = player_turn_result.get(\\\\\\\"fired_weapon\\\\\\\")\\\\n		missile_dropped = player_turn_result.get(\\\\\\\"missile_dropped\\\\\\\")\\\\n		dropped_location = player_turn_result.get(\\\\\\\"dropped_location\\\\\\\") \\\\n		monster_drops = player_turn_result.get(\\\\\\\"monster_drops\\\\\\\")\\\\n		loaded = player_turn_result.get(\\\\\\\"loaded\\\\\\\")\\\\n\\\\n		if quit:\\\\n			return True\\\\n		if message:\\\\n			message_log.add_message(message)\\\\n		if dead_entity:\\\\n			message, game_state, entities = handle_death(entities, dead_entity, player, game_state)\\\\n			message_log.add_message(message)\\\\n		if item_added:\\\\n			entities.remove(item_added)\\\\n		# TODO: roll these three results into one?\\\\n		if targeting:\\\\n			game_state.previous_game_state = GameStates.PLAYERS_TURN\\\\n			game_state.current_game_state = GameStates.TARGETING\\\\n			targets.current_targeting_consumable = targeting\\\\n			message_log.add_message(targets.current_targeting_consumable.consumable.targeting_message)\\\\n		if spell_targeting:\\\\n			game_state.previous_game_state = GameStates.PLAYERS_TURN\\\\n			game_state.current_game_state = GameStates.TARGETING\\\\n			targets.current_targeting_spell = spell_targeting\\\\n			message_log.add_message(targets.current_targeting_spell.targeting_message)\\\\n		if feat_targeting:\\\\n			game_state.previous_game_state = GameStates.PLAYERS_TURN\\\\n			game_state.current_game_state = GameStates.TARGETING\\\\n			targets.current_targeting_feat = feat_targeting\\\\n			message_log.add_message(targets.current_targeting_feat.targeting_message)\\\\n		if missile_targeting:\\\\n			game_state.previous_game_state = GameStates.PLAYERS_TURN\\\\n			game_state.current_game_state = GameStates.TARGETING\\\\n			targets.current_targeting_weapon = True\\\\n			message_log.add_message(Message(\\\\\\\"Choose a target for your missile attack...\\\\\\\"))\\\\n		if missile_dropped:\\\\n			missile_entity = make_dropped_missile(missile_dropped, dropped_location)\\\\n			entities.append(missile_entity)\\\\n		if item_dropped:\\\\n			entities.append(item_dropped)\\\\n		if equip:\\\\n			equip_results = player.equipment.toggle_equip(equip)\\\\n			for equip_result in equip_results:\\\\n				equipped = equip_result.get('equipped')\\\\n				dequipped = equip_result.get('dequipped')\\\\n				fail_equip = equip_result.get('fail_equip')\\\\n				if equipped:\\\\n					message_log.add_message(Message('You equipped the {0}.'.format(equipped.name.true_name)))\\\\n				if dequipped:\\\\n					message_log.add_message(Message('You dequipped the {0}.'.format(dequipped.name.true_name)))\\\\n				if fail_equip:\\\\n					message_log.add_message(Message(fail_equip))\\\\n			pass\\\\n		if targeting_cancelled:\\\\n			game_state.current_game_state = previous_game_state\\\\n			message_log.add_message(Message('Targeting cancelled'))\\\\n\\\\n	return game_state, entities, player, targets\\\\n\\\\ndef process_ai_results(enemy_turn_results, acting_entity, entities, player, message_log, game_state):\\\\n	for enemy_turn_result in enemy_turn_results:\\\\n		message = enemy_turn_result.get('message')\\\\n		dead_entity = enemy_turn_result.get('dead')\\\\n		missile_dropped = enemy_turn_result.get('missile_dropped')\\\\n		dropped_location = enemy_turn_result.get('dropped_location')\\\\n		equips = enemy_turn_result.get(\\\\\\\"equips\\\\\\\")\\\\n		\\\\n		if message:\\\\n			message_log.add_message(message)\\\\n		if missile_dropped:\\\\n			missile_entity = make_dropped_missile(missile_dropped, dropped_location)\\\\n			entities.append(missile_entity)\\\\n		if equips:\\\\n			acting_entity.equipment.toggle_equip(equips)\\\\n		if dead_entity:\\\\n			if dead_entity == player:\\\\n				message, game_state = kill_player(dead_entity, game_state)\\\\n				print(f\\\\\\\"gs is {game_state.current_game_state}\\\\\\\")\\\\n			else:\\\\n				message = kill_monster(dead_entity)\\\\n			message_log.add_message(message)\\\\n			if game_state == GameStates.PLAYER_DEAD:\\\\n				break\\\\n\\\\n	return entities, game_state, message_log	\\\",\\n  564  			\\\"file\\\": \\\"systems/results_process_system.py\\\",\\n  565  			\\\"file_size\\\": 4746,\\n\\nC:\\\\dev\\\\p3roguelike\\\\systems\\\\results_process_system.py:\\n   36  			entities.remove(item_added)\\n   37  		# TODO: roll these three results into one?\\n   38: 		if targeting:\\n   39  			game_state.previous_game_state = GameStates.PLAYERS_TURN\\n   40  			game_state.current_game_state = GameStates.TARGETING\\n   ..\\n   74  					message_log.add_message(Message(fail_equip))\\n   75  			pass\\n   76: 		if targeting_cancelled:\\n   77  			game_state.current_game_state = previous_game_state\\n   78  			message_log.add_message(Message('Targeting cancelled'))\\n\\n4 matches across 2 files\\n\\n\\nSearching 76 files for \\\"there are no valid\\\"\\n\\nC:\\\\dev\\\\p3roguelike\\\\systems\\\\feat_system.py:\\n   52  				break\\n   53  		else:\\n   54: 			results.append({'message': Message('There are no valid targets there.')})\\n   55  			return results\\n   56  		kwargs = {**feat.function_kwargs, **kwargs}\\n\\n1 match in 1 file\\n\\n\\nSearching 76 files for \\\"feat_targeting\\\"\\n\\nC:\\\\dev\\\\p3roguelike\\\\p3RL.sublime-workspace:\\n  561  		},\\n  562  		{\\n  563: 			\\\"contents\\\": \\\"from game_messages import Message\\\\nfrom game_states import GameStates\\\\nfrom death_functions import handle_death\\\\nfrom components.equippable import make_dropped_missile\\\\nfrom death_functions import kill_player, kill_monster\\\\n\\\\ndef process_results(player_turn_results, game_state, entities, player, message_log, targets):\\\\n	for player_turn_result in player_turn_results:\\\\n		quit = player_turn_result.get('quit')\\\\n		message = player_turn_result.get('message')\\\\n		dead_entity = player_turn_result.get('dead')\\\\n		item_added = player_turn_result.get('item_added')\\\\n		item_consumed = player_turn_result.get('consumed')\\\\n		item_dropped = player_turn_result.get('item_dropped')\\\\n		targeting = player_turn_result.get('targeting')\\\\n		spell_targeting = player_turn_result.get('spell_targeting')\\\\n		feat_targeting = player_turn_result.get('feat_targeting')\\\\n		targeting_cancelled = player_turn_result.get('targeting_cancelled')\\\\n		equip = player_turn_result.get('equip')\\\\n		cast = player_turn_result.get('cast')\\\\n		missile_targeting = player_turn_result.get('missile_targeting')\\\\n		fired_weapon = player_turn_result.get(\\\\\\\"fired_weapon\\\\\\\")\\\\n		missile_dropped = player_turn_result.get(\\\\\\\"missile_dropped\\\\\\\")\\\\n		dropped_location = player_turn_result.get(\\\\\\\"dropped_location\\\\\\\") \\\\n		monster_drops = player_turn_result.get(\\\\\\\"monster_drops\\\\\\\")\\\\n		loaded = player_turn_result.get(\\\\\\\"loaded\\\\\\\")\\\\n\\\\n		if quit:\\\\n			return True\\\\n		if message:\\\\n			message_log.add_message(message)\\\\n		if dead_entity:\\\\n			message, game_state, entities = handle_death(entities, dead_entity, player, game_state)\\\\n			message_log.add_message(message)\\\\n		if item_added:\\\\n			entities.remove(item_added)\\\\n		# TODO: roll these three results into one?\\\\n		if targeting:\\\\n			game_state.previous_game_state = GameStates.PLAYERS_TURN\\\\n			game_state.current_game_state = GameStates.TARGETING\\\\n			targets.current_targeting_consumable = targeting\\\\n			message_log.add_message(targets.current_targeting_consumable.consumable.targeting_message)\\\\n		if spell_targeting:\\\\n			game_state.previous_game_state = GameStates.PLAYERS_TURN\\\\n			game_state.current_game_state = GameStates.TARGETING\\\\n			targets.current_targeting_spell = spell_targeting\\\\n			message_log.add_message(targets.current_targeting_spell.targeting_message)\\\\n		if feat_targeting:\\\\n			game_state.previous_game_state = GameStates.PLAYERS_TURN\\\\n			game_state.current_game_state = GameStates.TARGETING\\\\n			targets.current_targeting_feat = feat_targeting\\\\n			message_log.add_message(targets.current_targeting_feat.targeting_message)\\\\n		if missile_targeting:\\\\n			game_state.previous_game_state = GameStates.PLAYERS_TURN\\\\n			game_state.current_game_state = GameStates.TARGETING\\\\n			targets.current_targeting_weapon = True\\\\n			message_log.add_message(Message(\\\\\\\"Choose a target for your missile attack...\\\\\\\"))\\\\n		if missile_dropped:\\\\n			missile_entity = make_dropped_missile(missile_dropped, dropped_location)\\\\n			entities.append(missile_entity)\\\\n		if item_dropped:\\\\n			entities.append(item_dropped)\\\\n		if equip:\\\\n			equip_results = player.equipment.toggle_equip(equip)\\\\n			for equip_result in equip_results:\\\\n				equipped = equip_result.get('equipped')\\\\n				dequipped = equip_result.get('dequipped')\\\\n				fail_equip = equip_result.get('fail_equip')\\\\n				if equipped:\\\\n					message_log.add_message(Message('You equipped the {0}.'.format(equipped.name.true_name)))\\\\n				if dequipped:\\\\n					message_log.add_message(Message('You dequipped the {0}.'.format(dequipped.name.true_name)))\\\\n				if fail_equip:\\\\n					message_log.add_message(Message(fail_equip))\\\\n			pass\\\\n		if targeting_cancelled:\\\\n			game_state.current_game_state = previous_game_state\\\\n			message_log.add_message(Message('Targeting cancelled'))\\\\n\\\\n	return game_state, entities, player, targets\\\\n\\\\ndef process_ai_results(enemy_turn_results, acting_entity, entities, player, message_log, game_state):\\\\n	for enemy_turn_result in enemy_turn_results:\\\\n		message = enemy_turn_result.get('message')\\\\n		dead_entity = enemy_turn_result.get('dead')\\\\n		missile_dropped = enemy_turn_result.get('missile_dropped')\\\\n		dropped_location = enemy_turn_result.get('dropped_location')\\\\n		equips = enemy_turn_result.get(\\\\\\\"equips\\\\\\\")\\\\n		\\\\n		if message:\\\\n			message_log.add_message(message)\\\\n		if missile_dropped:\\\\n			missile_entity = make_dropped_missile(missile_dropped, dropped_location)\\\\n			entities.append(missile_entity)\\\\n		if equips:\\\\n			acting_entity.equipment.toggle_equip(equips)\\\\n		if dead_entity:\\\\n			if dead_entity == player:\\\\n				message, game_state = kill_player(dead_entity, game_state)\\\\n				print(f\\\\\\\"gs is {game_state.current_game_state}\\\\\\\")\\\\n			else:\\\\n				message = kill_monster(dead_entity)\\\\n			message_log.add_message(message)\\\\n			if game_state == GameStates.PLAYER_DEAD:\\\\n				break\\\\n\\\\n	return entities, game_state, message_log	\\\",\\n  564  			\\\"file\\\": \\\"systems/results_process_system.py\\\",\\n  565  			\\\"file_size\\\": 4746,\\n\\nC:\\\\dev\\\\p3roguelike\\\\systems\\\\feat_system.py:\\n   41  	\\n   42  	elif not (target_x or target_y):\\n   43: 		results.append({'feat_targeting': feat})\\n   44  	\\n   45  	elif int(distance(entity, target_x, target_y)) > feat.feat_range:\\n\\nC:\\\\dev\\\\p3roguelike\\\\systems\\\\results_process_system.py:\\n   15  		targeting = player_turn_result.get('targeting')\\n   16  		spell_targeting = player_turn_result.get('spell_targeting')\\n   17: 		feat_targeting = player_turn_result.get('feat_targeting')\\n   18  		targeting_cancelled = player_turn_result.get('targeting_cancelled')\\n   19  		equip = player_turn_result.get('equip')\\n   ..\\n   46  			targets.current_targeting_spell = spell_targeting\\n   47  			message_log.add_message(targets.current_targeting_spell.targeting_message)\\n   48: 		if feat_targeting:\\n   49  			game_state.previous_game_state = GameStates.PLAYERS_TURN\\n   50  			game_state.current_game_state = GameStates.TARGETING\\n   51: 			targets.current_targeting_feat = feat_targeting\\n   52  			message_log.add_message(targets.current_targeting_feat.targeting_message)\\n   53  		if missile_targeting:\\n\\n9 matches across 3 files\\n\",\n  615  			\"settings\":\n  616  			{\n  ...\n 1053  			\"ENEMY_TURN\",\n 1054  			\"spell_func\",\n 1055: 			\"TODO\",\n 1056  			\"cast(\",\n 1057: 			\"todo\",\n 1058  			\"Effect(\",\n 1059  			\"turns_left\",\n ....\n 1067  			\"EffectNames\",\n 1068  			\"effect\",\n 1069: 			\"TODO\",\n 1070  			\"item-added\",\n 1071  			\"inventoryt\",\n 1072: 			\"TODO\",\n 1073  			\"print(\",\n 1074: 			\"TODO\",\n 1075  			\"get_equipped\",\n 1076  			\"equipment\",\n 1077  			\"show_equipment_sc\",\n 1078: 			\"TODO\",\n 1079  			\"make_dropped\",\n 1080  			\"make_dropp\",\n 1081: 			\"TODO\",\n 1082  			\"missile_dropped\",\n 1083  			\"currently\",\n ....\n 1094  			\"missile_damage_b\",\n 1095  			\"weaponcateg\",\n 1096: 			\"TODO\",\n 1097  			\"exit\",\n 1098  			\"potion_index\",\n ....\n 1115  			\"damage_mess\",\n 1116  			\"weapon\",\n 1117: 			\"TODO\",\n 1118  			\"get_current_melee\",\n 1119  			\"damage\",\n ....\n 1131  			\"d6_d6_dice_roll\",\n 1132  			\"dice_roll\",\n 1133: 			\"TODO\",\n 1134  			\"heal(\",\n 1135  			\"roll\",\n 1136  			\"dice\",\n 1137: 			\"TODO\",\n 1138  			\"print(\",\n 1139  			\"Searching\",\n\nC:\\dev\\p3roguelike\\rltests.py:\n  353  \n  354  	def test_can_perform_attack_with_feat_bonuses(self):\n  355: 		#TODO: Make this testable somehow!\n  356  		pass\n  357  \n  ...\n  417  class DeathTests(unittest.TestCase):\n  418  	def test_killing_a_monster_gives_xp(self):\n  419: 		# TODO: write this test\n  420  		test_char = mocks.create_mockchar_11()\n  421  		test_monster = monsters.make_orc(1, 1)\n  ...\n  727  		constants = get_constants()\n  728  		test_priest = create_player(constants, 3)\n  729: 		# TODO: There must be a better way to test this\n  730  		self.assertEqual(test_priest.stats.Strength, 13)\n  731  \n  ...\n  733  		constants = get_constants()\n  734  		test_wizard = create_player(constants, 2)\n  735: 		# TODO: There must be a better way to test this\n  736  		self.assertEqual(test_wizard.stats.Intellect, 18)	\n  737  \n\nC:\\dev\\p3roguelike\\systems\\damage.py:\n    9  		dice_number, dice_type, modifier = (1,3,0)\n   10  		damage_type = DamageTypes.CRUSHING\n   11: 	# something in main hand but it's not a melee weapon, e.g. a bow - TODO: make this better\n   12  	elif entity.equipment.main_hand and not entity.equipment.main_hand.melee_weapon:\n   13  		dice_number, dice_type, modifier = (1,3,0)\n\nC:\\dev\\p3roguelike\\systems\\feat_system.py:\n    9  \n   10  def add_feat(player, feat):\n   11: 	# TODO: Is this required? Do I need any more logic here?\n   12  	player.performer.feat_list.append(feat)\n   13  \n\nC:\\dev\\p3roguelike\\systems\\name_system.py:\n    2  \n    3  def get_display_name(player, named_entity):\n    4: 	# TODO: fix this - pretty terrible! need to refactor items completely (urgh)\n    5  	if named_entity.consumable:\n    6  		if named_entity.consumable.consumable_type == ConsumableTypes.POTION:\n\nC:\\dev\\p3roguelike\\systems\\results_process_system.py:\n   41  			entities.remove(item_added)\n   42  			action_free = False	\n   43: 		# TODO: roll these three results into one?\n   44  		if targeting:\n   45  			game_state.previous_game_state = GameStates.PLAYERS_TURN\n   ..\n   69  			action_free = False\n   70  		if failed_cast:\n   71: 			# TODO: fix this - action_free = False\n   72  			game_state.current_game_state = GameStates.PLAYERS_TURN\n   73  			action_free = False\n\nC:\\dev\\p3roguelike\\systems\\spell_system.py:\n   33  	else:\n   34  		# we have coordinates, so get a valid target entity in range - assume if it is a fighter, it is a target \n   35: 		spell_range = kwargs.get('spell_range') or 5 # TODO - pretty random... and should be a constant, not a magic number\n   36  		target_x, target_y = kwargs.get('target_x'), kwargs.get('target_y')\n   37  		if distance(entity, target_x, target_y) > spell_range:\n\nC:\\dev\\p3roguelike\\systems\\time_system.py:\n    5  	results.extend(effects_manager.process_damage_over_time(entity))\n    6  	effects_manager.tick_down_effects(entity)	\n    7: 	# TODO: move this somewhere else? Maybe in engine?? e.g. we shouldn't do this if time effects have just killed someone... \n    8: 	# TODO: change the regen from hardcoded to something else, probably based on stamina?\n    9  	regen_hp(entity, 0.2)\n   10  	regen_mana(entity, 0.2)\n   ..\n   12  	return results\n   13  \n   14: # TODO: fix this! hp regen should be in stats, not fighter - heal should be moved out too\n   15  def regen_hp(entity, amount):\n   16  	if entity.stats:\n\n33 matches across 12 files\n\n\nSearching 77 files for \"heal(\"\n\nC:\\dev\\p3roguelike\\components\\fighter.py:\n   29  		return results\n   30  \n   31: 	def heal(self, amount):\n   32  		self.owner.stats.hp += amount\n   33  		if self.owner.stats.hp >= self.owner.stats.max_hp:\n\nC:\\dev\\p3roguelike\\components\\level.py:\n   24  			self.owner.stats.max_hp += 1\n   25  			self.owner.stats.Endurance += 1\n   26: 			self.owner.fighter.heal(2)\n   27  			self.owner.stats.max_sp += 2\n   28  			self.owner.stats.sp += 2\n\nC:\\dev\\p3roguelike\\magic_functions.py:\n   29  	return spell	\n   30  \n   31: def heal(*args, **kwargs):\n   32  	entity = args[0]\n   33  	amount = kwargs.get('amount')\n   ..\n   39  			results.append({'consumed': False, 'message': Message(f'{subject} {verb} already at full health.', libtcod.yellow)})\n   40  		else:\n   41: 			entity.fighter.heal(amount)\n   42  			results.append({'consumed': True, 'message': Message('Your wounds start to feel better!', libtcod.green)})	\n   43  	else:\n\nC:\\dev\\p3roguelike\\p3RL.sublime-workspace:\n 1132  			\"dice_roll\",\n 1133  			\"TODO\",\n 1134: 			\"heal(\",\n 1135  			\"roll\",\n 1136  			\"dice\",\n\nC:\\dev\\p3roguelike\\rltests.py:\n   72  \n   73  class SpellTests(unittest.TestCase):\n   74: 	def test_can_learn_heal(self):\n   75  		test_caster = Caster(spells=[], max_mana=50)\n   76  		test_entity = entity.Entity(1, 1, 'A', libtcod.white, \"Player\", caster=test_caster)\n\nC:\\dev\\p3roguelike\\systems\\time_system.py:\n   18  		if entity.stats.hp_regen_counter >= 1:\n   19  			entity.stats.hp_regen_counter -= 1\n   20: 			entity.fighter.heal(1)\n   21  \n   22  def regen_mana(entity, amount):\n\n7 matches across 6 files\n",
-			"settings":
-			{
-				"buffer_size": 25183,
-				"line_ending": "Windows",
-				"name": "Find Results",
-				"scratch": true
-			}
-		},
-		{
-			"file": "components/stats.py",
-			"settings":
-			{
-				"buffer_size": 1403,
+				"buffer_size": 45315,
 				"line_ending": "Windows"
 			}
 		},
@@ -573,7 +534,7 @@
 			"file": "loader_functions/constants.py",
 			"settings":
 			{
-				"buffer_size": 2550,
+				"buffer_size": 2659,
 				"line_ending": "Windows"
 			}
 		},
@@ -594,18 +555,34 @@
 			}
 		},
 		{
-			"file": "loader_functions/initialize_new_game.py",
+			"file": "character.py",
 			"settings":
 			{
-				"buffer_size": 7378,
+				"buffer_size": 530,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "components/ai.py",
+			"file": "race.py",
 			"settings":
 			{
-				"buffer_size": 2653,
+				"buffer_size": 507,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "engine.py",
+			"settings":
+			{
+				"buffer_size": 5811,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "loader_functions/initialize_new_game.py",
+			"settings":
+			{
+				"buffer_size": 7047,
 				"line_ending": "Windows"
 			}
 		},
@@ -613,7 +590,7 @@
 			"file": "menus.py",
 			"settings":
 			{
-				"buffer_size": 8907,
+				"buffer_size": 8993,
 				"line_ending": "Windows"
 			}
 		},
@@ -626,42 +603,10 @@
 			}
 		},
 		{
-			"file": "systems/time_system.py",
+			"file": "entity.py",
 			"settings":
 			{
-				"buffer_size": 1207,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "systems/effects_manager.py",
-			"settings":
-			{
-				"buffer_size": 1379,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "monsters.py",
-			"settings":
-			{
-				"buffer_size": 3649,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "character.py",
-			"settings":
-			{
-				"buffer_size": 530,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "engine.py",
-			"settings":
-			{
-				"buffer_size": 5811,
+				"buffer_size": 2145,
 				"line_ending": "Windows"
 			}
 		},
@@ -682,34 +627,10 @@
 			}
 		},
 		{
-			"file": "death_functions.py",
-			"settings":
-			{
-				"buffer_size": 1303,
-				"line_ending": "Windows"
-			}
-		},
-		{
 			"file": "input_handlers.py",
 			"settings":
 			{
 				"buffer_size": 5657,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "systems/move_system.py",
-			"settings":
-			{
-				"buffer_size": 4080,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "components/defender.py",
-			"settings":
-			{
-				"buffer_size": 2180,
 				"line_ending": "Windows"
 			}
 		},
@@ -754,38 +675,6 @@
 			}
 		},
 		{
-			"file": "systems/attack.py",
-			"settings":
-			{
-				"buffer_size": 4839,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "systems/feat_system.py",
-			"settings":
-			{
-				"buffer_size": 4732,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "feats.py",
-			"settings":
-			{
-				"buffer_size": 697,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "components/performer.py",
-			"settings":
-			{
-				"buffer_size": 90,
-				"line_ending": "Windows"
-			}
-		},
-		{
 			"file": "components/inventory.py",
 			"settings":
 			{
@@ -798,6 +687,14 @@
 			"settings":
 			{
 				"buffer_size": 938,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "map_objects/game_map.py",
+			"settings":
+			{
+				"buffer_size": 7704,
 				"line_ending": "Windows"
 			}
 		},
@@ -822,22 +719,6 @@
 			"settings":
 			{
 				"buffer_size": 6668,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "components/name.py",
-			"settings":
-			{
-				"buffer_size": 321,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "random_utils.py",
-			"settings":
-			{
-				"buffer_size": 903,
 				"line_ending": "Windows"
 			}
 		},
@@ -874,25 +755,37 @@
 	},
 	"file_history":
 	[
-		"/C/dev/p3roguelike/.git/COMMIT_EDITMSG",
+		"/C/dev/p3roguelike/engine.py",
+		"/C/dev/p3roguelike/random_utils.py",
+		"/C/dev/p3roguelike/components/name.py",
+		"/C/dev/p3roguelike/components/performer.py",
+		"/C/dev/p3roguelike/feats.py",
+		"/C/dev/p3roguelike/systems/feat_system.py",
 		"/C/dev/p3roguelike/systems/attack.py",
+		"/C/dev/p3roguelike/components/defender.py",
+		"/C/dev/p3roguelike/systems/move_system.py",
+		"/C/dev/p3roguelike/death_functions.py",
+		"/C/dev/p3roguelike/monsters.py",
+		"/C/dev/p3roguelike/systems/effects_manager.py",
+		"/C/dev/p3roguelike/systems/time_system.py",
+		"/C/dev/p3roguelike/loader_functions/tile_codes.py",
+		"/C/dev/p3roguelike/systems/name_system.py",
+		"/C/dev/p3roguelike/components/stats.py",
+		"/C/dev/p3roguelike/mocks.py",
+		"/C/dev/p3roguelike/components/fighter.py",
+		"/C/dev/p3roguelike/components/level.py",
+		"/C/dev/p3roguelike/components/ai.py",
+		"/C/dev/p3roguelike/.git/COMMIT_EDITMSG",
 		"/C/dev/p3roguelike/render_functions.py",
 		"/C/dev/p3roguelike/targeting.py",
 		"/C/dev/p3roguelike/systems/pickup_system.py",
-		"/C/dev/p3roguelike/monsters.py",
 		"/C/dev/p3roguelike/entity.py",
 		"/C/dev/p3roguelike/game_states.py",
-		"/C/dev/p3roguelike/death_functions.py",
-		"/C/dev/p3roguelike/components/ai.py",
 		"/C/dev/p3roguelike/game_state.py",
 		"/C/dev/p3roguelike/map_objects/game_map.py",
-		"/C/dev/p3roguelike/mocks.py",
-		"/C/dev/p3roguelike/feats.py",
-		"/C/dev/p3roguelike/components/stats.py",
 		"/C/dev/p3roguelike/p3RL.sublime-workspace",
 		"/C/dev/p3roguelike/systems/damage.py",
 		"/C/Users/Leon/Documents/steem",
-		"/C/dev/p3roguelike/systems/effects_manager.py",
 		"/C/dev/p3roguelike/components/effects.py",
 		"/C/dev/p3roguelike/components/meleeweapon.py",
 		"/C/dev/p3roguelike/components/missileweapon.py",
@@ -902,8 +795,6 @@
 		"/C/dev/p3roguelike/components/identified.py",
 		"/C/dev/p3roguelike/components/ammunition.py",
 		"/C/dev/p3roguelike/equipment_slots.py",
-		"/C/dev/p3roguelike/systems/name_system.py",
-		"/C/dev/p3roguelike/random_utils.py",
 		"/C/dev/p3roguelike/components/feats.py",
 		"/C/dev/p3rl-copy/engine.py",
 		"/C/dev/microblog/microblog.py",
@@ -920,7 +811,6 @@
 		"/C/dev/ClonedRL/atrl-master/main.py",
 		"/C/dev/p3roguelike/damage_types.py",
 		"/C/dev/p3roguelike/spells.py",
-		"/C/dev/p3roguelike/components/name.py",
 		"/C/dev/p3rl-copy/components/fighter.py",
 		"/C/dev/p3roguelike - Copy/systems/input_process_system.py",
 		"/C/dev/p3rl-copy/systems/results_process_system.py",
@@ -933,16 +823,12 @@
 		"/C/dev/ClonedRL/atrl-master/game/loader_functions/initialize_new_game.py",
 		"/C/dev/p3roguelike/input_process_system.py",
 		"/C/dev/p3roguelike/systems/pickup_system",
-		"/C/dev/p3roguelike/systems/move_system.py",
 		"/C/dev/p3roguelike/components/inventory.py",
 		"/C/dev/ClonedRL/atrl-master/game/menus.py",
 		"/C/dev/p3roguelike/components/consumable.py",
-		"/C/dev/p3roguelike/loader_functions/tile_codes.py",
 		"/C/dev/jsrl/jsrl.html",
 		"/C/dev/p3roguelike/main.py",
 		"/C/dev/p3roguelike/potion_test.py",
-		"/C/dev/p3roguelike/systems/time_system.py",
-		"/C/dev/p3roguelike/components/defender.py",
 		"/C/dev/p3roguelike/components/skills.py",
 		"/C/dev/p3roguelike/menu_options.py",
 		"/C/dev/p3roguelike/loader_functions/data_loaders.py",
@@ -954,21 +840,18 @@
 		"/C/workspace/pingpong/index.html",
 		"/C/dev/p3roguelike/identified.py",
 		"/C/dev/property.py",
-		"/C/dev/p3roguelike/components/level.py",
 		"/C/dev/p3roguelike/fov_functions.py",
 		"/C/dev/p3roguelike/loader_functions/skill_book.py",
 		"/C/dev/p3roguelike/components/caster.py",
 		"/C/dev/p3roguelike/rltests.py",
 		"/C/dev/p3roguelike/rltests2.py",
 		"/C/dev/test.py",
-		"/C/dev/p3roguelike/components/fighter.py",
 		"/C/dev/p3roguelike-base/components/fighter.py",
 		"/C/dev/p3roguelike/monsters",
 		"/C/dev/animal.html",
 		"/C/dev/rock.html",
 		"/C/dev/pong/pong3.html",
 		"/C/dev/p3roguelike/map_objects/rectangle.py",
-		"/C/dev/p3roguelike/engine.py",
 		"/C/dev/p3roguelike-base/map_objects/game_map.py",
 		"/C/dev/p3roguelike/loader_functions/initialize_new_game.py",
 		"/C/dev/p3roguelike/map_objects/tile.py",
@@ -999,9 +882,7 @@
 		"/C/workspace/pygame/game1.py",
 		"/C/workspace/RLtdl/input_handlers.py",
 		"/C/workspace/RLtdl/render_functions.py",
-		"/C/workspace/RLtdl/components/ai.py",
-		"/C/workspace/RLtdl/components/fighter.py",
-		"/C/workspace/RLtdl/map_utils.py"
+		"/C/workspace/RLtdl/components/ai.py"
 	],
 	"find":
 	{
@@ -1009,7 +890,7 @@
 	},
 	"find_in_files":
 	{
-		"height": 102.0,
+		"height": 0.0,
 		"where_history":
 		[
 			"C:\\dev\\p3roguelike",
@@ -1024,6 +905,22 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"root",
+			"DEATH OF",
+			"con",
+			"charac",
+			"character",
+			"print(",
+			"tomb of the",
+			"tomb of",
+			"tomb of the",
+			"lightning_scroll",
+			"lightn",
+			"const",
+			"TODO",
+			"make_long",
+			"make_great",
+			"TODO",
 			"heal(",
 			"TODO",
 			"fighter.current_targeting_weapon",
@@ -1135,23 +1032,7 @@
 			"current_targeting_spel",
 			"current_targeting_mis",
 			"missile_targ",
-			"fire_weapon",
-			"choose a target for your m",
-			"fov_map",
-			"spell",
-			"character_screen(",
-			"deatht",
-			"print",
-			"makeOrc",
-			"makeTroll",
-			"makeKobold",
-			"makeOrc",
-			"death",
-			"dead",
-			"handle",
-			"xp=",
-			"xp",
-			"print"
+			"fire_weapon"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1232,7 +1113,7 @@
 	"groups":
 	[
 		{
-			"selected": 37,
+			"selected": 6,
 			"sheets":
 			[
 				{
@@ -1240,15 +1121,15 @@
 					"file": "rltests.py",
 					"settings":
 					{
-						"buffer_size": 45227,
+						"buffer_size": 45315,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								17291,
-								17291
+								36050,
+								36050
 							]
 						],
 						"settings":
@@ -1257,25 +1138,25 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 6891.0,
+						"translation.y": 15444.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "mocks.py",
+					"file": "loader_functions/constants.py",
 					"settings":
 					{
-						"buffer_size": 9831,
+						"buffer_size": 2659,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								489,
-								491
+								0,
+								0
 							]
 						],
 						"settings":
@@ -1284,25 +1165,25 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 444.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 2,
-					"file": "components/level.py",
+					"file": "components/equippable.py",
 					"settings":
 					{
-						"buffer_size": 874,
+						"buffer_size": 9486,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								813,
-								813
+								424,
+								424
 							]
 						],
 						"settings":
@@ -1318,313 +1199,6 @@
 				},
 				{
 					"buffer": 3,
-					"file": "components/fighter.py",
-					"settings":
-					{
-						"buffer_size": 2763,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								614,
-								614
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"settings":
-					{
-						"buffer_size": 25183,
-						"regions":
-						{
-							"match":
-							{
-								"flags": 112,
-								"regions":
-								[
-									[
-										109,
-										113
-									],
-									[
-										408,
-										412
-									],
-									[
-										665,
-										669
-									],
-									[
-										901,
-										905
-									],
-									[
-										1416,
-										1420
-									],
-									[
-										3337,
-										3341
-									],
-									[
-										8766,
-										8770
-									],
-									[
-										12168,
-										12172
-									],
-									[
-										14814,
-										14818
-									],
-									[
-										19349,
-										19353
-									],
-									[
-										19386,
-										19390
-									],
-									[
-										19500,
-										19504
-									],
-									[
-										19566,
-										19570
-									],
-									[
-										19604,
-										19608
-									],
-									[
-										19702,
-										19706
-									],
-									[
-										19770,
-										19774
-									],
-									[
-										19901,
-										19905
-									],
-									[
-										20014,
-										20018
-									],
-									[
-										20141,
-										20145
-									],
-									[
-										20214,
-										20218
-									],
-									[
-										20375,
-										20379
-									],
-									[
-										20543,
-										20547
-									],
-									[
-										20766,
-										20770
-									],
-									[
-										20983,
-										20987
-									],
-									[
-										21307,
-										21311
-									],
-									[
-										21568,
-										21572
-									],
-									[
-										21792,
-										21796
-									],
-									[
-										22117,
-										22121
-									],
-									[
-										22321,
-										22325
-									],
-									[
-										22684,
-										22688
-									],
-									[
-										23072,
-										23076
-									],
-									[
-										23203,
-										23207
-									],
-									[
-										23395,
-										23399
-									],
-									[
-										23693,
-										23698
-									],
-									[
-										23963,
-										23968
-									],
-									[
-										24126,
-										24131
-									],
-									[
-										24385,
-										24390
-									],
-									[
-										24626,
-										24631
-									],
-									[
-										24781,
-										24786
-									],
-									[
-										25102,
-										25107
-									]
-								],
-								"scope": ""
-							}
-						},
-						"selection":
-						[
-							[
-								23575,
-								23575
-							]
-						],
-						"settings":
-						{
-							"detect_indentation": false,
-							"output_tag": 2,
-							"result_base_dir": "",
-							"result_file_regex": "^([A-Za-z\\\\/<].*):$",
-							"result_line_regex": "^ +([0-9]+):",
-							"scroll_past_end": true,
-							"syntax": "Packages/Default/Find Results.hidden-tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 7128.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "components/stats.py",
-					"settings":
-					{
-						"buffer_size": 1403,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1279,
-								1279
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 264.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "loader_functions/constants.py",
-					"settings":
-					{
-						"buffer_size": 2550,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								801,
-								801
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 198.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 7,
-					"file": "components/equippable.py",
-					"settings":
-					{
-						"buffer_size": 9486,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2268,
-								2268
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 462.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 8,
 					"file": "components/equipment.py",
 					"settings":
 					{
@@ -1651,19 +1225,99 @@
 					"type": "text"
 				},
 				{
-					"buffer": 9,
+					"buffer": 4,
+					"file": "character.py",
+					"settings":
+					{
+						"buffer_size": 530,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "race.py",
+					"settings":
+					{
+						"buffer_size": 507,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								484,
+								484
+							]
+						],
+						"settings":
+						{
+							"auto_name": "",
+							"syntax": "Packages/Python/Python.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "engine.py",
+					"settings":
+					{
+						"buffer_size": 5811,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 988.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 7,
 					"file": "loader_functions/initialize_new_game.py",
 					"settings":
 					{
-						"buffer_size": 7378,
+						"buffer_size": 7047,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								5474,
-								5474
+								0,
+								0
 							]
 						],
 						"settings":
@@ -1672,52 +1326,25 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 2310.0,
+						"translation.y": 2579.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 10,
-					"file": "components/ai.py",
-					"settings":
-					{
-						"buffer_size": 2653,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1867,
-								1867
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 726.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 11,
+					"buffer": 8,
 					"file": "menus.py",
 					"settings":
 					{
-						"buffer_size": 8907,
+						"buffer_size": 8993,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3623,
-								3623
+								0,
+								0
 							]
 						],
 						"settings":
@@ -1726,13 +1353,13 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1149.0,
+						"translation.y": 1347.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 12,
+					"buffer": 9,
 					"file": "render_functions.py",
 					"settings":
 					{
@@ -1743,8 +1370,8 @@
 						"selection":
 						[
 							[
-								3436,
-								3436
+								4790,
+								4791
 							]
 						],
 						"settings":
@@ -1753,44 +1380,17 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1171.0,
+						"translation.y": 1061.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 13,
-					"file": "systems/time_system.py",
+					"buffer": 10,
+					"file": "entity.py",
 					"settings":
 					{
-						"buffer_size": 1207,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								425,
-								425
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 14,
-					"file": "systems/effects_manager.py",
-					"settings":
-					{
-						"buffer_size": 1379,
+						"buffer_size": 2145,
 						"regions":
 						{
 						},
@@ -1813,87 +1413,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 15,
-					"file": "monsters.py",
-					"settings":
-					{
-						"buffer_size": 3649,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2567,
-								2567
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 394.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 16,
-					"file": "character.py",
-					"settings":
-					{
-						"buffer_size": 530,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								508,
-								508
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 17,
-					"file": "engine.py",
-					"settings":
-					{
-						"buffer_size": 5811,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1676,
-								1676
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 726.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 18,
+					"buffer": 11,
 					"file": "systems/input_process_system.py",
 					"settings":
 					{
@@ -1920,7 +1440,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 19,
+					"buffer": 12,
 					"file": "systems/results_process_system.py",
 					"settings":
 					{
@@ -1947,34 +1467,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 20,
-					"file": "death_functions.py",
-					"settings":
-					{
-						"buffer_size": 1303,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1124,
-								1124
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 21,
+					"buffer": 13,
 					"file": "input_handlers.py",
 					"settings":
 					{
@@ -1985,8 +1478,8 @@
 						"selection":
 						[
 							[
-								5657,
-								5657
+								0,
+								0
 							]
 						],
 						"settings":
@@ -1995,67 +1488,13 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 928.0,
+						"translation.y": 3830.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 22,
-					"file": "systems/move_system.py",
-					"settings":
-					{
-						"buffer_size": 4080,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								424,
-								424
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 23,
-					"file": "components/defender.py",
-					"settings":
-					{
-						"buffer_size": 2180,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								111,
-								111
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 24,
+					"buffer": 14,
 					"file": "spells.py",
 					"settings":
 					{
@@ -2081,7 +1520,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 25,
+					"buffer": 15,
 					"file": "components/caster.py",
 					"settings":
 					{
@@ -2108,7 +1547,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 26,
+					"buffer": 16,
 					"file": "systems/spell_system.py",
 					"settings":
 					{
@@ -2135,7 +1574,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 27,
+					"buffer": 17,
 					"file": "systems/skill_manager.py",
 					"settings":
 					{
@@ -2162,7 +1601,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 28,
+					"buffer": 18,
 					"file": "components/skills.py",
 					"settings":
 					{
@@ -2189,114 +1628,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 29,
-					"file": "systems/attack.py",
-					"settings":
-					{
-						"buffer_size": 4839,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								4258,
-								4258
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 1391.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 30,
-					"file": "systems/feat_system.py",
-					"settings":
-					{
-						"buffer_size": 4732,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								790,
-								790
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 31,
-					"file": "feats.py",
-					"settings":
-					{
-						"buffer_size": 697,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								484,
-								484
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 32,
-					"file": "components/performer.py",
-					"settings":
-					{
-						"buffer_size": 90,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								90,
-								90
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 33,
+					"buffer": 19,
 					"file": "components/inventory.py",
 					"settings":
 					{
@@ -2323,7 +1655,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 34,
+					"buffer": 20,
 					"file": "generators.py",
 					"settings":
 					{
@@ -2334,22 +1666,49 @@
 						"selection":
 						[
 							[
-								178,
-								178
+								85,
+								87
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/Python/Python.tmLanguage"
 						},
-						"translation.x": 0.0,
+						"translation.x": 80.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 35,
+					"buffer": 21,
+					"file": "map_objects/game_map.py",
+					"settings":
+					{
+						"buffer_size": 7704,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 3804.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 22,
 					"file": "components/item.py",
 					"settings":
 					{
@@ -2376,7 +1735,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 36,
+					"buffer": 23,
 					"file": "item_factory.py",
 					"settings":
 					{
@@ -2403,7 +1762,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 37,
+					"buffer": 24,
 					"file": "magic_functions.py",
 					"settings":
 					{
@@ -2430,60 +1789,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 38,
-					"file": "components/name.py",
-					"settings":
-					{
-						"buffer_size": 321,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 39,
-					"file": "random_utils.py",
-					"settings":
-					{
-						"buffer_size": 903,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								903,
-								903
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 330.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 40,
+					"buffer": 25,
 					"file": ".gitignore",
 					"settings":
 					{

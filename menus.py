@@ -72,10 +72,15 @@ def main_menu(con, backgrond_image, screen_width, screen_height):
 def character_class_menu(con, screen_width, screen_height):
 	constants = get_constants()
 	libtcod.console_set_default_foreground(0, libtcod.light_yellow)
-	libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height / 2) -4, libtcod.BKGND_NONE, libtcod.CENTER, 'TOMBS OF THE ANCIENT KINGS')
-	libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height /2) -3, libtcod.BKGND_NONE, libtcod.CENTER, 'By Leon Tranter')
-	# TODO: This probably shouldn't be hard-coded here!!
+	libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height / 2) -4, libtcod.BKGND_NONE, libtcod.CENTER, 'Choose your character class...')
 	character_classes = constants['character_classes']
+	menu(con, '', character_classes, 24, screen_width, screen_height)
+
+def character_race_menu(con, screen_width, screen_height):
+	constants = get_constants()
+	libtcod.console_set_default_foreground(0, libtcod.light_yellow)
+	libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height / 2) -4, libtcod.BKGND_NONE, libtcod.CENTER, 'Choose your character race...')
+	character_classes = constants['character_races']
 	menu(con, '', character_classes, 24, screen_width, screen_height)
 
 def skills_screen(player, character_screen_width, character_screen_height, screen_width, screen_height):

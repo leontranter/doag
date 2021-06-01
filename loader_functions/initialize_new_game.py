@@ -131,9 +131,9 @@ def equip_player(player, player_class):
 	item = armor_mapping[player_class]()
 	player.inventory.items.append(item)
 	player.equipment.body = item
-	off_hand_mapping = {1: EquippableFactory.make_shield, 3: EquippableFactory.make_shield}
-	item = off_hand_mapping.get(player_class)()
-	if item is not None:
+	off_hand_mapping = {0: None, 1: EquippableFactory.make_shield, 2: None, 3: EquippableFactory.make_shield}
+	if off_hand_mapping[player_class] is not None:
+		item = off_hand_mapping.get(player_class)()
 		player.inventory.items.append(item)
 		print(item.name.true_name)
 		player.equipment.off_hand = item

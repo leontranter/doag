@@ -24,6 +24,7 @@ from systems import results_process_system
 from targeting import Targeting
 from game_state import GameState
 from character import get_character_class
+from race import get_character_race
 
 def main():
 	constants = get_constants()
@@ -58,6 +59,7 @@ def main():
 			if show_load_error_message and (new_game or load_saved_game or exit_game):
 				show_load_error_message = False
 			elif new_game:
+				character_race = get_character_race(con, constants)
 				character_class = get_character_class(con, constants)
 				player_class = character_class.get('player_class')
 				player, entities, game_map, message_log, game_state, dlevels = get_game_variables(constants, player_class)
